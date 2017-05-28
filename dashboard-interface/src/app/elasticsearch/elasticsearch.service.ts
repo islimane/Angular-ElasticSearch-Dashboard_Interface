@@ -100,4 +100,22 @@ export class Elasticsearch {
 
 	}
 
+	public getIndices(): PromiseLike<string[]>{
+		return this.clientElasticsearch.cat.indices({
+			format: 'json'
+		})
+		.then(function(indexObjArray){
+				var indices = []
+
+				console.log(indexObjArray);
+				for(var i=0; i<indexObjArray.length; i++){
+					console.log(indexObjArray[i].index);
+					indices.push(indexObjArray[i].index);
+				}
+				console.log('indices:', indices);
+
+				return indices;
+		});
+	}
+
 }

@@ -9,19 +9,13 @@ import { Elasticsearch } from './elasticsearch';
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-	title: string;
+	title: string = '';
 	result: number = 0;
-	indexes: string[] = [
-		'bank',
-		'shakespeare',
-		'logstash-2015.05.20',
-		'logstash-2015.05.18',
-		'logstash-2015.05.19'
-	];
-	selectedIndex: string = this.indexes[0];
-	values: string[];
-	numFields: string[];
-	selectedNumField: string;
+	indexes: string[] = [];
+	selectedIndex: string = '';
+	values: string[] = [];
+	numFields: string[] = [];
+	selectedNumField: string = '';
 
 
 	constructor(
@@ -32,7 +26,13 @@ export class AppComponent {
 	ngOnInit(): void {
 		this.getTitle();
 		console.log(this.elasticsearch);
-		this.setNumFields();
+		var that = this;
+		this.elasticsearch.getIndices().then(function(indices){
+			that.indexes = indices;
+			that.selectedIndex = (that.indexes.length>0) ? that.indexes[0] : '';
+
+			that.setNumFields();
+		});
 	}
 
 	getTitle(): void {
@@ -45,8 +45,10 @@ export class AppComponent {
 	}
 
 	avg(): void {
-		this.elasticsearch.avg(this.selectedIndex, this.selectedNumField)
-		.then(avg => this.result = avg);
+		if(this.selectedIndex && this.selectedNumField){
+			this.elasticsearch.avg(this.selectedIndex, this.selectedNumField)
+			.then(avg => this.result = avg);
+		}
 	}
 
 	setNumFields(): void {
