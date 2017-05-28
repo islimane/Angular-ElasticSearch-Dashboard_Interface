@@ -1,5 +1,30 @@
 <h2>
-  {{title}}
+	{{title}}
 </h2>
-<button (click)="displayData()">Display</button>
-Count: <span>{{data}}</span>
+
+<h3>Index: </h3>
+<select [(ngModel)]="selectedIndex" (change)="onChange($event.target.value)">
+	<option
+		*ngFor="let index of indexes"
+		[value]="index">
+			{{index}}
+	</option>
+</select>
+
+<ul>
+	<li>
+		<button (click)="displayData()">Count</button>
+	</li>
+	<li>
+		<select [(ngModel)]="selectedNumField">
+			<option
+				*ngFor="let numField of numFields"
+				[value]="numField">
+					{{numField}}
+			</option>
+		</select>
+		<button (click)="avg()">Average</button>
+	</li>
+</ul>
+
+Result: <span>{{result}}</span>

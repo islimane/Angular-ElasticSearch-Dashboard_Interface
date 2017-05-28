@@ -46,4 +46,58 @@ export class Elasticsearch {
 		return Promise.reject(error.message || error);
 	}
 
+	public avg(index: string, field: string): PromiseLike<number>{
+		return this.clientElasticsearch.search({
+				"index": index,
+				"body": {
+						"size" : 0,
+						"aggs" : {
+								"avg_grade" : {
+										"avg" : {
+												"field": field
+										}
+								}
+						}
+				}
+		})
+		.then(
+			response => response.aggregations.avg_grade.value,
+			this.handleError
+		);
+	}
+
+	private map(index): PromiseLike<any> {
+		return this.clientElasticsearch.indices.getMapping(
+			{
+				index: index
+			}
+		)
+		.then(
+			response => response,
+			this.handleError
+		);
+	}
+
+	public getIndexNumFields(index): PromiseLike<string[]> {
+		return this.map(index).then(function(response){
+			var mappings = response[index].mappings;
+
+			// this is beacause the mapping field is different for
+			// each index, so we take the first field
+			var props = mappings[Object.keys(mappings)[0]].properties;
+
+			var numProps = [];
+			console.log(props);
+			for(var propName in props){
+				if(['integer', 'long'].indexOf(props[propName].type)>=0){
+					console.log(propName);
+					numProps.push(propName);
+				}
+			}
+
+			return numProps;
+		});
+
+	}
+
 }
