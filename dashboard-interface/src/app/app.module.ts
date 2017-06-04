@@ -5,11 +5,14 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { DataService } from './data.service';
+import { MetricsComponent } from './metrics.component';
+
 import { Elasticsearch } from './elasticsearch';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		MetricsComponent
 	],
 	imports: [
 		BrowserModule,

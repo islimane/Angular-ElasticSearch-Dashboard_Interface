@@ -3,7 +3,7 @@
 </h2>
 
 <h3>Index: </h3>
-<select [(ngModel)]="selectedIndex" (change)="onChange($event.target.value)">
+<select [(ngModel)]="selectedIndex">
 	<option
 		*ngFor="let index of indexes"
 		[value]="index">
@@ -11,20 +11,12 @@
 	</option>
 </select>
 
-<ul>
-	<li>
-		<button (click)="displayData()">Count</button>
-	</li>
-	<li>
-		<select [(ngModel)]="selectedNumField">
-			<option
-				*ngFor="let numField of numFields"
-				[value]="numField">
-					{{numField}}
-			</option>
-		</select>
-		<button (click)="avg()">Average</button>
-	</li>
-</ul>
+<select [(ngModel)]="selectedVisualization">
+	<option
+		*ngFor="let visualization of visualizations"
+		[value]="visualization">
+			{{visualization}}
+	</option>
+</select>
 
-Result: <span>{{result}}</span>
+<metrics [index]="selectedIndex"></metrics>

@@ -46,22 +46,20 @@ export class Elasticsearch {
 		return Promise.reject(error.message || error);
 	}
 
-	public avg(index: string, field: string): PromiseLike<number>{
+	// avg, sum, min, max, median, std_deviation, unique_count
+	public numFieldCalculation(
+		index: string,
+		aggs: any): PromiseLike<any>{
+
 		return this.clientElasticsearch.search({
 				"index": index,
 				"body": {
 						"size" : 0,
-						"aggs" : {
-								"avg_grade" : {
-										"avg" : {
-												"field": field
-										}
-								}
-						}
+						"aggs" : aggs
 				}
 		})
 		.then(
-			response => response.aggregations.avg_grade.value,
+			response => response.aggregations,
 			this.handleError
 		);
 	}
@@ -87,10 +85,10 @@ export class Elasticsearch {
 			var props = mappings[Object.keys(mappings)[0]].properties;
 
 			var numProps = [];
-			console.log(props);
+			//console.log(props);
 			for(var propName in props){
 				if(['integer', 'long'].indexOf(props[propName].type)>=0){
-					console.log(propName);
+					//console.log(propName);
 					numProps.push(propName);
 				}
 			}

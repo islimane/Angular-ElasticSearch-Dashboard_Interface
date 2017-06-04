@@ -1,0 +1,26 @@
+<h4>Metrics: </h4>
+<p>
+	<span>Aggregation:</span>
+	<select [(ngModel)]="selectedAggregation">
+		<option
+			*ngFor="let aggregation of aggregationsArr"
+			(change)="onChange($event.target.value)"
+			[value]="aggregation">
+				{{aggregation}}
+		</option>
+	</select>
+	<select
+		*ngIf="isNumFieldAgg()"
+		[(ngModel)]="selectedNumField">
+		<option
+			*ngFor="let numField of numFields"
+			[value]="numField">
+				{{numField}}
+		</option>
+	</select>
+</p>
+<p>
+	<button (click)="processCalculation()">Calculate</button>
+</p>
+
+Result: <span *ngFor="let result of results">{{'[' + result + ']'}} </span>
