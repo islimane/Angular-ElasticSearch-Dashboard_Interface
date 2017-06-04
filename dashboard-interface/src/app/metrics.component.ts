@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
 
-import { Elasticsearch } from './elasticsearch';
+import { MetricsService } from './metrics.service';
 
 @Component({
 	selector: 'metrics',
-	templateUrl: './metrics.html'
+	templateUrl: './metrics.html',
+	providers: [ MetricsService ]
 })
 
 export class MetricsComponent implements OnChanges{
@@ -32,154 +33,59 @@ export class MetricsComponent implements OnChanges{
 	results: number[] = [0];
 
 	constructor(
-		public elasticsearch: Elasticsearch
+		public metricsService: MetricsService
 	) { }
 
 	ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
 		var previousValue = changes.index.previousValue;
 		var currentValue = changes.index.currentValue;
 		if(currentValue && previousValue!==currentValue)
-			this.setNumFields();
-	}
-
-	setNumFields(): void {
-		this.elasticsearch.getIndexNumFields(this.index)
-		.then(numFields => {
-			this.numFields = numFields;
-			this.selectedNumField = this.numFields[0];
-		});
-	}
-
-	count(): void {
-		console.log('this.elasticsearch', this.elasticsearch);
-		this.elasticsearch.count(this.index)
-		.then(count => this.results = [count]);
-	}
-
-	avg(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {'result': {
-					'avg':{'field':this.selectedNumField}
-				}
-			})
-			.then(aggregations => this.results = [aggregations.result.value]);
-		}
-	}
-
-	sum(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {'result': {
-					'sum':{'field':this.selectedNumField}
-				}
-			})
-			.then(aggregations => this.results = [aggregations.result.value]);
-		}
-	}
-
-	min(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {'result': {
-					'min':{'field':this.selectedNumField}
-				}
-			})
-			.then(aggregations => this.results = [aggregations.result.value]);
-		}
-	}
-
-	max(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {'result': {
-					'max':{'field':this.selectedNumField}
-				}
-			})
-			.then(aggregations => this.results = [aggregations.result.value]);
-		}
-	}
-
-	median(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {'result': {
-					'percentiles':
-						{
-							'field':this.selectedNumField,
-							'percents': [50]
-						}
-			}})
-			.then(aggregations =>
-				this.results = [aggregations.result.values['50.0']]
-			);
-		}
-	}
-
-	stdDeviation(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {
-					'grades_stats': {
-						'extended_stats':
-							{
-								'field':this.selectedNumField,
-								'sigma': 2
-							}
-					}
-			})
-			.then(aggregations =>
-				this.results = [
-					aggregations.grades_stats.std_deviation_bounds.lower,
-					aggregations.grades_stats.std_deviation_bounds.upper
-				]
-			);
-		}
-	}
-
-	uniqueCount(): void {
-		if(this.index && this.selectedNumField){
-			this.elasticsearch.numFieldCalculation(
-				this.index, {'result': {
-					'cardinality':{'field':this.selectedNumField}
-				}
-			})
-			.then(aggregations => this.results = [aggregations.result.value]);
-		}
+			this.metricsService.getNumFields(this.index).then(numFields => {
+				this.numFields = numFields;
+				this.selectedNumField = this.numFields[0];
+			});
 	}
 
 	processCalculation(value): void{
 		switch(this.selectedAggregation){
 			case 'Count': {
-				this.count();
+				this.metricsService.count(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			case 'Average': {
-				this.avg();
+				this.metricsService.avg(this.index, this.selectedNumField)
+				.then();
 				break;
 			}
 			case 'Sum': {
-				this.sum();
+				this.metricsService.sum(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			case 'Min': {
-				this.min();
+				this.metricsService.min(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			case 'Max': {
-				this.max();
+				this.metricsService.max(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			case 'Median': {
-				this.median();
+				this.metricsService.median(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			case 'Standard Deviation': {
-				this.stdDeviation();
+				this.metricsService.stdDeviation(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			case 'Unique Count': {
-				this.uniqueCount();
+				this.metricsService.uniqueCount(this.index, this.selectedNumField)
+				.then(results => this.results = results);
 				break;
 			}
 			default: {
