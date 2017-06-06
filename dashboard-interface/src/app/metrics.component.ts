@@ -1,6 +1,10 @@
 import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
+import { FormGroup, FormBuilder} from '@angular/forms';
 
 import { MetricsService } from './metrics.service';
+
+import { maxValidator } from './shared/validators.directive';
+
 
 @Component({
 	selector: 'metrics',
@@ -10,6 +14,16 @@ import { MetricsService } from './metrics.service';
 
 export class MetricsComponent implements OnChanges{
 	@Input() index: string;
+
+	percentileForm: FormGroup;
+	formErrors = {
+		'percentileBox': ''
+	};
+	validationMessages = {
+		'percentileBox': {
+			'maxValue': 'Percentile value can\'t be greater tha 100.'
+		}
+	};
 
 	numFields: string[] = [];
 	selectedNumField: string = '';
@@ -33,8 +47,13 @@ export class MetricsComponent implements OnChanges{
 	results: number[] = [0];
 
 	constructor(
-		public metricsService: MetricsService
+		public metricsService: MetricsService,
+		private fb: FormBuilder
 	) { }
+
+	ngOnInit(): void{
+		this.buildForm();
+	}
 
 	ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
 		var previousValue = changes.index.previousValue;
@@ -44,6 +63,42 @@ export class MetricsComponent implements OnChanges{
 				this.numFields = numFields;
 				this.selectedNumField = this.numFields[0];
 			});
+	}
+
+	buildForm(): void {
+		this.percentileForm = this.fb.group({
+			'percentileBox': ['', [
+					maxValidator(100)
+				]
+			]
+		});
+
+		this.percentileForm.valueChanges
+			.subscribe(data => this.onValueChanged(data));
+
+		this.onValueChanged(); // (re)set validation messages now
+	}
+
+	onValueChanged(data?: any) {
+		if (!this.percentileForm) { return; }
+		const form = this.percentileForm;
+
+		for (const field in this.formErrors) {
+			// clear previous error message (if any)
+			this.formErrors[field] = '';
+			const control = form.get(field);
+
+			if (control && control.dirty && !control.valid) {
+				const messages = this.validationMessages[field];
+				for (const key in control.errors) {
+					this.formErrors[field] += messages[key] + ' ';
+				}
+			}
+		}
+	}
+
+	addPercentile(value: string): void{
+		console.log(value);
 	}
 
 	processCalculation(value): void{

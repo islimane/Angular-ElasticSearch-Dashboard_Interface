@@ -2,21 +2,30 @@
 	{{title}}
 </h2>
 
-<h3>Index: </h3>
-<select [(ngModel)]="selectedIndex">
-	<option
-		*ngFor="let index of indexes"
-		[value]="index">
-			{{index}}
-	</option>
-</select>
+<h3>Select: </h3>
 
-<select [(ngModel)]="selectedVisualization">
-	<option
-		*ngFor="let visualization of visualizations"
-		[value]="visualization">
-			{{visualization}}
-	</option>
-</select>
+<p>
+	<span>Index:</span>
+	<select [(ngModel)]="selectedIndex">
+		<option
+			*ngFor="let index of indexes"
+			[value]="index">
+				{{index}}
+		</option>
+	</select>
+</p>
 
-<metrics [index]="selectedIndex"></metrics>
+<p>
+	<span>Visualization:</span>
+	<select [(ngModel)]="selectedVisualization">
+		<option
+			*ngFor="let visualization of visualizations"
+			[value]="visualization">
+				{{visualization}}
+		</option>
+	</select>
+</p>
+
+<div *ngIf="selectedVisualization==='Metric'">
+	<metrics [index]="selectedIndex"></metrics>
+</div>
