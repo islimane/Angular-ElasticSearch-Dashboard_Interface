@@ -101,6 +101,33 @@ export class MetricsService {
 		}
 	}
 
+	percentiles(
+		index: string,
+		selectedNumField: string,
+		percentileValues: number[]): PromiseLike<any> {
+		if(index && selectedNumField){
+			return this.elasticsearch.numFieldCalculation(
+				index, {
+					'result': {
+						'percentiles':
+							{
+								'field':selectedNumField,
+								'percents': percentileValues
+							}
+					}
+			})
+			.then(function(aggregations){
+				var results = [];
+				for(var percentile in aggregations.result.values){
+					results.push(
+						Math.round(aggregations.result.values[percentile]*100)/100
+					);
+				}
+				return results;
+			});
+		}
+	}
+
 	uniqueCount(index: string, selectedNumField: string): PromiseLike<any> {
 		if(index && selectedNumField){
 			return this.elasticsearch.numFieldCalculation(

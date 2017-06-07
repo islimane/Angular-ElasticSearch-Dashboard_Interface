@@ -24,6 +24,7 @@ export class MetricsComponent implements OnChanges{
 			'maxValue': 'Percentile value can\'t be greater tha 100.'
 		}
 	};
+	percentileValues: number[] = [];
 
 	numFields: string[] = [];
 	selectedNumField: string = '';
@@ -36,12 +37,13 @@ export class MetricsComponent implements OnChanges{
 		'Max',
 		'Median',
 		'Standard Deviation',
-		'Unique Count'
+		'Unique Count',
+		'Percentiles'
 	];
 	selectedAggregation: string = this.aggregationsArr[0];
 	numFieldAgg: string[] = [
 		'Average', 'Sum', 'Min', 'Max', 'Median', 'Standard Deviation',
-		'Unique Count'
+		'Unique Count', 'Percentiles'
 	];
 
 	results: number[] = [0];
@@ -99,6 +101,12 @@ export class MetricsComponent implements OnChanges{
 
 	addPercentile(value: string): void{
 		console.log(value);
+		var percentile = parseInt(value);
+		if(!isNaN(percentile)){
+			this.percentileValues = Array.from(
+				new Set(this.percentileValues).add(percentile)
+			).sort((a,b) => a - b);
+		}
 	}
 
 	processCalculation(value): void{
@@ -141,6 +149,15 @@ export class MetricsComponent implements OnChanges{
 			case 'Unique Count': {
 				this.metricsService.uniqueCount(this.index, this.selectedNumField)
 				.then(results => this.results = results);
+				break;
+			}
+			case 'Percentiles': {
+				if(this.percentileValues.length>0)
+					this.metricsService.percentiles(
+						this.index,
+						this.selectedNumField,
+						this.percentileValues
+					).then(results => this.results = results);
 				break;
 			}
 			default: {
