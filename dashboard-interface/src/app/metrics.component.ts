@@ -15,16 +15,21 @@ import { maxValidator } from './shared/validators.directive';
 export class MetricsComponent implements OnChanges{
 	@Input() index: string;
 
-	percentileForm: FormGroup;
+	form: FormGroup;
 	formErrors = {
-		'percentileBox': ''
+		'percentileBox': '',
+		'percentileRanks': ''
 	};
 	validationMessages = {
 		'percentileBox': {
 			'maxValue': 'Percentile value can\'t be greater tha 100.'
-		}
+		},
+		'percentileRanks': {}
 	};
+
 	percentileValues: number[] = [];
+
+	percentileRankValues: number[] = [];
 
 	numFields: string[] = [];
 	selectedNumField: string = '';
@@ -38,12 +43,13 @@ export class MetricsComponent implements OnChanges{
 		'Median',
 		'Standard Deviation',
 		'Unique Count',
-		'Percentiles'
+		'Percentiles',
+		'Percentile Ranks'
 	];
 	selectedAggregation: string = this.aggregationsArr[0];
 	numFieldAgg: string[] = [
 		'Average', 'Sum', 'Min', 'Max', 'Median', 'Standard Deviation',
-		'Unique Count', 'Percentiles'
+		'Unique Count', 'Percentiles', 'Percentile Ranks'
 	];
 
 	results: number[] = [0];
@@ -68,22 +74,23 @@ export class MetricsComponent implements OnChanges{
 	}
 
 	buildForm(): void {
-		this.percentileForm = this.fb.group({
+		this.form = this.fb.group({
 			'percentileBox': ['', [
 					maxValidator(100)
 				]
-			]
+			],
+			'percentileRanks': ['', []]
 		});
 
-		this.percentileForm.valueChanges
+		this.form.valueChanges
 			.subscribe(data => this.onValueChanged(data));
 
 		this.onValueChanged(); // (re)set validation messages now
 	}
 
 	onValueChanged(data?: any) {
-		if (!this.percentileForm) { return; }
-		const form = this.percentileForm;
+		if (!this.form) { return; }
+		const form = this.form;
 
 		for (const field in this.formErrors) {
 			// clear previous error message (if any)
@@ -105,6 +112,16 @@ export class MetricsComponent implements OnChanges{
 		if(!isNaN(percentile)){
 			this.percentileValues = Array.from(
 				new Set(this.percentileValues).add(percentile)
+			).sort((a,b) => a - b);
+		}
+	}
+
+	addPercentileRank(value: string): void{
+		console.log(value);
+		var percentile = parseInt(value);
+		if(!isNaN(percentile)){
+			this.percentileRankValues = Array.from(
+				new Set(this.percentileRankValues).add(percentile)
 			).sort((a,b) => a - b);
 		}
 	}
@@ -157,6 +174,15 @@ export class MetricsComponent implements OnChanges{
 						this.index,
 						this.selectedNumField,
 						this.percentileValues
+					).then(results => this.results = results);
+				break;
+			}case 'Percentile Ranks':{
+				console.log('is Percentile Ranks');
+				if(this.percentileRankValues.length>0)
+					this.metricsService.percentileRanks(
+						this.index,
+						this.selectedNumField,
+						this.percentileRankValues
 					).then(results => this.results = results);
 				break;
 			}

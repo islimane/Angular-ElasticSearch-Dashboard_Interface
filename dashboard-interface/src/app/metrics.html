@@ -23,7 +23,7 @@
 
 	<div *ngIf="selectedAggregation==='Percentiles'">
 			<div>
-				<form novalidate [formGroup]="percentileForm">
+				<form novalidate [formGroup]="form">
 					<input
 						#percentileBox
 						formControlName="percentileBox"
@@ -43,9 +43,30 @@
 					{{'[' + value + ']'}}
 				</span>
 			</div>
-		<!--<p>
-			Percentiles: <span *ngFor="let result of results">{{'[' + result + ']'}} </span>
-		</p>-->
+	</div>
+
+	<div *ngIf="selectedAggregation==='Percentile Ranks'">
+			<div>
+				<form novalidate [formGroup]="form">
+					<input
+						#percentileRanks
+						formControlName="percentileRanks"
+						type="number"
+					/>
+				</form>
+				<span
+					*ngIf="formErrors.percentileRanks">
+					{{ formErrors.percentileRanks }}
+				</span>
+				<div *ngIf="!formErrors.percentileRanks">
+					<button (click)="addPercentileRank(percentileRanks.value)">Add</button>
+				</div>
+			</div>
+			<div>
+				<span *ngFor="let value of percentileRankValues">
+					{{'[' + value + ']'}}
+				</span>
+			</div>
 	</div>
 
 	<p>
