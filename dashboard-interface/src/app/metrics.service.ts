@@ -14,6 +14,11 @@ export class MetricsService {
 		.then(numFields => numFields);
 	}
 
+	getTextFields(index: string): PromiseLike<string[]> {
+		return this.elasticsearch.getIndexTextFields(index)
+		.then(textFields => textFields);
+	}
+
 	count(index: string, selectedNumField: string): PromiseLike<number[]> {
 		console.log('this.elasticsearch', this.elasticsearch);
 		return this.elasticsearch.count(index)
@@ -101,6 +106,17 @@ export class MetricsService {
 		}
 	}
 
+	uniqueCount(index: string, selectedNumField: string): PromiseLike<any> {
+		if(index && selectedNumField){
+			return this.elasticsearch.numFieldCalculation(
+				index, {'result': {
+					'cardinality':{'field':selectedNumField}
+				}
+			})
+			.then(aggregations => [aggregations.result.value]);
+		}
+	}
+
 	percentiles(
 		index: string,
 		selectedNumField: string,
@@ -155,14 +171,95 @@ export class MetricsService {
 		}
 	}
 
-	uniqueCount(index: string, selectedNumField: string): PromiseLike<any> {
-		if(index && selectedNumField){
-			return this.elasticsearch.numFieldCalculation(
-				index, {'result': {
-					'cardinality':{'field':selectedNumField}
-				}
-			})
-			.then(aggregations => [aggregations.result.value]);
+	topHits(
+		index: string,
+		selectedField: string,
+		sortOn: string,
+		size: number,
+		order: string,
+		aggType: string): PromiseLike<any> {
+		var sortOnObj = {};
+		sortOnObj[sortOn] = {
+			'order': order
 		}
+
+		if(index && selectedField){
+			var that = this;
+			return this.elasticsearch.numFieldCalculation(
+				index,
+				{
+					'result': {
+						'top_hits': {
+							"sort": [ sortOnObj ],
+							"_source": {
+								"includes": [ selectedField ]
+							},
+							"size" : size
+						}
+					}
+				}
+			).then(function(aggregations){
+				var hitsArr = aggregations.result.hits.hits;
+				return that.getTopHitsResut(hitsArr, selectedField, aggType);
+			});
+		}
+	}
+
+
+	private getTopHitsResut(
+		hits: any[],
+		selectedField: string,
+		aggType: string): any[]{
+
+		var results = [];
+
+		if(aggType==='Concatenate'){
+			var concatenation = '';
+			for(var i=0; i<hits.length; i++){
+				concatenation += hits[i]._source[selectedField]
+				if(i<(hits.length-1)) concatenation += ', '
+			}
+			results.push(concatenation);
+		}else if(aggType==='Sum'){
+			var sum = 0;
+			for(var i=0; i<hits.length; i++){
+				sum += hits[i]._source[selectedField];
+			}
+			results.push(sum);
+		}else if(aggType==='Max'){
+			var max = null;
+			for(var i=0; i<hits.length; i++){
+				var hitValue = hits[i]._source[selectedField];
+				if(max===null){
+					max = hits[i]._source[selectedField];
+				}else if(hitValue>max){
+					max = hitValue;
+				}
+			}
+			results.push(max);
+		}else if(aggType==='Min'){
+			var min = null;
+			for(var i=0; i<hits.length; i++){
+				var hitValue = hits[i]._source[selectedField];
+				if(min===null){
+					min = hits[i]._source[selectedField];
+				}else if(hitValue<min){
+					min = hitValue;
+				}
+			}
+			results.push(min);
+		}else if(aggType==='Average'){
+			var avg = null;
+			var sum = 0;
+			for(var i=0; i<hits.length; i++){
+				sum += hits[i]._source[selectedField];
+			}
+
+			avg = (hits.length>0) ? sum/hits.length : 0;
+
+			results.push(avg);
+		}
+
+		return results;
 	}
 }

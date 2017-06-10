@@ -18,21 +18,41 @@ export class MetricsComponent implements OnChanges{
 	form: FormGroup;
 	formErrors = {
 		'percentileBox': '',
-		'percentileRanks': ''
+		'percentileRanks': '',
+		'topHits': ''
 	};
 	validationMessages = {
 		'percentileBox': {
 			'maxValue': 'Percentile value can\'t be greater tha 100.'
 		},
-		'percentileRanks': {}
+		'percentileRanks': {},
+		'topHits': {}
 	};
 
 	percentileValues: number[] = [];
 
 	percentileRankValues: number[] = [];
 
+	topHitAggregations: string[] = [
+		'Concatenate',
+		'Average',
+		'Max',
+		'Min',
+		'Sum'
+	];
+	topHitFilteredAggregations: string[] = this.topHitAggregations;
+	selectedTopHitAgg: string = this.topHitAggregations[0];
+	selectedSortField: string = '';
+	selectedTopHitField: string = '';
+	hitsSize: number = 1;
+	orders: string[] = ['desc', 'asc'];
+	selectedOrder: string = this.orders[0];
+
 	numFields: string[] = [];
 	selectedNumField: string = '';
+
+	textFields: string[] = [];
+	selectedTextField: string = '';
 
 	aggregationsArr: string[] = [
 		'Count',
@@ -44,12 +64,13 @@ export class MetricsComponent implements OnChanges{
 		'Standard Deviation',
 		'Unique Count',
 		'Percentiles',
-		'Percentile Ranks'
+		'Percentile Ranks',
+		'Top Hit'
 	];
 	selectedAggregation: string = this.aggregationsArr[0];
 	numFieldAgg: string[] = [
 		'Average', 'Sum', 'Min', 'Max', 'Median', 'Standard Deviation',
-		'Unique Count', 'Percentiles', 'Percentile Ranks'
+		'Unique Count', 'Percentiles', 'Percentile Ranks', 'Top Hit'
 	];
 
 	results: number[] = [0];
@@ -66,11 +87,19 @@ export class MetricsComponent implements OnChanges{
 	ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
 		var previousValue = changes.index.previousValue;
 		var currentValue = changes.index.currentValue;
-		if(currentValue && previousValue!==currentValue)
+		if(currentValue && previousValue!==currentValue){
 			this.metricsService.getNumFields(this.index).then(numFields => {
 				this.numFields = numFields;
 				this.selectedNumField = this.numFields[0];
+				this.selectedTopHitField = this.numFields[0];
 			});
+
+			this.metricsService.getTextFields(this.index).then(textFields => {
+				this.textFields = textFields;
+				this.selectedTextField = this.textFields[0];
+				this.selectedSortField = this.textFields[0];
+			});
+		}
 	}
 
 	buildForm(): void {
@@ -79,7 +108,8 @@ export class MetricsComponent implements OnChanges{
 					maxValidator(100)
 				]
 			],
-			'percentileRanks': ['', []]
+			'percentileRanks': ['', []],
+			'topHits': ['', []]
 		});
 
 		this.form.valueChanges
@@ -104,6 +134,21 @@ export class MetricsComponent implements OnChanges{
 				}
 			}
 		}
+	}
+
+	setAggregations(): void{
+		var aggregations = [];
+
+		if(this.textFields.indexOf(this.selectedTopHitField)!==-1){
+			aggregations.push(this.topHitAggregations[0]);
+		}else{
+			for(var i=0; i<this.topHitAggregations.length; i++){
+				aggregations.push(this.topHitAggregations[i]);
+			}
+		}
+
+		this.topHitFilteredAggregations = aggregations;
+		this.selectedTopHitAgg = this.topHitAggregations[0];
 	}
 
 	addPercentile(value: string): void{
@@ -177,12 +222,22 @@ export class MetricsComponent implements OnChanges{
 					).then(results => this.results = results);
 				break;
 			}case 'Percentile Ranks':{
-				console.log('is Percentile Ranks');
 				if(this.percentileRankValues.length>0)
 					this.metricsService.percentileRanks(
 						this.index,
 						this.selectedNumField,
 						this.percentileRankValues
+					).then(results => this.results = results);
+				break;
+			}case 'Top Hit':{
+				if(this.hitsSize && this.hitsSize>0)
+					this.metricsService.topHits(
+						this.index,
+						this.selectedTopHitField,
+						this.selectedSortField,
+						this.hitsSize,
+						this.selectedOrder,
+						this.selectedTopHitAgg
 					).then(results => this.results = results);
 				break;
 			}

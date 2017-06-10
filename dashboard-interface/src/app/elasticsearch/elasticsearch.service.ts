@@ -86,6 +86,7 @@ export class Elasticsearch {
 
 			var numProps = [];
 			//console.log(props);
+			console.log(mappings);
 			for(var propName in props){
 				if(['integer', 'long'].indexOf(props[propName].type)>=0){
 					//console.log(propName);
@@ -95,7 +96,28 @@ export class Elasticsearch {
 
 			return numProps;
 		});
+	}
 
+	public getIndexTextFields(index): PromiseLike<string[]> {
+		return this.map(index).then(function(response){
+			var mappings = response[index].mappings;
+
+			// this is beacause the mapping field is different for
+			// each index, so we take the first field
+			var props = mappings[Object.keys(mappings)[0]].properties;
+
+			var textProps = [];
+			//console.log(props);
+			console.log(mappings);
+			for(var propName in props){
+				if(['text'].indexOf(props[propName].type)>=0){
+					//console.log(propName);
+					textProps.push(propName);
+				}
+			}
+
+			return textProps;
+		});
 	}
 
 	public getIndices(): PromiseLike<string[]>{
