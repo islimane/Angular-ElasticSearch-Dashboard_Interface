@@ -1,0 +1,79 @@
+<div *ngIf="numFields.length>0">
+	<div>
+		<span>Field:</span>
+		<select
+			#selectedTopHit
+			(change)="setAggregations()"
+			[(ngModel)]="selectedField">
+			<option
+				*ngFor="let numField of numFields"
+				[value]="numField">
+					{{numField}}
+			</option>
+			<option
+				*ngFor="let textField of textFields"
+				[value]="textField">
+					{{textField}}
+			</option>
+		</select>
+	</div>
+
+	<div>
+		<span>Aggregate With:</span>
+		<select [(ngModel)]="selectedTopHitAgg">
+			<option
+				*ngFor="let aggregation of topHitFilteredAggregations"
+				(change)="onChange($event.target.value)"
+				[value]="aggregation">
+					{{aggregation}}
+			</option>
+		</select>
+	</div>
+
+	<div>
+		<form novalidate [formGroup]="form">
+			<input
+				#topHits
+				[(ngModel)]="hitsSize"
+				formControlName="topHits"
+				type="number"
+			/>
+		</form>
+		<span
+			*ngIf="formErrors.topHits">
+			{{ formErrors.topHits }}
+		</span>
+	</div>
+
+	<div>
+		<span>Sort On:</span>
+		<select
+			[(ngModel)]="selectedSortField">
+			<option
+				*ngFor="let numField of numFields"
+				[value]="numField">
+					{{numField}}
+			</option>
+			<option
+				*ngFor="let textField of textFields"
+				[value]="textField">
+					{{textField}}
+			</option>
+		</select>
+	</div>
+
+	<div>
+		<span>Order:</span>
+		<select
+			[(ngModel)]="selectedOrder">
+			<option
+				*ngFor="let order of orders"
+				[value]="order">
+					{{order}}
+			</option>
+		</select>
+	</div>
+
+<div *ngIf="numFields.length===0">
+	There is no number field to process this metric aggergation.
+</div>

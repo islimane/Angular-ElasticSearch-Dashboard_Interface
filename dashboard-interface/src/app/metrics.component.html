@@ -1,0 +1,60 @@
+<div>
+	<h4 *ngIf="widgetMode">Metrics: </h4>
+	<h3 *ngIf="!widgetMode">Metrics: </h3>
+	<div>
+		<span>Aggregation:</span>
+		<select [(ngModel)]="selectedAggregation">
+			<option
+				*ngFor="let aggregation of aggregationsArr"
+				(change)="onChange($event.target.value)"
+				[value]="aggregation">
+					{{aggregation}}
+			</option>
+		</select>
+	</div>
+
+	<div *ngIf="numFields.length>0 && isNumFieldAgg() && selectedAggregation!=='Top Hit'">
+		<span>Field:</span>
+		<select
+			[(ngModel)]="selectedNumField">
+			<option
+				*ngFor="let numField of numFields"
+				[value]="numField">
+					{{numField}}
+			</option>
+		</select>
+	</div>
+
+	<div *ngIf="selectedAggregation==='Percentiles'">
+		<percentiles-metric
+			[index]="index"
+			[numField]="selectedNumField"
+			(resultsEvent)="onResultsEvent($event)">
+		</percentiles-metric>
+	</div>
+
+	<div *ngIf="selectedAggregation==='Percentile Ranks'">
+		<percentileRanks-metric
+			[index]="index"
+			[numField]="selectedNumField"
+			(resultsEvent)="onResultsEvent($event)">
+		</percentileRanks-metric>
+	</div>
+
+	<div *ngIf="selectedAggregation==='Top Hit'">
+		<topHit-metric
+			[index]="index"
+			[numFields]="numFields"
+			(resultsEvent)="onResultsEvent($event)">
+		</topHit-metric>
+	</div>
+
+	<div *ngIf="!widgetMode">
+		<p>
+			<button (click)="processCalculation()">Calculate</button>
+		</p>
+
+		Result: <span *ngFor="let result of results">{{'[' + result + ']'}} </span>
+	</div>
+
+</div>

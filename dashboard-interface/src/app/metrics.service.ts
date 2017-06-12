@@ -205,7 +205,6 @@ export class MetricsService {
 		}
 	}
 
-
 	private getTopHitsResut(
 		hits: any[],
 		selectedField: string,

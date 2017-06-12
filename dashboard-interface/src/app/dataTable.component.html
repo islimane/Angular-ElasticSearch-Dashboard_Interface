@@ -1,0 +1,16 @@
+<div>
+	<h3>Data Table: </h3>
+	<metrics
+		[index]="index"
+		[widgetMode]="true"
+		(resultsChange)="onResultChange($event)">
+	</metrics>
+
+	<div>
+		<p>
+			<button (click)="calculate()">Calculate</button>
+		</p>
+
+		Result: <span *ngFor="let result of results">{{'[' + result + ']'}} </span>
+	</div>
+</div>

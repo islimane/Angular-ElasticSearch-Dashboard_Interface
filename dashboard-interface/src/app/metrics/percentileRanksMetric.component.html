@@ -1,0 +1,29 @@
+<div *ngIf="numField">
+	<div>
+		<form novalidate [formGroup]="form">
+			<input
+				#percentileRanks
+				formControlName="percentileRanks"
+				type="number"
+			/>
+		</form>
+		<span
+			*ngIf="formErrors.percentileRanks">
+			{{ formErrors.percentileRanks }}
+		</span>
+		<div *ngIf="!formErrors.percentileRanks">
+			<button (click)="addPercentileRank(percentileRanks.value)">
+				Add
+			</button>
+		</div>
+	</div>
+	<div>
+		<span *ngFor="let value of percentileRankValues">
+			{{'[' + value + ']'}}
+		</span>
+	</div>
+</div>
+
+<div *ngIf="!numField">
+	There is no number field to process this metric aggergation.
+</div>

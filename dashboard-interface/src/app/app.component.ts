@@ -13,7 +13,7 @@ import { Elasticsearch } from './elasticsearch';
 export class AppComponent {
 	title: string = '';
 	visualizations: string[] = ['Metric', 'Data Table'];
-	selectedVisualization: string = this.visualizations[0];
+	selectedVisualization: string = this.visualizations[1];
 
 	indexes: string[] = [];
 	selectedIndex: string = '';

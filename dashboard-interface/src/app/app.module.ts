@@ -4,15 +4,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { DataService } from './data.service';
 import { MetricsComponent } from './metrics.component';
+import { DataTableComponent } from './dataTable.component';
+import { PercentilesMetricComponent } from './metrics/percentilesMetric.component';
+import { PercentileRanksMetricComponent } from './metrics/percentileRanksMetric.component';
+import { TopHitMetricComponent } from './metrics/topHitMetric.component';
+
+import { DataService } from './data.service';
+import { MetricsService } from './metrics.service';
 
 import { Elasticsearch } from './elasticsearch';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		MetricsComponent
+		MetricsComponent,
+		DataTableComponent,
+		PercentilesMetricComponent,
+		PercentileRanksMetricComponent,
+		TopHitMetricComponent
 	],
 	imports: [
 		BrowserModule,
@@ -22,7 +32,8 @@ import { Elasticsearch } from './elasticsearch';
 	],
 	providers: [
 		DataService,
-		Elasticsearch
+		Elasticsearch,
+		MetricsService
 	],
 	bootstrap: [AppComponent]
 })
