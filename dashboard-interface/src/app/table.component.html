@@ -1,0 +1,14 @@
+<div>
+	<table>
+		<thead>
+			<th *ngFor="let column of columns">
+				{{ column }}
+			</th>
+		</thead>
+		<tbody>
+			<tr *ngFor="let row of rows">
+				<td *ngFor="let field of row">{{ field }}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

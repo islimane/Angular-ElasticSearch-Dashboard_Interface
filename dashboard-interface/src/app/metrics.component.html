@@ -54,7 +54,13 @@
 			<button (click)="processCalculation()">Calculate</button>
 		</p>
 
-		Result: <span *ngFor="let result of results">{{'[' + result + ']'}} </span>
+		<div *ngIf="results.length">
+			Results:
+			<div *ngFor="let result of results">
+				<span>{{result.label}}: {{result.result}}</span>
+			</div>
+		</div>
+
 	</div>
 
 </div>

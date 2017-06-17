@@ -7,10 +7,20 @@
 	</metrics>
 
 	<div>
-		<p>
+		<div>
 			<button (click)="calculate()">Calculate</button>
-		</p>
+		</div>
 
-		Result: <span *ngFor="let result of results">{{'[' + result + ']'}} </span>
+		Results:
+		<div *ngFor="let result of results">
+			<span>{{result.label}}: {{result.result}}</span>
+		</div>
 	</div>
+</div>
+
+<div *ngIf="results.length>0">
+	<dataTable-table
+		[columns]="columns"
+		[rows]="rows">
+	</dataTable-table>
 </div>

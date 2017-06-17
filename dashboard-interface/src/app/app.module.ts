@@ -9,6 +9,7 @@ import { DataTableComponent } from './dataTable.component';
 import { PercentilesMetricComponent } from './metrics/percentilesMetric.component';
 import { PercentileRanksMetricComponent } from './metrics/percentileRanksMetric.component';
 import { TopHitMetricComponent } from './metrics/topHitMetric.component';
+import { TableComponent } from './table.component';
 
 import { DataService } from './data.service';
 import { MetricsService } from './metrics.service';
@@ -22,7 +23,8 @@ import { Elasticsearch } from './elasticsearch';
 		DataTableComponent,
 		PercentilesMetricComponent,
 		PercentileRanksMetricComponent,
-		TopHitMetricComponent
+		TopHitMetricComponent,
+		TableComponent
 	],
 	imports: [
 		BrowserModule,

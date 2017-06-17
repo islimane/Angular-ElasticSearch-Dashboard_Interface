@@ -19,10 +19,13 @@ export class MetricsService {
 		.then(textFields => textFields);
 	}
 
-	count(index: string, selectedNumField: string): PromiseLike<number[]> {
+	count(index: string, selectedNumField: string): PromiseLike<any[]> {
 		console.log('this.elasticsearch', this.elasticsearch);
 		return this.elasticsearch.count(index)
-		.then(count => [count]);
+		.then(count => [{
+				label: 'Count',
+				result: count
+		}]);
 	}
 
 	avg(index: string, selectedNumField: string): PromiseLike<any> {
@@ -32,7 +35,10 @@ export class MetricsService {
 					'avg':{'field':selectedNumField}
 				}
 			})
-			.then(aggregations => [aggregations.result.value]);
+			.then(aggregations => [{
+					label: ('Average ' + selectedNumField),
+					result: aggregations.result.value
+			}]);
 		}
 	}
 
@@ -43,7 +49,10 @@ export class MetricsService {
 					'sum':{'field':selectedNumField}
 				}
 			})
-			.then(aggregations => [aggregations.result.value]);
+			.then(aggregations => [{
+					label: ('Sum of ' + selectedNumField),
+					result: aggregations.result.value
+			}]);
 		}
 	}
 
@@ -54,7 +63,10 @@ export class MetricsService {
 					'min':{'field':selectedNumField}
 				}
 			})
-			.then(aggregations => [aggregations.result.value]);
+			.then(aggregations => [{
+						label: ('Min ' + selectedNumField),
+						result: aggregations.result.value
+			}]);
 		}
 	}
 
@@ -65,7 +77,10 @@ export class MetricsService {
 					'max':{'field':selectedNumField}
 				}
 			})
-			.then(aggregations => [aggregations.result.value]);
+			.then(aggregations => [{
+						label: ('Max ' + selectedNumField),
+						result: aggregations.result.value
+			}]);
 		}
 	}
 
@@ -79,9 +94,10 @@ export class MetricsService {
 							'percents': [50]
 						}
 			}})
-			.then(aggregations =>
-				[aggregations.result.values['50.0']]
-			);
+			.then(aggregations => [{
+						label: ('50th percentile of ' + selectedNumField),
+						result: aggregations.result.values['50.0']
+			}]);
 		}
 	}
 
@@ -99,8 +115,14 @@ export class MetricsService {
 			})
 			.then(aggregations =>
 				[
-					aggregations.grades_stats.std_deviation_bounds.lower,
-					aggregations.grades_stats.std_deviation_bounds.upper
+					{
+						label: ('Lower Standard Deviation of ' + selectedNumField),
+						result: aggregations.grades_stats.std_deviation_bounds.lower
+					},
+					{
+						label: ('Upper Standard Deviation of ' + selectedNumField),
+						result: aggregations.grades_stats.std_deviation_bounds.upper
+					}
 				]
 			);
 		}
@@ -136,7 +158,10 @@ export class MetricsService {
 				var results = [];
 				for(var percentile in aggregations.result.values){
 					results.push(
-						Math.round(aggregations.result.values[percentile]*100)/100
+						{
+							label: (percentile + 'th percentile of ' + selectedNumField),
+							result: Math.round(aggregations.result.values[percentile]*100)/100
+						}
 					);
 				}
 				return results;
@@ -162,9 +187,13 @@ export class MetricsService {
 			.then(function(aggregations){
 				var results = [];
 				for(var percentile in aggregations.result.values){
-					results.push(
-						Math.round(aggregations.result.values[percentile]*100)/100
-					);
+					results.push({
+						label: (
+							'Percentile rank ' +
+							percentile + ' of "' + selectedNumField + '"'
+						),
+						result: Math.round(aggregations.result.values[percentile]*100)/100
+					});
 				}
 				return results;
 			});

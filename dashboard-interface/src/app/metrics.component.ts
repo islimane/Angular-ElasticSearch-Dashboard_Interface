@@ -25,7 +25,7 @@ export class MetricsComponent implements OnChanges{
 	@Input() widgetMode: boolean = false;
 	@Output() resultsChange = new EventEmitter<number[]>();
 
-	results: number[] = [0];
+	results: number[] = [];
 
 	numFields: string[] = [];
 	selectedNumField: string = '';
