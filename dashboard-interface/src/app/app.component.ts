@@ -17,6 +17,7 @@ export class AppComponent {
 
 	indexes: string[] = [];
 	selectedIndex: string = '';
+	numFields: string[] = [];
 
 	constructor(
 		private dataService: DataService,
@@ -25,15 +26,34 @@ export class AppComponent {
 
 	ngOnInit(): void {
 		this.getTitle();
-		//console.log(this.elasticsearch);
+		this.setIndexes();
+	}
+
+	onIndexChange(newIndex): void {
+		this.setNumFields();
+	}
+
+	setIndexes(): void {
 		var that = this;
 		this.elasticsearch.getIndices().then(function(indices){
 			that.indexes = indices;
 			that.selectedIndex = (that.indexes.length>0) ? that.indexes[0] : '';
+			that.setNumFields();
 		});
+	}
+
+	setNumFields(): void {
+		this.elasticsearch.getIndexNumFields(this.selectedIndex).then(
+			numFields => this.numFields = numFields
+		);
+	}
+
+	getNumFields(index: string): PromiseLike<string[]> {
+		return ;
 	}
 
 	getTitle(): void {
 		this.title = this.dataService.getTitle();
 	}
+
 }

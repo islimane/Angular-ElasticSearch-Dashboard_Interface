@@ -4,18 +4,21 @@
 
 <h3>Select: </h3>
 
-<p>
+<div>
 	<span>Index:</span>
-	<select [(ngModel)]="selectedIndex">
+	<select
+		#index
+		[(ngModel)]="selectedIndex"
+		(change)="onIndexChange(index.value)">
 		<option
 			*ngFor="let index of indexes"
 			[value]="index">
 				{{index}}
 		</option>
 	</select>
-</p>
+</div>
 
-<p>
+<div>
 	<span>Visualization:</span>
 	<select [(ngModel)]="selectedVisualization">
 		<option
@@ -24,12 +27,18 @@
 				{{visualization}}
 		</option>
 	</select>
-</p>
+</div>
 
 <div *ngIf="selectedVisualization==='Metric'">
-	<metrics [index]="selectedIndex"></metrics>
+	<metrics
+		[index]="selectedIndex"
+		[numFields]="numFields">
+	</metrics>
 </div>
 
 <div *ngIf="selectedVisualization==='Data Table'">
-	<data-table [index]="selectedIndex"></data-table>
+	<data-table
+	[index]="selectedIndex"
+	[numFields]="numFields">
+</data-table>
 </div>

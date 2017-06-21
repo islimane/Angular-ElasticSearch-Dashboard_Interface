@@ -80,12 +80,13 @@ export class PercentilesMetricComponent {
 		}
 	}
 
-	calculate(): void {
+	calculate(dataTableData: any): void {
 		if(this.percentileValues.length>0 && this.index && this.numField)
 			this.metricsService.percentiles(
 				this.index,
 				this.numField,
-				this.percentileValues
+				this.percentileValues,
+				dataTableData
 			).then(results => {
 				this.resultsEvent.emit(results);
 			});

@@ -51,7 +51,7 @@
 
 	<div *ngIf="!widgetMode">
 		<p>
-			<button (click)="processCalculation()">Calculate</button>
+			<button (click)="processCalculation(null)">Calculate</button>
 		</p>
 
 		<div *ngIf="results.length">

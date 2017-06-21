@@ -2,23 +2,58 @@
 	<h3>Data Table: </h3>
 	<metrics
 		[index]="index"
+		[numFields]="numFields"
 		[widgetMode]="true"
 		(resultsChange)="onResultChange($event)">
 	</metrics>
 
+	<h4>buckets:</h4>
 	<div>
-		<div>
-			<button (click)="calculate()">Calculate</button>
-		</div>
+			<span>Aggregation:</span>
+			<select [(ngModel)]="selectedAgg">
+				<option
+					*ngFor="let aggregation of aggregations"
+					[value]="aggregation">
+						{{aggregation}}
+				</option>
+			</select>
+	</div>
 
-		Results:
-		<div *ngFor="let result of results">
-			<span>{{result.label}}: {{result.result}}</span>
-		</div>
+	<div>
+			<span>Field:</span>
+			<select [(ngModel)]="selectedNumField">
+				<option
+					*ngFor="let numField of numFields"
+					[value]="numField">
+						{{numField}}
+				</option>
+			</select>
+	</div>
+
+	<div>
+			<span>Interval:</span>
+			<form novalidate [formGroup]="form">
+				<input
+					#intervalInp
+					formControlName="intervalInp"
+					type="number"
+					(change)="onIntervalChange(intervalInp.value)"
+				/>
+				<span
+					*ngIf="formErrors.intervalInp">
+					{{ formErrors.intervalInp }}
+				</span>
+			</form>
 	</div>
 </div>
 
-<div *ngIf="results.length>0">
+<div>
+	<div>
+		<button (click)="calculate()">Calculate</button>
+	</div>
+</div>
+
+<div *ngIf="rows.length>0">
 	<dataTable-table
 		[columns]="columns"
 		[rows]="rows">

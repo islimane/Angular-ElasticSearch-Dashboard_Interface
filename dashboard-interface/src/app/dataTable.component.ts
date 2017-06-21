@@ -1,6 +1,9 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, SimpleChange } from '@angular/core';
+import { FormGroup, FormBuilder} from '@angular/forms';
 
 import { MetricsComponent } from './metrics.component';
+
+import { minValidator } from './shared/validators.directive';
 
 @Component({
 	selector: 'data-table',
@@ -12,33 +15,144 @@ export class DataTableComponent {
 	private metricsComponent: MetricsComponent
 
 	@Input() index: string;
+	@Input() numFields: string[] = [];
 
 	results: any[] = [];
-
 	columns: string[] = []
-
 	rows: string[][] = [];
 
-	calculate(): void{
-		this.metricsComponent.processCalculation();
+	aggregations: string[] = [
+		'Date Histogram',
+		'Histogram',
+		'Range',
+		'Date Range',
+		'IPv4 Range',
+		'Terms',
+		'Filters',
+		'Significant Terms',
+		'Geohash'
+	];
+	selectedAgg: string = this.aggregations[1];
+
+	selectedNumField: string;
+
+	interval: number = null;
+
+	form: FormGroup;
+	formErrors = {
+		'intervalInp': ''
+	};
+	validationMessages = {
+		'intervalInp': {
+			'minValue': 'Percentile value can\'t be lower than 0.'
+		}
+	};
+
+	constructor(
+		private fb: FormBuilder
+	) { }
+
+	ngOnInit(): void{
+		this.buildForm();
 	}
 
-	onResultChange(results): void{
-		this.resetTable();
-		console.log('results:', results);
-		this.results = results;
-		var row = [];
-		for(var i=0; i<this.results.length; i++){
-			console.log(this.results[i]);
-			this.columns.push(this.results[i].label);
-			row.push(this.results[i].result);
-		}
+	// onResultChange(results): void{
+	// 	this.resetTable();
+	// 	console.log('results:', results);
+	// 	this.results = results;
+	// 	for(var i=0; i<this.results.length; i++){
+	// 		console.log(this.results[i]);
+	// 		this.columns.push(this.results[i].label);
+	// 		for(var k=0; k<this.results[i].result.length; k++){
+	// 			if(!this.rows[k])
+	// 				this.rows[k] = [];
+	// 			this.rows[k].push(this.results[i].result[k]);
+	// 		}
+	// 	}
+	// }
 
-		this.rows.push(row);
+	onResultChange(tableData): void{
+		this.resetTable();
+		console.log('results:', tableData);
+		this.columns = tableData.columns;
+		this.rows = tableData.rows;
+	}
+
+	ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+		console.log('changes.numFields:', changes.numFields);
+		var oldNumFields = (changes.numFields) ? changes.numFields.previousValue : '';
+		var newNumFields = (changes.numFields) ? changes.numFields.currentValue : '';
+		console.log('oldNumFields:', oldNumFields);
+		console.log('newNumFields:', newNumFields);
+		if(newNumFields && oldNumFields!==newNumFields){
+			this.selectedNumField = (this.numFields.length) ? this.numFields[0] : '';
+		}
+	}
+
+	buildForm(): void {
+		this.form = this.fb.group({
+			'intervalInp': ['', [
+					minValidator(0)
+				]
+			]
+		});
+
+		this.form.valueChanges
+			.subscribe(data => this.onValueChanged(data));
+
+		this.onValueChanged(); // (re)set validation messages now
+	}
+
+	onValueChanged(data?: any) {
+		if (!this.form) { return; }
+		const form = this.form;
+
+		for (const field in this.formErrors) {
+			// clear previous error message (if any)
+			this.formErrors[field] = '';
+			const control = form.get(field);
+
+			if (control && control.dirty && !control.valid) {
+				const messages = this.validationMessages[field];
+				for (const key in control.errors) {
+					this.formErrors[field] += messages[key] + ' ';
+				}
+			}
+		}
+	}
+
+	calculate(): void{
+		console.log('CALCULATE - interval:', this.interval);
+		var dataTableData = this.getDataTableData();
+		this.metricsComponent.processCalculation(dataTableData);
 	}
 
 	resetTable(): void{
 		this.columns = [];
 		this.rows = [];
+	}
+
+	onIntervalChange(value: number): void {
+		this.interval = value;
+		console.log(this.interval);
+	}
+
+	private getDataTableData(): any {
+		switch (this.selectedAgg) {
+			case 'Histogram':
+				return {
+					name: this.selectedAgg,
+					field: this.selectedNumField,
+					interval: this.interval
+				};
+			case 'Range':
+				return {
+					name: this.selectedAgg,
+					field: this.selectedNumField,
+					interval: null/*this.interval*/
+				};
+			default:
+				return null;
+		}
 	}
 }

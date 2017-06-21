@@ -75,12 +75,13 @@ export class PercentileRanksMetricComponent {
 		}
 	}
 
-	calculate(): void {
+	calculate(dataTableData: any): void {
 		if(this.percentileRankValues.length>0 && this.index && this.numField){
 			this.metricsService.percentileRanks(
 				this.index,
 				this.numField,
-				this.percentileRankValues
+				this.percentileRankValues,
+				dataTableData
 			).then(results => {
 				this.resultsEvent.emit(results);
 			});

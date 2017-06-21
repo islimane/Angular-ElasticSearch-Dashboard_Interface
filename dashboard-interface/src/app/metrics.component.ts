@@ -23,11 +23,11 @@ export class MetricsComponent implements OnChanges{
 
 	@Input() index: string;
 	@Input() widgetMode: boolean = false;
+	@Input() numFields: string[] = [];
 	@Output() resultsChange = new EventEmitter<number[]>();
 
 	results: number[] = [];
 
-	numFields: string[] = [];
 	selectedNumField: string = '';
 
 	aggregationsArr: string[] = [
@@ -56,21 +56,21 @@ export class MetricsComponent implements OnChanges{
 	) { }
 
 	ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-		var previousValue = changes.index.previousValue;
-		var currentValue = changes.index.currentValue;
-		if(currentValue && previousValue!==currentValue){
-			this.metricsService.getNumFields(this.index).then(numFields => {
-				this.numFields = numFields;
-				this.selectedNumField = this.numFields[0];
-				//this.selectedTopHitField = this.numFields[0];
-			});
+		console.log('changes.numFields:', changes.numFields);
+		var oldNumFields = (changes.numFields) ? changes.numFields.previousValue : '';
+		var newNumFields = (changes.numFields) ? changes.numFields.currentValue : '';
+		console.log('oldNumFields:', oldNumFields);
+		console.log('newNumFields:', newNumFields);
+		if(newNumFields && oldNumFields!==newNumFields){
+			this.selectedNumField = (this.numFields.length) ? this.numFields[0] : '';
 		}
 	}
 
-	processCalculation(): void{
+	processCalculation(dataTableData: any): void{
+		console.log('PROCESSCALC - dataTableData:', dataTableData);
 		switch(this.selectedAggregation){
 			case 'Count': {
-				this.metricsService.count(this.index, this.selectedNumField)
+				this.metricsService.count(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -78,7 +78,7 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Average': {
-				this.metricsService.avg(this.index, this.selectedNumField)
+				this.metricsService.avg(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -86,7 +86,7 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Sum': {
-				this.metricsService.sum(this.index, this.selectedNumField)
+				this.metricsService.sum(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -94,7 +94,7 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Min': {
-				this.metricsService.min(this.index, this.selectedNumField)
+				this.metricsService.min(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -102,7 +102,7 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Max': {
-				this.metricsService.max(this.index, this.selectedNumField)
+				this.metricsService.max(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -110,7 +110,7 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Median': {
-				this.metricsService.median(this.index, this.selectedNumField)
+				this.metricsService.median(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -118,7 +118,7 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Standard Deviation': {
-				this.metricsService.stdDeviation(this.index, this.selectedNumField)
+				this.metricsService.stdDeviation(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
@@ -126,20 +126,20 @@ export class MetricsComponent implements OnChanges{
 				break;
 			}
 			case 'Unique Count': {
-				this.metricsService.uniqueCount(this.index, this.selectedNumField)
+				this.metricsService.uniqueCount(this.index, this.selectedNumField, dataTableData)
 				.then(results => {
 					this.results = results;
 					this.triggerResultsEvent();
 				});
 				break;
 			}case 'Percentiles': {
-				this.percentilesMetricComponent.calculate();
+				this.percentilesMetricComponent.calculate(dataTableData);
 				break;
 			}case 'Percentile Ranks':{
-				this.percentileRanksMetricComponent.calculate();
+				this.percentileRanksMetricComponent.calculate(dataTableData);
 				break;
 			}case 'Top Hit':{
-				this.topHitMetricComponent.calculate();
+				this.topHitMetricComponent.calculate(dataTableData);
 				break;
 			}
 			default: {

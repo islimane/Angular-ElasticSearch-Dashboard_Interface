@@ -119,7 +119,7 @@ export class TopHitMetricComponent {
 		this.selectedTopHitAgg = this.topHitAggregations[0];
 	}
 
-	calculate(): void {
+	calculate(dataTableData: any): void {
 		if(this.hitsSize && this.hitsSize>0){
 			this.metricsService.topHits(
 				this.index,
@@ -127,7 +127,8 @@ export class TopHitMetricComponent {
 				this.selectedSortField,
 				this.hitsSize,
 				this.selectedOrder,
-				this.selectedTopHitAgg
+				this.selectedTopHitAgg,
+        dataTableData
 			).then(results => {
 				this.resultsEvent.emit(results);
 			});
