@@ -19,32 +19,69 @@
 			</select>
 	</div>
 
-	<div>
-			<span>Field:</span>
-			<select [(ngModel)]="selectedNumField">
-				<option
-					*ngFor="let numField of numFields"
-					[value]="numField">
-						{{numField}}
-				</option>
-			</select>
+	<!-- HISTOGRAM -->
+	<div *ngIf="selectedAgg==='Histogram'">
+		<div>
+				<span>Field:</span>
+				<select [(ngModel)]="selectedNumField">
+					<option
+						*ngFor="let numField of numFields"
+						[value]="numField">
+							{{numField}}
+					</option>
+				</select>
+		</div>
+
+		<div>
+				<span>Interval:</span>
+				<form novalidate [formGroup]="form">
+					<input
+						#interval
+						formControlName="naturalNumber"
+						type="number"
+						(change)="onIntervalChange(interval.value)"
+					/>
+					<span
+						*ngIf="formErrors.naturalNumber">
+						{{ formErrors.naturalNumber }}
+					</span>
+				</form>
+		</div>
 	</div>
 
-	<div>
-			<span>Interval:</span>
-			<form novalidate [formGroup]="form">
-				<input
-					#intervalInp
-					formControlName="intervalInp"
-					type="number"
-					(change)="onIntervalChange(intervalInp.value)"
-				/>
-				<span
-					*ngIf="formErrors.intervalInp">
-					{{ formErrors.intervalInp }}
-				</span>
-			</form>
+	<!-- RANGE -->
+	<div *ngIf="selectedAgg==='Range'">
+		<div>
+				<span>Field:</span>
+				<select [(ngModel)]="selectedNumField">
+					<option
+						*ngFor="let numField of numFields"
+						[value]="numField">
+							{{numField}}
+					</option>
+				</select>
+		</div>
+
+		<div>
+				<div *ngFor="let range of ranges; let i = index">
+					<span>From:</span>
+					<input
+						[attr.data-type]="from"
+						type="number"
+						[(ngModel)]="range.from"
+					/>
+					<span>to:</span>
+					<input
+						[attr.data-type]="to"
+						type="number"
+						[(ngModel)]="range.to"
+					/>
+					<button [attr.data-index]="i" (click)="removeRange(i)">Remove</button>
+				</div>
+				<button (click)="addRange()">Add range</button>
+		</div>
 	</div>
+
 </div>
 
 <div>

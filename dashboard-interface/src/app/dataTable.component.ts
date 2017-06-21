@@ -32,7 +32,7 @@ export class DataTableComponent {
 		'Significant Terms',
 		'Geohash'
 	];
-	selectedAgg: string = this.aggregations[1];
+	selectedAgg: string = this.aggregations[2];
 
 	selectedNumField: string;
 
@@ -40,13 +40,15 @@ export class DataTableComponent {
 
 	form: FormGroup;
 	formErrors = {
-		'intervalInp': ''
+		'naturalNumber': ''
 	};
 	validationMessages = {
-		'intervalInp': {
+		'naturalNumber': {
 			'minValue': 'Percentile value can\'t be lower than 0.'
 		}
 	};
+
+	ranges: any[] = [];
 
 	constructor(
 		private fb: FormBuilder
@@ -91,7 +93,7 @@ export class DataTableComponent {
 
 	buildForm(): void {
 		this.form = this.fb.group({
-			'intervalInp': ['', [
+			'naturalNumber': ['', [
 					minValidator(0)
 				]
 			]
@@ -137,6 +139,17 @@ export class DataTableComponent {
 		console.log(this.interval);
 	}
 
+	addRange(): void {
+		this.ranges.push({
+			from: 0,
+			to: 0
+		});
+	}
+
+	removeRange(index: number): void {
+		this.ranges.splice(index, 1);
+	}
+
 	private getDataTableData(): any {
 		switch (this.selectedAgg) {
 			case 'Histogram':
@@ -149,7 +162,7 @@ export class DataTableComponent {
 				return {
 					name: this.selectedAgg,
 					field: this.selectedNumField,
-					interval: null/*this.interval*/
+					ranges: this.ranges
 				};
 			default:
 				return null;
