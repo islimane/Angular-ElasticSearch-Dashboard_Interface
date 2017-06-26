@@ -14,6 +14,8 @@ import { maxValidator } from '../shared/validators.directive';
 export class TopHitMetricComponent {
 	@Input() index: string;
 	@Input() numFields: string[];
+	@Input() textFields: string[] = [];
+	@Input() savedData: any = null;
 	@Output() resultsEvent = new EventEmitter<number[]>();
 
 	form: FormGroup;
@@ -41,7 +43,7 @@ export class TopHitMetricComponent {
 
 	selectedField: string;
 	selectedSortField: string = '';
-	textFields: string[] = [];
+
 
 	constructor(
 		public metricsService: MetricsService,
@@ -51,19 +53,36 @@ export class TopHitMetricComponent {
 	ngOnInit(): void{
 		console.log('numFields', this.numFields);
 		this.buildForm();
+		console.log('savedData:', this.savedData);
+		if(this.savedData!==null){
+			this.loadSavedData();
+		}
+	}
+
+	loadSavedData(): void {
+		this.selectedOrder = this.savedData.params.sortOrder;
+		this.selectedTopHitAgg = this.savedData.params.aggregate;
+		this.hitsSize = this.savedData.params.size;
+		this.metricsService.getTextFields(this.index).then(textFields => {
+			this.textFields = textFields;
+			console.log('this.savedData.params.field:', this.savedData.params.field);
+			this.selectedField = this.savedData.params.field;
+			console.log('this.savedData.params.sortField:', this.savedData.params.sortField);
+			this.selectedSortField = this.savedData.params.sortField;
+			this.calculate(null);
+		});
 	}
 
 	ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-		var indexPreviousValue = (changes.index) ? changes.index.previousValue : null;
-		var indexCurrentValue = (changes.index) ? changes.index.currentValue : null;
-		if(indexCurrentValue && indexPreviousValue!==indexCurrentValue){
-			console.log('changes.index.previousValue', changes.index.previousValue);
-			console.log('changes.index.currentValue', changes.index.currentValue);
-			this.metricsService.getTextFields(this.index).then(textFields => {
-				this.textFields = textFields;
+		var textFieldsPreviousValue = (changes.textFields) ? changes.textFields.previousValue : null;
+		var textFieldsCurrentValue = (changes.textFields) ? changes.textFields.currentValue : null;
+		if(textFieldsCurrentValue && textFieldsPreviousValue!==textFieldsCurrentValue){
+			console.log('changes.textFields.previousValue', changes.textFields.previousValue);
+			console.log('changes.textFields.currentValue', changes.textFields.currentValue);
+			if(this.savedData===null){
 				this.selectedField = this.textFields[0];
 				this.selectedSortField = this.textFields[0];
-			});
+			}
 		}
 
 		var numFieldsPreviousValue = (changes.numFields) ? changes.numFields.previousValue : null;
@@ -128,7 +147,7 @@ export class TopHitMetricComponent {
 				this.hitsSize,
 				this.selectedOrder,
 				this.selectedTopHitAgg,
-        dataTableData
+				dataTableData
 			).then(results => {
 				this.resultsEvent.emit(results);
 			});

@@ -7,13 +7,13 @@
 			<option
 				*ngFor="let aggregation of aggregationsArr"
 				(change)="onChange($event.target.value)"
-				[value]="aggregation">
-					{{aggregation}}
+				[value]="aggregation.value">
+					{{aggregation.label}}
 			</option>
 		</select>
 	</div>
 
-	<div *ngIf="numFields.length>0 && isNumFieldAgg() && selectedAggregation!=='Top Hit'">
+	<div *ngIf="numFields.length>0 && isNumFieldAgg() && selectedAggregation!=='top_hits'">
 		<span>Field:</span>
 		<select
 			[(ngModel)]="selectedNumField">
@@ -25,26 +25,31 @@
 		</select>
 	</div>
 
-	<div *ngIf="selectedAggregation==='Percentiles'">
+	<div *ngIf="selectedAggregation==='percentiles'">
 		<percentiles-metric
 			[index]="index"
 			[numField]="selectedNumField"
+			[savedData]="childrenData.percentilesMetricData"
 			(resultsEvent)="onResultsEvent($event)">
 		</percentiles-metric>
 	</div>
 
-	<div *ngIf="selectedAggregation==='Percentile Ranks'">
+	<div *ngIf="selectedAggregation==='percentile_ranks'">
 		<percentileRanks-metric
+			#percentileRanks
 			[index]="index"
 			[numField]="selectedNumField"
+			[savedData]="childrenData.percentileRanksMetricData"
 			(resultsEvent)="onResultsEvent($event)">
 		</percentileRanks-metric>
 	</div>
 
-	<div *ngIf="selectedAggregation==='Top Hit'">
+	<div *ngIf="selectedAggregation==='top_hits'">
 		<topHit-metric
 			[index]="index"
 			[numFields]="numFields"
+			[savedData]="childrenData.topHitMetricData"
+			[textFields]="textFields"
 			(resultsEvent)="onResultsEvent($event)">
 		</topHit-metric>
 	</div>
@@ -59,6 +64,18 @@
 			<div *ngFor="let result of results">
 				<span>{{result.label}}: {{result.result}}</span>
 			</div>
+		</div>
+
+		<div>
+			<form #saveForm>
+				<!-- TODO: include validation -->
+				<input
+					#visTitle
+					type="text"
+					required
+				/>
+				<button (click)="save(visTitle.value)">Save</button>
+			</form>
 		</div>
 
 	</div>

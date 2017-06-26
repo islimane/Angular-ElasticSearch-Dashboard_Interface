@@ -2,12 +2,18 @@ import { Injectable } from '@angular/core';
 
 import { Elasticsearch } from './elasticsearch';
 
+import { VisualizationObj } from './object-classes/visualizationObj';
+
 @Injectable()
 export class MetricsService {
 
 	constructor(
 		public elasticsearch: Elasticsearch
 	) { }
+
+	saveMetric(visualizationObj: VisualizationObj): void {
+		this.elasticsearch.saveVisualization(visualizationObj);
+	}
 
 	getTextFields(index: string): PromiseLike<string[]> {
 		return this.elasticsearch.getIndexTextFields(index)

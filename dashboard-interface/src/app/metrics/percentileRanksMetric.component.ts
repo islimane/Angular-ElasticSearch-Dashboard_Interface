@@ -14,6 +14,7 @@ import { maxValidator } from '../shared/validators.directive';
 export class PercentileRanksMetricComponent {
 	@Input() index: string;
 	@Input() numField: string = '';
+	@Input() savedData: any = null;
 	@Output() resultsEvent = new EventEmitter<number[]>();
 
 	form: FormGroup;
@@ -34,6 +35,14 @@ export class PercentileRanksMetricComponent {
 	ngOnInit(): void{
 		console.log(this.metricsService);
 		this.buildForm();
+		if(this.savedData!==null){
+			this.loadSavedData();
+		}
+	}
+
+	loadSavedData(): void {
+		this.percentileRankValues = this.savedData.params.values;
+		this.calculate(null);
 	}
 
 	buildForm(): void {

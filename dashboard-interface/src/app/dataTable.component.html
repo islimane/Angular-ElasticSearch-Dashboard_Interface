@@ -65,6 +65,7 @@
 		<div>
 				<div *ngFor="let range of ranges; let i = index">
 					<span>From:</span>
+					<!-- TODO: Include validation -->
 					<input
 						[attr.data-type]="from"
 						type="number"
