@@ -20,36 +20,35 @@ export class MetricsService {
 		.then(textFields => textFields);
 	}
 
-	count(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any[]> {
+	count(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
 		console.log('dataTableData', dataTableData);
-		if(dataTableData===null){
+
+		if(dataTableData!==null){
+			var dataTableAggregation = this.getDataTableAggregation(dataTableData);
+			return this.elasticsearch.numFieldCalculation(index, dataTableAggregation)
+			.then(function(aggregations){
+				var columns = [dataTableData.field, 'Count'];
+				var rows = [];
+				var tableData = {
+					columns: columns,
+					rows: rows
+				};
+
+				for(var i=0; i<aggregations.result.buckets.length; i++){
+					rows.push([
+						aggregations.result.buckets[i].key,
+						aggregations.result.buckets[i].doc_count
+					]);
+				}
+				return tableData;
+			});
+		}else{
+			console.log('this.elasticsearch', this.elasticsearch);
 			return this.elasticsearch.count(index)
 			.then(count => [{
 					label: 'Count',
-					result: [count]
+					result: count
 			}]);
-		}else{
-			var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-			return this.elasticsearch.numFieldCalculation(index, dataTableAggregation)
-			.then(function(aggregations){
-				var fieldValues = {
-					label: dataTableData.field,
-					result: []
-				}
-				var countValues = {
-					label: 'Count',
-					result: []
-				}
-
-				var results = [fieldValues, countValues];
-
-				for(var i=0; i<aggregations.result.buckets.length; i++){
-					fieldValues.result.push(aggregations.result.buckets[i].key);
-					countValues.result.push(aggregations.result.buckets[i].doc_count);
-				}
-				return results;
-			});
 		}
 	}
 

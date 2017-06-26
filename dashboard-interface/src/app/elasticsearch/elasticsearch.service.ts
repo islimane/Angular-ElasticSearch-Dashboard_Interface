@@ -66,7 +66,7 @@ export class Elasticsearch {
 
 	}
 
-	public count(index): PromiseLike<number> {
+	public count(index): PromiseLike<any> {
 		return this.clientElasticsearch.count(
 			{
 				index: index
