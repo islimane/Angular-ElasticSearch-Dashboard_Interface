@@ -1,0 +1,40 @@
+<div>
+	<h3>Metrics: </h3>
+
+	<dynamic-component
+		[componentType]="metricComponentType"
+		(event)="onEvent($event)">
+	</dynamic-component>
+
+	<div>
+		<button (click)="addMetric(null)">Add Metric</button>
+		<button (click)="debug()">Debug</button>
+	</div>
+
+	<div>
+		<p>
+			<button (click)="calculateMetrics()">Calculate</button>
+		</p>
+
+		<div *ngIf="results.length" style="margin-top:1rem;margin-bottom:1rem;">
+			<div *ngFor="let metricResults of results">
+				Results:
+				<div *ngFor="let result of metricResults">
+					<span>{{result.label}}: {{result.result}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<form #saveForm>
+			<!-- TODO: include validation -->
+			<input
+				#visTitle
+				type="text"
+				required
+			/>
+			<button (click)="save(visTitle.value)">Save</button>
+		</form>
+	</div>
+</div>

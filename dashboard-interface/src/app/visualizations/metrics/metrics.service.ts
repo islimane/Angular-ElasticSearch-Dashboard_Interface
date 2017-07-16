@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Elasticsearch } from './elasticsearch';
+import { Elasticsearch } from '../../elasticsearch';
 
-import { VisualizationObj } from './object-classes/visualizationObj';
+import { VisualizationObj } from '../../object-classes/visualizationObj';
 
 @Injectable()
 export class MetricsService {
@@ -171,8 +171,6 @@ export class MetricsService {
 							result: [aggregations.result.value]
 				}]);
 			}
-
-
 		}
 	}
 

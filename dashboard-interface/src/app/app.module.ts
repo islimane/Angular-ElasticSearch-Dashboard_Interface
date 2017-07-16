@@ -4,27 +4,43 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { MetricsComponent } from './metrics.component';
-import { DataTableComponent } from './dataTable.component';
-import { PercentilesMetricComponent } from './metrics/percentilesMetric.component';
-import { PercentileRanksMetricComponent } from './metrics/percentileRanksMetric.component';
-import { TopHitMetricComponent } from './metrics/topHitMetric.component';
-import { TableComponent } from './table.component';
+import { VisualizationsComponent } from './visualizations/visualizations.component';
+import { MetricsComponent } from './visualizations/metrics/metrics.component';
+import { MetricComponent } from './visualizations/metrics/metric.component';
+import { PercentilesMetricComponent } from './visualizations/metrics/aggregations/percentilesMetric.component';
+import { PercentileRanksMetricComponent } from './visualizations/metrics/aggregations/percentileRanksMetric.component';
+import { TopHitMetricComponent } from './visualizations/metrics/aggregations/topHitMetric.component';
+import { DataTableComponent } from './visualizations/data-table/dataTable.component';
+import { TableComponent } from './visualizations/data-table/table.component';
+import { DynamicComponent } from './shared/dynamicComponent.component';
 
 import { DataService } from './data.service';
-import { MetricsService } from './metrics.service';
+import { MetricsService } from './visualizations/metrics/metrics.service';
+import { VisualizationsService } from './visualizations/visualizations.service';
+
+import { HiddenDirective } from './shared/hidden.directive';
 
 import { Elasticsearch } from './elasticsearch';
+
+import { MissionControlComponent } from './example/missioncontrol.component';
+import { AstronautComponent } from './example/astronaut.component';
+import { MissionService } from './example/mission.service';
 
 @NgModule({
 	declarations: [
 		AppComponent,
+		VisualizationsComponent,
 		MetricsComponent,
+		MetricComponent,
 		DataTableComponent,
 		PercentilesMetricComponent,
 		PercentileRanksMetricComponent,
 		TopHitMetricComponent,
-		TableComponent
+		TableComponent,
+		DynamicComponent,
+		HiddenDirective,
+		MissionControlComponent,
+		AstronautComponent
 	],
 	imports: [
 		BrowserModule,
@@ -35,8 +51,11 @@ import { Elasticsearch } from './elasticsearch';
 	providers: [
 		DataService,
 		Elasticsearch,
-		MetricsService
+		MetricsService,
+		VisualizationsService,
+		MissionService
 	],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
+	entryComponents: [ MetricComponent ]
 })
 export class AppModule { }

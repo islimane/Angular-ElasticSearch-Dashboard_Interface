@@ -1,0 +1,57 @@
+<div style="padding: 2rem;">
+	<h4 *ngIf="widgetMode">Metrics: </h4>
+	<div>
+		<span>Aggregation:</span>
+		<select
+			[(ngModel)]="selectedAggregation"
+			(change)="dataChangeEvent()">
+			<option
+				*ngFor="let aggregation of aggregationsArr"
+				[value]="aggregation.value">
+					{{aggregation.label}}
+			</option>
+		</select>
+	</div>
+
+	<div *ngIf="_numFields.length>0 && isNumFieldAgg()">
+		<span>Field:</span>
+		<select
+			[(ngModel)]="selectedField"
+			(change)="dataChangeEvent()">
+			<option
+				*ngFor="let field of getFields()"
+				[value]="field">
+					{{field}}
+			</option>
+		</select>
+	</div>
+
+	<div *ngIf="selectedAggregation==='percentiles'">
+		<percentiles-metric
+			[numField]="selectedField"
+			[savedData]="childrenData.percentilesMetricData"
+			(resultsEvent)="onResultsEvent($event)">
+		</percentiles-metric>
+	</div>
+
+	<div *ngIf="selectedAggregation==='percentile_ranks'">
+		<percentileRanks-metric
+			[numField]="selectedField"
+			[savedData]="childrenData.percentileRanksMetricData"
+			(resultsEvent)="onResultsEvent($event)">
+		</percentileRanks-metric>
+	</div>
+
+	<div *ngIf="selectedAggregation==='top_hits'">
+		<topHit-metric
+			[selectedFieldData]="getTopHitsFieldData()"
+			[savedData]="savedData"
+			[fields]="getAllFields()"
+			(dataChange)="dataChangeEvent()">
+		</topHit-metric>
+	</div>
+
+	<div>
+		<button (click)="triggerRemoveEvent()">Remove Metric</button>
+	</div>
+</div>

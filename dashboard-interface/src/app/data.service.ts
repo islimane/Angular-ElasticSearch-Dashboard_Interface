@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 export class DataService {
 
 	getTitle(): string {
-		return 'Elasticsearch Dashboard Interface';
+		return 'Sakura - Elasticsearch Dashboard Interface';
 	}
 
 }

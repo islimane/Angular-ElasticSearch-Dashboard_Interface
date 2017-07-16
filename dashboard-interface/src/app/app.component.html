@@ -1,56 +1,9 @@
-<h2>
-	{{title}}
-</h2>
-
 <div>
-	<h3>Saved Visualizations</h3>
-	<ul>
-		<li *ngFor="let visualization of savedVisualizations">
-			<span (click)="loadVis(visualization)" style="cursor: pointer; color: blue;">{{visualization._source.title}}</span>
-		</li>
-	</ul>
-</div>
-
-<div>
-	<h3>Select: </h3>
+	<h2>
+		{{title}}
+	</h2>
 
 	<div>
-		<span>Index:</span>
-		<select
-			#index
-			[(ngModel)]="selectedIndex"
-			(change)="onIndexChange(index.value)">
-			<option
-				*ngFor="let index of indexes"
-				[value]="index">
-					{{index}}
-			</option>
-		</select>
-	</div>
-
-	<div>
-		<span>Visualization:</span>
-		<select [(ngModel)]="selectedVisualization">
-			<option
-				*ngFor="let visualization of visualizations"
-				[value]="visualization">
-					{{visualization}}
-			</option>
-		</select>
-	</div>
-
-	<div *ngIf="selectedVisualization==='Metric'">
-		<metrics
-			[index]="selectedIndex"
-			[numFields]="numFields"
-			[textFields]="textFields">
-		</metrics>
-	</div>
-
-	<div *ngIf="selectedVisualization==='Data Table'">
-		<data-table
-		[index]="selectedIndex"
-		[numFields]="numFields">
-	</data-table>
+		<visualizations></visualizations>
 	</div>
 </div>

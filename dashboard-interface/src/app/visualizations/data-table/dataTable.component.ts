@@ -1,9 +1,9 @@
 import { Component, Input, ViewChild, SimpleChange } from '@angular/core';
 import { FormGroup, FormBuilder} from '@angular/forms';
 
-import { MetricsComponent } from './metrics.component';
+import { MetricComponent } from '../metrics/metric.component';
 
-import { minValidator } from './shared/validators.directive';
+import { minValidator } from '../../shared/validators.directive';
 
 @Component({
 	selector: 'data-table',
@@ -11,8 +11,8 @@ import { minValidator } from './shared/validators.directive';
 })
 
 export class DataTableComponent {
-	@ViewChild(MetricsComponent)
-	private metricsComponent: MetricsComponent
+	@ViewChild(MetricComponent)
+	private metricComponent: MetricComponent
 
 	@Input() index: string;
 	@Input() numFields: string[] = [];
@@ -126,7 +126,7 @@ export class DataTableComponent {
 	calculate(): void{
 		console.log('CALCULATE - interval:', this.interval);
 		var dataTableData = this.getDataTableData();
-		this.metricsComponent.processCalculation(dataTableData);
+		this.metricComponent.processCalculation(dataTableData);
 	}
 
 	resetTable(): void{

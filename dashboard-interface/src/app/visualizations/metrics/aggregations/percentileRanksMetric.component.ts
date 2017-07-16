@@ -3,31 +3,28 @@ import { FormGroup, FormBuilder} from '@angular/forms';
 
 import { MetricsService } from '../metrics.service';
 
-import { maxValidator } from '../shared/validators.directive';
+import { maxValidator } from '../../../shared/validators.directive';
 
 @Component({
-	selector: 'percentiles-metric',
-	templateUrl: './percentilesMetric.component.html',
+	selector: 'percentileRanks-metric',
+	templateUrl: './percentileRanksMetric.component.html',
 	providers: [ MetricsService ]
 })
 
-export class PercentilesMetricComponent {
-	@Input() index: string;
+export class PercentileRanksMetricComponent {
 	@Input() numField: string = '';
 	@Input() savedData: any = null;
 	@Output() resultsEvent = new EventEmitter<number[]>();
 
 	form: FormGroup;
 	formErrors = {
-		'percentileBox': ''
+		'percentileRanks': ''
 	};
 	validationMessages = {
-		'percentileBox': {
-			'maxValue': 'Percentile value can\'t be greater tha 100.'
-		}
+		'percentileRanks': {}
 	};
 
-	percentileValues: number[] = [];
+	percentileRankValues: number[] = [];
 
 	constructor(
 		public metricsService: MetricsService,
@@ -37,26 +34,18 @@ export class PercentilesMetricComponent {
 	ngOnInit(): void{
 		console.log(this.metricsService);
 		this.buildForm();
-		console.log(1);
-		console.log('savedData:', this.savedData);
-		if(this.savedData!==null){
-			console.log(2);
+		if(this.savedData && this.savedData.params){
 			this.loadSavedData();
 		}
 	}
 
 	loadSavedData(): void {
-		console.log(3);
-		this.percentileValues = this.savedData.params.percents;
-		this.calculate(null);
+		this.percentileRankValues = this.savedData.params.values;
 	}
 
 	buildForm(): void {
 		this.form = this.fb.group({
-			'percentileBox': ['', [
-					maxValidator(100)
-				]
-			]
+			'percentileRanks': ['', []]
 		});
 
 		this.form.valueChanges
@@ -83,26 +72,14 @@ export class PercentilesMetricComponent {
 		}
 	}
 
-	addPercentile(value: string): void{
+	addPercentileRank(value: string): void{
 		console.log(value);
 		var percentile = parseInt(value);
 		if(!isNaN(percentile)){
-			this.percentileValues = Array.from(
-				new Set(this.percentileValues).add(percentile)
+			this.percentileRankValues = Array.from(
+				new Set(this.percentileRankValues).add(percentile)
 			).sort((a,b) => a - b);
 		}
 	}
-
-	calculate(dataTableData: any): void {
-		if(this.percentileValues.length>0 && this.index && this.numField)
-			this.metricsService.percentiles(
-				this.index,
-				this.numField,
-				this.percentileValues,
-				dataTableData
-			).then(results => {
-				this.resultsEvent.emit(results);
-			});
-		}
 
 }
