@@ -12,9 +12,13 @@
 	</div>
 
 	<div>
-		<p>
+		<button (click)="removeAll()">Remove all</button>
+	</div>
+
+	<div>
+		<div>
 			<button (click)="calculateMetrics()">Calculate</button>
-		</p>
+		</div>
 
 		<div *ngIf="results.length" style="margin-top:1rem;margin-bottom:1rem;">
 			<div *ngFor="let metricResults of results">

@@ -180,6 +180,13 @@ export class MetricsComponent {
 		this.metricsMap.delete(uniqueId);
 	}
 
+	removeAll(): void {
+		this.metricsMap.forEach((value, key, map) => {
+			this.dynamicComponents.destroyCmp(key);
+			this.metricsMap.delete(key);
+		});
+	}
+
 	setMetricIds(): void {
 		let i = 0;
 		this.metricsMap.forEach((value, key, map) => {
