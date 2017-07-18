@@ -139,6 +139,7 @@ export class MetricsComponent {
 
 	loadSavedMetrics(aggs: AggregationData[]): void {
 		console.log('METRICS - loadSavedMetrics():', aggs);
+		this.removeAll();
 		for(let i=0; i<aggs.length; i++){
 			this.addMetric(aggs[i]);
 		}
