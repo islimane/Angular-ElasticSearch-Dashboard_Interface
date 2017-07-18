@@ -12,6 +12,10 @@ import 'rxjs/add/operator/toPromise';
 
 import { Client, SearchResponse, CountResponse } from 'elasticsearch';
 
+//import { bodybuilder } from "bodybuilder";
+
+declare let bodybuilder: any;
+
 @Injectable()
 export class Elasticsearch {
 
@@ -24,13 +28,6 @@ export class Elasticsearch {
 		});
 	}
 
-	public test_search(): Observable<SearchResponse<{}>> {
-		return Observable.fromPromise(<Promise<SearchResponse<{}>>> this.clientElasticsearch.search( {
-			index: '3entreprises',
-			q: `Customer:0`
-		}));
-	}
-
 	public getSavedVisualizations(): PromiseLike<any> {
 		return this.clientElasticsearch.search({
 				"index": '.sakura',
@@ -40,30 +37,83 @@ export class Elasticsearch {
 						"match_all": {}
 					}
 				}
-		})
-		.then(
+		}).then(
 			response => response.hits.hits,
 			this.handleError
 		);
 	}
 
 	public saveVisualization(visualizationObj: VisualizationObj): void{
-		var that = this;
-		this.clientElasticsearch.count({index: '.sakura'})
-		.then(response =>
-			this.clientElasticsearch.create({
-				index: '.sakura',
-				type: 'visualization',
-				id: (response.count+1) + '',
-				body: visualizationObj
-			}).then(
-				response => console.log('SUCCESS'),
-				this.handleError
-			),
+		this._isNewVisualization(visualizationObj.title).then(isNew => {
+			console.log('isNew:', isNew);
+			(isNew) ? this._createVis(visualizationObj) : this._updateVis(visualizationObj);
+		});
+	}
+
+	private _createVis(visualizationObj: VisualizationObj): void{
+		let index= '.sakura';
+		let type = 'visualization';
+		let newId = visualizationObj.title;
+		console.log('create:', newId)
+		this.clientElasticsearch.create({
+			index: '.sakura',
+			type: 'visualization',
+			id: newId,
+			body: visualizationObj
+		}).then(
+			response => console.log('SUCCESS'),
 			this.handleError
 		);
+	}
 
+	private _updateVis(visualizationObj: VisualizationObj): void{
+		let index= '.sakura';
+		let type = 'visualization';
+		let id = visualizationObj.title;
+		console.log('update:', id)
+		this.clientElasticsearch.update({
+			index: '.sakura',
+			type: 'visualization',
+			id: id,
+			body: {
+				doc: visualizationObj
+			}
+		}).then(
+			response => console.log('SUCCESS'),
+			this.handleError
+		);
+	}
 
+	private _getNextId(index: string, type: string): PromiseLike<string>{
+		let body = bodybuilder().size(1).sort('_uid', 'desc').build()
+		return this.clientElasticsearch.search({
+				"index": '.sakura',
+				"type": 'visualization',
+				"body": body
+		}).then(response => {
+			console.log('max_id - response:', response)
+			if(response.hits.hits.length===0)
+				return '1';
+			else
+				return (parseInt(response.hits.hits[0]._id)+1) + '';
+		});
+	}
+
+	private _isNewVisualization(title: string): PromiseLike<boolean> {
+		let body = bodybuilder().filter('term', '_id', title).build();
+		console.log('body:', body);
+
+		return this.clientElasticsearch.search({
+				"index": '.sakura',
+				"type": 'visualization',
+				"body": body
+		}).then(function(response){
+			console.log('response:', response)
+			let isNew = (response.hits.hits.length===0) ? true : false;
+			return isNew;
+		},
+			this.handleError
+		);
 	}
 
 	public count(index): PromiseLike<any> {
