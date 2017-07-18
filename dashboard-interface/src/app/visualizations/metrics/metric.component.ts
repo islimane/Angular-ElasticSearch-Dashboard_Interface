@@ -23,7 +23,6 @@ export class MetricComponent {
 	@ViewChild(TopHitMetricComponent)
 	private topHitMetricComponent: TopHitMetricComponent;
 
-	@Output() resultsChange = new EventEmitter<number[]>();
 	@Output() dataChange = new EventEmitter<AggregationData>();
 	@Output() remove = new EventEmitter<any>();
 
@@ -79,7 +78,7 @@ export class MetricComponent {
 		{ label: 'Percentile Ranks', value: 'percentile_ranks'},
 		{ label: 'Top Hit', value: 'top_hits'}
 	];
-	selectedAggregation: string = '';
+	selectedAggregation: string = this.aggregationsArr[0].value;
 	numFieldAgg: string[] = [
 		'avg', 'sum', 'min', 'max', 'median', 'extended_stats',
 		'cardinality', 'percentiles', 'percentile_ranks', 'top_hits'
@@ -92,9 +91,7 @@ export class MetricComponent {
 		topHitMetricData: null
 	}
 
-
 	constructor( public metricsService: MetricsService ) { }
-
 
 	ngOnInit(): void {
 		console.log('METRIC - ngOnInit()');
@@ -127,29 +124,6 @@ export class MetricComponent {
 		console.log('METRIC - load():', agg);
 		this.selectedAggregation = agg.type;
 		this.selectedField = agg.params.field;
-	}
-
-	processChildCalculation(visState: any): void {
-		console.log('visState.aggs[0].type:', visState.aggs[0].type);
-		if(visState.aggs[0].type=='percentile_ranks'){
-			console.log('SET DATA');
-			this.childrenData.percentileRanksMetricData = visState.aggs[0];
-		}else if(visState.aggs[0].type=='percentiles'){
-			this.childrenData.percentilesMetricData = visState.aggs[0];
-		}else if(visState.aggs[0].type=='top_hits'){
-			this.childrenData.topHitMetricData = visState.aggs[0];
-		}
-	}
-
-	isChildComponent(agg: any): boolean {
-		switch(agg.type){
-			case 'percentile_ranks':
-			case 'percentiles':
-			case 'top_hits':
-				return true;
-			default:
-				return false;
-		}
 	}
 
 	processCalculation(dataTableData: any): PromiseLike<any> {
@@ -218,17 +192,6 @@ export class MetricComponent {
 			default:
 				console.error('Error: aggeregation not found.');
 		}
-	}
-
-	onResultsEvent(results): void {
-		this.results = results;
-		this.triggerResultsEvent();
-	}
-
-	triggerResultsEvent(): void{
-		// trigger this event for parent update
-		//if(this.widgetMode)
-		this.resultsChange.emit(this.results);
 	}
 
 	isNumFieldAgg(): Boolean{
