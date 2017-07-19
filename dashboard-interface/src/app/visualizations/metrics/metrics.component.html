@@ -15,7 +15,7 @@
 		<button (click)="removeAll()">Remove all</button>
 	</div>
 
-	<div>
+	<div *ngIf="!widgetMode">
 		<div>
 			<button (click)="calculateMetrics()">Calculate</button>
 		</div>
@@ -30,7 +30,7 @@
 		</div>
 	</div>
 
-	<div>
+	<div *ngIf="!widgetMode">
 		<form #saveForm>
 			<!-- TODO: include validation -->
 			<input

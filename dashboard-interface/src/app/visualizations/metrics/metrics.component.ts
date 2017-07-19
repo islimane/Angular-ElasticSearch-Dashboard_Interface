@@ -23,6 +23,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class MetricsComponent {
 	@ViewChild(DynamicComponent) dynamicComponents;
 
+	@Input() widgetMode: boolean = false;
 	@Input() index: string;
 	// This fields come from _visualizationsService
 	numFields: string[] = [];
@@ -33,7 +34,6 @@ export class MetricsComponent {
 	metricComponentType: any = MetricComponent;
 	metricEvents: Array<string> = [ 'remove', 'dataChange' ];
 	metricsMap: Map<string, AggregationData> = new Map<string, AggregationData>();
-	metricsCount = 0;
 
 	results: any = [];
 
