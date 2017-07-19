@@ -1,0 +1,75 @@
+<div style="padding: 2rem;">
+	<div>
+			<span>Aggregation:</span>
+			<select
+				[(ngModel)]="selectedAgg"
+				(change)="dataChangeEvent()">
+				<option
+					*ngFor="let aggregation of aggregations"
+					[value]="aggregation.value">
+						{{aggregation.label}}
+				</option>
+			</select>
+	</div>
+
+	<div>
+			<span>Field:</span>
+			<select
+				[(ngModel)]="selectedNumField"
+				(change)="dataChangeEvent()">
+				<option
+					*ngFor="let numField of _numFields"
+					[value]="numField">
+						{{numField}}
+				</option>
+			</select>
+	</div>
+
+	<!-- HISTOGRAM -->
+	<div *ngIf="selectedAgg==='histogram'">
+		<div>
+				<span>Interval:</span>
+				<form novalidate [formGroup]="form">
+					<input
+						formControlName="naturalNumber"
+						type="number"
+						[(ngModel)]="interval"
+						(change)="dataChangeEvent()"
+					/>
+					<span
+						*ngIf="formErrors.naturalNumber">
+						{{ formErrors.naturalNumber }}
+					</span>
+				</form>
+		</div>
+	</div>
+
+	<!-- RANGE -->
+	<div *ngIf="selectedAgg==='range'">
+		<div>
+				<div *ngFor="let range of ranges; let i = index">
+					<span>From:</span>
+					<!-- TODO: Include validation -->
+					<input
+						[attr.data-type]="from"
+						type="number"
+						[(ngModel)]="range.from"
+						(change)="dataChangeEvent()"
+					/>
+					<span>to:</span>
+					<input
+						[attr.data-type]="to"
+						type="number"
+						[(ngModel)]="range.to"
+						(change)="dataChangeEvent()"
+					/>
+					<button [attr.data-index]="i" (click)="removeRange(i)">Remove</button>
+				</div>
+				<button (click)="addRange()">Add range</button>
+		</div>
+	</div>
+
+	<div>
+		<button (click)="triggerRemoveEvent()">Remove Bucket</button>
+	</div>
+</div>
