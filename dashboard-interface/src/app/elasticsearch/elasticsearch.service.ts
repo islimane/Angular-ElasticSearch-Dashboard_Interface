@@ -84,21 +84,6 @@ export class Elasticsearch {
 		);
 	}
 
-	private _getNextId(index: string, type: string): PromiseLike<string>{
-		let body = bodybuilder().size(1).sort('_uid', 'desc').build()
-		return this.clientElasticsearch.search({
-				"index": '.sakura',
-				"type": 'visualization',
-				"body": body
-		}).then(response => {
-			console.log('max_id - response:', response)
-			if(response.hits.hits.length===0)
-				return '1';
-			else
-				return (parseInt(response.hits.hits[0]._id)+1) + '';
-		});
-	}
-
 	private _isNewVisualization(title: string): PromiseLike<boolean> {
 		let body = bodybuilder().filter('term', '_id', title).build();
 		console.log('body:', body);
