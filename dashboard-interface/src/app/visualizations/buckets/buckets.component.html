@@ -1,0 +1,18 @@
+<div>
+	<h3>Buckets: </h3>
+
+	<dynamic-component
+		[componentType]="bucketComponentType"
+		(event)="onEvent($event)">
+	</dynamic-component>
+
+	<div>
+		<button (click)="_addBucket(null)">Add Bucket</button>
+		<button (click)="debug()">Debug</button>
+	</div>
+
+	<div>
+		<button (click)="_removeAll()">Remove all</button>
+	</div>
+
+</div>

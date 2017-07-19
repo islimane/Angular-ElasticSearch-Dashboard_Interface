@@ -15,7 +15,7 @@ export class VisualizationsComponent {
 	@ViewChild(MetricsComponent) metricsComponent: MetricsComponent;
 
 	visualizations: string[] = ['Metric', 'Data Table'];
-	selectedVisualization: string = this.visualizations[0];
+	selectedVisualization: string = this.visualizations[1];
 	savedVisualizations: any[] = [];
 
 	indexes: string[] = [];

@@ -12,6 +12,8 @@ import { PercentileRanksMetricComponent } from './visualizations/metrics/aggrega
 import { TopHitMetricComponent } from './visualizations/metrics/aggregations/topHitMetric.component';
 import { DataTableComponent } from './visualizations/data-table/dataTable.component';
 import { TableComponent } from './visualizations/data-table/table.component';
+import { BucketsComponent } from './visualizations/buckets/buckets.component';
+import { BucketComponent } from './visualizations/buckets/bucket.component';
 import { DynamicComponent } from './shared/dynamicComponent.component';
 
 import { DataService } from './data.service';
@@ -40,7 +42,9 @@ import { MissionService } from './example/mission.service';
 		DynamicComponent,
 		HiddenDirective,
 		MissionControlComponent,
-		AstronautComponent
+		AstronautComponent,
+		BucketsComponent,
+		BucketComponent
 	],
 	imports: [
 		BrowserModule,
@@ -56,6 +60,6 @@ import { MissionService } from './example/mission.service';
 		MissionService
 	],
 	bootstrap: [AppComponent],
-	entryComponents: [ MetricComponent ]
+	entryComponents: [ MetricComponent, BucketComponent ]
 })
 export class AppModule { }

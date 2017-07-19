@@ -1,89 +1,18 @@
 <div>
 	<h3>Data Table: </h3>
-	<metric
-		[index]="index"
-		[numFields]="numFields"
-		[widgetMode]="true"
-		(resultsChange)="onResultChange($event)">
-	</metric>
 
-	<h4>buckets:</h4>
-	<div>
-			<span>Aggregation:</span>
-			<select [(ngModel)]="selectedAgg">
-				<option
-					*ngFor="let aggregation of aggregations"
-					[value]="aggregation">
-						{{aggregation}}
-				</option>
-			</select>
+	<div style="margin-top: 2rem; margin-bottom: 2rem;">
+		<!-- METRICS -->
+		<metrics
+			[index]="index"
+			[widgetMode]="true">
+		</metrics>
+
+		<!-- BUCKETS -->
+		<buckets
+			[index]="index">
+		</buckets>
 	</div>
-
-	<!-- HISTOGRAM -->
-	<div *ngIf="selectedAgg==='Histogram'">
-		<div>
-				<span>Field:</span>
-				<select [(ngModel)]="selectedNumField">
-					<option
-						*ngFor="let numField of numFields"
-						[value]="numField">
-							{{numField}}
-					</option>
-				</select>
-		</div>
-
-		<div>
-				<span>Interval:</span>
-				<form novalidate [formGroup]="form">
-					<input
-						#interval
-						formControlName="naturalNumber"
-						type="number"
-						(change)="onIntervalChange(interval.value)"
-					/>
-					<span
-						*ngIf="formErrors.naturalNumber">
-						{{ formErrors.naturalNumber }}
-					</span>
-				</form>
-		</div>
-	</div>
-
-	<!-- RANGE -->
-	<div *ngIf="selectedAgg==='Range'">
-		<div>
-				<span>Field:</span>
-				<select [(ngModel)]="selectedNumField">
-					<option
-						*ngFor="let numField of numFields"
-						[value]="numField">
-							{{numField}}
-					</option>
-				</select>
-		</div>
-
-		<div>
-				<div *ngFor="let range of ranges; let i = index">
-					<span>From:</span>
-					<!-- TODO: Include validation -->
-					<input
-						[attr.data-type]="from"
-						type="number"
-						[(ngModel)]="range.from"
-					/>
-					<span>to:</span>
-					<input
-						[attr.data-type]="to"
-						type="number"
-						[(ngModel)]="range.to"
-					/>
-					<button [attr.data-index]="i" (click)="removeRange(i)">Remove</button>
-				</div>
-				<button (click)="addRange()">Add range</button>
-		</div>
-	</div>
-
-</div>
 
 <div>
 	<div>
