@@ -30,7 +30,7 @@
 		<percentiles-metric
 			[numField]="selectedField"
 			[savedData]="childrenData.percentilesMetricData"
-			(resultsEvent)="onResultsEvent($event)">
+			(dataChange)="dataChangeEvent()">
 		</percentiles-metric>
 	</div>
 
@@ -38,7 +38,7 @@
 		<percentileRanks-metric
 			[numField]="selectedField"
 			[savedData]="childrenData.percentileRanksMetricData"
-			(resultsEvent)="onResultsEvent($event)">
+			(dataChange)="dataChangeEvent()">
 		</percentileRanks-metric>
 	</div>
 
