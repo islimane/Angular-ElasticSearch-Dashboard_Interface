@@ -21,7 +21,7 @@ export class MetricsService {
 	}
 
 	private _getResults(response: any, aggs: AggregationData[]): any[] {
-		let aggByIdMap = this._getaggByIdMap(aggs);
+		let aggByIdMap = this._getAggByIdMap(aggs);
 		let results = [];
 		for(let i=0; i<aggs.length; i++){
 			results.push(this._getAggResult(response, aggs[i]));
@@ -53,7 +53,7 @@ export class MetricsService {
 		}
 	}
 
-	private _getaggByIdMap(aggs: AggregationData[]): Map<string, AggregationData> {
+	private _getAggByIdMap(aggs: AggregationData[]): Map<string, AggregationData> {
 		let aggByIdMap = new Map<string, AggregationData>();
 		for(let i=0; i<aggs.length; i++){
 			aggByIdMap.set(aggs[i].id, aggs[i]);
