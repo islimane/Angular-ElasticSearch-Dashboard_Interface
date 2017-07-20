@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 
+import { AggregationData } from '../object-classes/aggregationData';
 import { VisualizationObj } from '../object-classes/visualizationObj';
 
 import 'rxjs/add/operator/map';
@@ -19,17 +20,60 @@ declare let bodybuilder: any;
 @Injectable()
 export class Elasticsearch {
 
-	public clientElasticsearch: Client;
+	public cli: Client;
 
 	constructor() {
-		this.clientElasticsearch = new Client({
+		this.cli = new Client({
 			host: 'localhost:9200',
 			log: 'trace'
 		});
 	}
 
+	request(index: string, aggs: AggregationData[]): PromiseLike<any> {
+		console.log('METRICS SERVICE - request()');
+		var body = bodybuilder().size(0);
+		for(let i=0; i<aggs.length; i++){
+			if(aggs[i].type!='count'){
+				body = body.aggregation(
+					aggs[i].type,
+					null,
+					aggs[i].id,
+					this._getAggParams(aggs[i])
+				);
+			}
+		}
+		console.log(body.build());
+
+		return this.cli.search({
+				"index": index,
+				"body": body.build()
+		})
+		.then(
+			response => console.log(response.aggregations),
+			this.handleError
+		);
+	}
+
+	private _getAggParams(agg: AggregationData): any {
+		if(agg.type=='top_hits'){
+			let params = {
+				_source: agg.params.field,
+				size: agg.params.size,
+				sort: []
+			}
+			let sort = {};
+			sort[agg.params.sortField] = {
+				"order": agg.params.sortOrder
+			}
+			params.sort.push(sort);
+			return params;
+		}else{
+			return agg.params;
+		}
+	}
+
 	public getSavedVisualizations(): PromiseLike<any> {
-		return this.clientElasticsearch.search({
+		return this.cli.search({
 				"index": '.sakura',
 				"type": 'visualization',
 				"body": {
@@ -55,7 +99,7 @@ export class Elasticsearch {
 		let type = 'visualization';
 		let newId = visualizationObj.title;
 		console.log('create:', newId)
-		this.clientElasticsearch.create({
+		this.cli.create({
 			index: '.sakura',
 			type: 'visualization',
 			id: newId,
@@ -71,7 +115,7 @@ export class Elasticsearch {
 		let type = 'visualization';
 		let id = visualizationObj.title;
 		console.log('update:', id)
-		this.clientElasticsearch.update({
+		this.cli.update({
 			index: '.sakura',
 			type: 'visualization',
 			id: id,
@@ -88,7 +132,7 @@ export class Elasticsearch {
 		let body = bodybuilder().filter('term', '_id', title).build();
 		console.log('body:', body);
 
-		return this.clientElasticsearch.search({
+		return this.cli.search({
 				"index": '.sakura',
 				"type": 'visualization',
 				"body": body
@@ -102,7 +146,7 @@ export class Elasticsearch {
 	}
 
 	public count(index): PromiseLike<any> {
-		return this.clientElasticsearch.count(
+		return this.cli.count(
 			{
 				index: index
 			}
@@ -123,7 +167,7 @@ export class Elasticsearch {
 		index: string,
 		aggs: any): PromiseLike<any>{
 
-		return this.clientElasticsearch.search({
+		return this.cli.search({
 				"index": index,
 				"body": {
 						"size" : 0,
@@ -137,7 +181,7 @@ export class Elasticsearch {
 	}
 
 	private map(index): PromiseLike<any> {
-		return this.clientElasticsearch.indices.getMapping(
+		return this.cli.indices.getMapping(
 			{
 				index: index
 			}
@@ -207,7 +251,7 @@ export class Elasticsearch {
 	}
 
 	public getIndices(): PromiseLike<string[]>{
-		return this.clientElasticsearch.cat.indices({
+		return this.cli.cat.indices({
 			format: 'json'
 		})
 		.then(function(indexObjArray){
