@@ -123,6 +123,6 @@ export class VisualizationsComponent {
 	}
 
 	sendTextFields(): void {
-		this._visualizationsService.sendTextFields(this.numFields);
+		this._visualizationsService.sendTextFields(this.textFields);
 	}
 }
