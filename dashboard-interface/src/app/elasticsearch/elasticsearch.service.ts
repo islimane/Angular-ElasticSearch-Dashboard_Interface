@@ -35,7 +35,7 @@ export class Elasticsearch {
 		for(let i=0; i<aggs.length; i++){
 			if(aggs[i].type!='count'){
 				body = body.aggregation(
-					aggs[i].type,
+					this._getAggType(aggs[i]),
 					null,
 					aggs[i].id,
 					this._getAggParams(aggs[i])
@@ -49,9 +49,17 @@ export class Elasticsearch {
 				"body": body.build()
 		})
 		.then(
-			response => console.log(response.aggregations),
+			response => response,
 			this.handleError
 		);
+	}
+
+	private _getAggType(agg: AggregationData): any {
+		if(agg.type=='median'){
+			return 'percentiles';
+		}else{
+			return agg.type;
+		}
 	}
 
 	private _getAggParams(agg: AggregationData): any {

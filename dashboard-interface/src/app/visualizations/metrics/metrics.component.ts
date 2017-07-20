@@ -7,6 +7,7 @@ import { AggregationData } from '../../object-classes/aggregationData';
 import { SearchSourceJSON } from '../../object-classes/searchSourceJSON';
 import { VisualizationObj } from '../../object-classes/visualizationObj';
 
+import { Elasticsearch } from '../../elasticsearch';
 import { MetricsService } from './metrics.service';
 import { VisualizationsService } from '../visualizations.service';
 
@@ -40,7 +41,8 @@ export class MetricsComponent {
 
 	constructor(
 		private _metricsService: MetricsService,
-		private _visualizationsService: VisualizationsService
+		private _visualizationsService: VisualizationsService,
+		private _elasticCli: Elasticsearch
 	) {
 		let sub1 = _visualizationsService.numFieldsSent$.subscribe(numFields => {
 			console.log('METRICS - RECIEVED - numFields:', numFields);
@@ -99,14 +101,13 @@ export class MetricsComponent {
 	}
 
 	calculateMetrics(): void {
-		// Make calculation for each metric
-		this.results = [];
-		this.metricsMap.forEach((value, key, map) => {
-			let metricCmp = this.dynamicComponents.getCmp(key);
-			console.log('metricCmp:', metricCmp);
-			metricCmp.processCalculation(null).then(
-				result => (result) ? this.results.push(result) : null
-			);
+		this.setMetricIds();
+		this._metricsService.getAggsResults(
+			this.index,
+			Array.from(this.metricsMap.values())
+		).then(results => {
+			this.results = results;
+			console.log('results:', results);
 		});
 	}
 

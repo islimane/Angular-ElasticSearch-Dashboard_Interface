@@ -2,649 +2,199 @@ import { Injectable } from '@angular/core';
 
 import { Elasticsearch } from '../../elasticsearch';
 
+import { AggregationData } from '../../object-classes/aggregationData';
 import { VisualizationObj } from '../../object-classes/visualizationObj';
 
 @Injectable()
 export class MetricsService {
 
-	constructor(
-		public elasticsearch: Elasticsearch
-	) { }
+	constructor( private _elasticCli: Elasticsearch ) {}
 
 	saveMetric(visualizationObj: VisualizationObj): void {
-		this.elasticsearch.saveVisualization(visualizationObj);
+		this._elasticCli.saveVisualization(visualizationObj);
 	}
 
-	getTextFields(index: string): PromiseLike<string[]> {
-		return this.elasticsearch.getIndexTextFields(index)
-		.then(textFields => textFields);
+	getAggsResults(index: string, aggs: AggregationData[]): PromiseLike<any>{
+		return this._elasticCli.request(index, aggs).then(response =>
+			this._getResults(response, aggs)
+		);
 	}
 
-	count(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		console.log('dataTableData', dataTableData);
+	private _getResults(response: any, aggs: AggregationData[]): any[] {
+		let aggByIdMap = this._getaggByIdMap(aggs);
+		let results = [];
+		for(let i=0; i<aggs.length; i++){
+			results.push(this._getAggResult(response, aggs[i]));
+		}
+		return results;
+	}
 
-		if(dataTableData!==null){
-			var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-			return this.elasticsearch.numFieldCalculation(index, dataTableAggregation)
-			.then(function(aggregations){
-				var columns = [dataTableData.field, 'Count'];
-				var rows = [];
-				var tableData = {
-					columns: columns,
-					rows: rows
-				};
+	private _getAggResult(response: any, agg: AggregationData): any {
+		let aggResponse = response.aggregations[agg.id];
+		switch(agg.type){
+			case 'count':
+				return this._getCountResult(response);
+			case 'avg':
+			case 'sum':
+			case 'min':
+			case 'max':
+			case 'cardinality':
+				return this._getSimpleResult(aggResponse, agg);
+			case 'median':
+				return this._getMedianResult(aggResponse, agg);
+			case 'extended_stats':
+				return this._getStdResult(aggResponse, agg);
+			case 'percentiles':
+				return this._getPercentilesResult(aggResponse, agg);
+			case 'percentile_ranks':
+				return this._getPercentileRanksResult(aggResponse, agg);
+			case 'top_hits':
+				return this._getTopHitsResult(aggResponse, agg);
+		}
+	}
 
-				for(var i=0; i<aggregations.result.buckets.length; i++){
-					rows.push([
-						aggregations.result.buckets[i].key,
-						aggregations.result.buckets[i].doc_count
-					]);
+	private _getaggByIdMap(aggs: AggregationData[]): Map<string, AggregationData> {
+		let aggByIdMap = new Map<string, AggregationData>();
+		for(let i=0; i<aggs.length; i++){
+			aggByIdMap.set(aggs[i].id, aggs[i]);
+		}
+		return aggByIdMap;
+	}
+
+	private _getCountResult(response: any): any[]{
+		return [{
+				label: 'Count',
+				result: response.hits.total
+		}];
+	}
+
+	// This method is avilable for aggs: avg, sum, min, max, cardinality
+	private _getSimpleResult(aggResponse: any, agg: AggregationData): any[] {
+		return [{
+			label: ('Average ' + agg.params.field),
+			result: aggResponse.value
+		}];
+	}
+
+	private _getMedianResult(aggResponse: any, agg: AggregationData): any[]{
+		return [{
+					label: ('50th percentile of ' + agg.params.field),
+					result: aggResponse.values['50.0']
+		}]
+	}
+
+	private _getStdResult(aggResponse: any, agg: AggregationData): any[]{
+		return [
+			{
+				label: ('Lower Standard Deviation of ' + agg.params.field),
+				result: aggResponse.std_deviation_bounds.lower
+			},
+			{
+				label: ('Upper Standard Deviation of ' + agg.params.field),
+				result: aggResponse.std_deviation_bounds.upper
+			}
+		]
+	}
+
+	private _getPercentilesResult(aggResponse: any, agg: AggregationData): any[]{
+		let results = [];
+		for(let percentile in aggResponse.values){
+			results.push(
+				{
+					label: (percentile + 'th percentile of ' + agg.params.field),
+					result: Math.round(aggResponse.values[percentile]*100)/100
 				}
-				return tableData;
+			);
+		}
+		return results;
+	}
+
+	private _getPercentileRanksResult(aggResponse: any, agg: AggregationData): any[]{
+		let results = [];
+		for(let percentile in aggResponse.values){
+			results.push({
+				label: (
+					'Percentile rank ' + percentile + ' of "' + agg.params.field + '"'
+				),
+				result: Math.round(aggResponse.values[percentile]*100)/100
 			});
-		}else{
-			console.log('this.elasticsearch', this.elasticsearch);
-			return this.elasticsearch.count(index)
-			.then(count => [{
-					label: 'Count',
-					result: count
-			}]);
 		}
+		return results;
 	}
 
-	getDataTableResults(dataTableData: any, aggregations: any, label: string): any {
-		var columns = [dataTableData.field, label];
-		var rows = [];
-		var tableData = {
-			columns: columns,
-			rows: rows
-		};
-
-		for(var i=0; i<aggregations.result.buckets.length; i++){
-			rows.push([
-				aggregations.result.buckets[i].key,
-				Math.round(aggregations.result.buckets[i].result.value*100)/100
-			]);
-		}
-
-		return tableData;
-	}
-
-	avg(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var avgAgg = {
-				'result': {
-					'avg': {'field':selectedNumField}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = avgAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(aggregations =>
-					this.getDataTableResults(
-						dataTableData,
-						aggregations,
-						('Average' + dataTableData.field))
-				);
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, avgAgg)
-				.then(aggregations => [{
-						label: ('Average ' + selectedNumField),
-						result: [aggregations.result.value]
-				}]);
-			}
-
-		}
-	}
-
-	sum(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var sumAgg = {
-				'result': {
-					'sum': {'field': selectedNumField}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = sumAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(aggregations =>
-					this.getDataTableResults(
-						dataTableData,
-						aggregations,
-						('Sum of' + dataTableData.field))
-					);
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, sumAgg)
-				.then(aggregations => [{
-						label: ('Sum of ' + selectedNumField),
-						result: [aggregations.result.value]
-				}]);
-			}
-		}
-	}
-
-	min(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var minAgg = {
-				'result': {
-					'min': {'field': selectedNumField}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = minAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(aggregations =>
-					this.getDataTableResults(
-						dataTableData,
-						aggregations,
-						('Min ' + selectedNumField)
-					)
-				);
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, minAgg)
-				.then(aggregations => [{
-							label: ('Min ' + selectedNumField),
-							result: [aggregations.result.value]
-				}]);
-			}
-		}
-	}
-
-	max(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var maxAgg = {
-				'result': {
-					'max': {'field': selectedNumField}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = maxAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(aggregations =>
-					this.getDataTableResults(
-						dataTableData,
-						aggregations,
-						('Max ' + selectedNumField)
-					)
-				);
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, maxAgg)
-				.then(aggregations => [{
-							label: ('Max ' + selectedNumField),
-							result: [aggregations.result.value]
-				}]);
-			}
-		}
-	}
-
-	median(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var medianAgg = {
-				'result': {
-					'percentiles': {
-						'field':selectedNumField,
-						'percents': [50]
-					}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = medianAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(function(aggregations) {
-					var columns = [
-						dataTableData.field,
-						('50th percentile of ' + selectedNumField)
-					]
-					var rows = []
-					var tableData = {
-						columns: columns,
-						rows: rows
-					}
-
-					for(var i=0; i<aggregations.result.buckets.length; i++){
-						rows.push([
-							aggregations.result.buckets[i].key,
-							aggregations.result.buckets[i].result.values['50.0']
-						]);
-					}
-
-					return tableData;
-				});
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, medianAgg)
-				.then(aggregations => [{
-							label: ('50th percentile of ' + selectedNumField),
-							result: [aggregations.result.values['50.0']]
-				}]);
-			}
-		}
-	}
-
-	stdDeviation(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var medianAgg = {
-				'result': {
-					'extended_stats': {
-						'field':selectedNumField,
-						'sigma': 2
-					}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = medianAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(function(aggregations) {
-					var columns = [
-						dataTableData.field,
-						('Lower Standard Deviation of ' + selectedNumField),
-						('Upper Standard Deviation of ' + selectedNumField)
-					]
-					var rows = []
-					var tableData = {
-						columns: columns,
-						rows: rows
-					}
-
-					for(var i=0; i<aggregations.result.buckets.length; i++){
-						rows.push([
-							aggregations.result.buckets[i].key,
-							aggregations.result.buckets[i].result.std_deviation_bounds.lower,
-							aggregations.result.buckets[i].result.std_deviation_bounds.upper
-						]);
-					}
-
-					return tableData;
-				});
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, medianAgg)
-				.then(aggregations =>
-					[
-						{
-							label: ('Lower Standard Deviation of ' + selectedNumField),
-							result: [aggregations.result.std_deviation_bounds.lower]
-						},
-						{
-							label: ('Upper Standard Deviation of ' + selectedNumField),
-							result: [aggregations.result.std_deviation_bounds.upper]
-						}
-					]
-				);
-			}
-		}
-	}
-
-	uniqueCount(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var uniqueCountAgg = {
-				'result': {
-					'cardinality': {'field': selectedNumField}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = uniqueCountAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(aggregations =>
-					this.getDataTableResults(
-						dataTableData,
-						aggregations,
-						('Unique count of ' + selectedNumField)
-					)
-				);
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, uniqueCountAgg)
-				.then(aggregations => [{
-							label: ('Unique count of ' + selectedNumField),
-							result: [aggregations.result.value]
-				}]);
-			}
-		}
-	}
-
-	percentiles(
-		index: string,
-		selectedNumField: string,
-		percentileValues: number[],
-		dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var percentilesAgg = {
-				'result': {
-					'percentiles': {
-						'field': selectedNumField,
-						'percents': percentileValues
-					}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = percentilesAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(function(aggregations) {
-					var columns = new Set([dataTableData.field]);
-					var rows = []
-					var tableData = {
-						columns: columns,
-						rows: rows
-					}
-
-					for(var i=0; i<aggregations.result.buckets.length; i++){
-						var key = aggregations.result.buckets[i].key;
-						var row = [key];
-						for(var percentile in aggregations.result.buckets[i].result.values){
-							columns.add(percentile + 'th percentile of ' + selectedNumField);
-							row.push(Math.round(aggregations.result.buckets[i].result.values[percentile]*100)/100);
-						}
-						rows.push(row);
-					}
-
-					return tableData;
-				});
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, percentilesAgg)
-				.then(function(aggregations){
-					var results = [];
-					for(var percentile in aggregations.result.values){
-						results.push(
-							{
-								label: (percentile + 'th percentile of ' + selectedNumField),
-								result: [Math.round(aggregations.result.values[percentile]*100)/100]
-							}
-						);
-					}
-					return results;
-				});
-			}
-		}
-	}
-
-	percentileRanks(
-		index: string,
-		selectedNumField: string,
-		percentileValues: number[],
-		dataTableData: any): PromiseLike<any> {
-		if(index && selectedNumField){
-			var percentileRanksAgg = {
-				'result': {
-					'percentile_ranks': {
-						'field': selectedNumField,
-						'values': percentileValues
-					}
-				}
-			};
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = percentileRanksAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(function(aggregations) {
-					var columns = new Set([dataTableData.field]);
-					var rows = []
-					var tableData = {
-						columns: columns,
-						rows: rows
-					}
-
-					for(var i=0; i<aggregations.result.buckets.length; i++){
-						var key = aggregations.result.buckets[i].key;
-						var row = [key];
-						for(var percentile in aggregations.result.buckets[i].result.values){
-							columns.add('Percentile rank ' + percentile + ' of "' + selectedNumField + '"');
-							row.push(Math.round(aggregations.result.buckets[i].result.values[percentile]*100)/100);
-						}
-						rows.push(row);
-					}
-
-					return tableData;
-				});
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, percentileRanksAgg)
-				.then(function(aggregations){
-					var results = [];
-					for(var percentile in aggregations.result.values){
-						results.push({
-							label: (
-								'Percentile rank ' +
-								percentile + ' of "' + selectedNumField + '"'
-							),
-							result: [Math.round(aggregations.result.values[percentile]*100)/100]
-						});
-					}
-					return results;
-				});
-			}
-		}
-	}
-
-	topHits(
-		index: string,
-		selectedField: string,
-		sortOn: string,
-		size: number,
-		order: string,
-		aggType: string,
-		dataTableData: any): PromiseLike<any> {
-
-		var sortOnObj = {};
-		sortOnObj[sortOn] = {
-			'order': order
-		}
-
-		if(index && selectedField){
-			var topHitsAgg = {
-				'result': {
-					'top_hits': {
-						"sort": [ sortOnObj ],
-						"_source": {
-							"includes": [ selectedField ]
-						},
-						"size" : size
-					}
-				}
-			};
-
-			var orderLabel = (order==='asc') ? 'First' : 'Last';
-
-			var that = this;
-
-			if(dataTableData){
-				var dataTableAggregation = this.getDataTableAggregation(dataTableData);
-
-				var aggs = {
-					"result": {}
-				}
-				aggs.result = dataTableAggregation.result;
-				aggs.result["aggs"] = topHitsAgg;
-
-				return this.elasticsearch.numFieldCalculation(index, aggs)
-				.then(function(aggregations) {
-					var columns = [
-						dataTableData.field,
-						(orderLabel + ' ' + size + ' ' + selectedField)
-					];
-					var rows = []
-					var tableData = {
-						columns: columns,
-						rows: rows
-					}
-
-					for(var i=0; i<aggregations.result.buckets.length; i++){
-						var hitsArr = aggregations.result.buckets[i].result.hits.hits;
-						rows.push([
-							aggregations.result.buckets[i].key,
-							that.getTopHitsResut(hitsArr, selectedField, aggType)
-						]);
-					}
-
-					return tableData;
-				});
-			}else{
-				return this.elasticsearch.numFieldCalculation(index, topHitsAgg)
-				.then(function(aggregations){
-					var results = [];
-					var hitsArr = aggregations.result.hits.hits;
-
-					results.push({
-						label: (orderLabel + ' ' + size + ' ' + selectedField),
-						result: [that.getTopHitsResut(hitsArr, selectedField, aggType)]
-					});
-
-					return results;
-				});
-			}
-		}
-	}
-
-	private getTopHitsResut(
-		hits: any[],
-		selectedField: string,
-		aggType: string): any[]{
-
-		var results = [];
-
-		if(aggType==='Concatenate'){
-			var concatenation = '';
-			for(var i=0; i<hits.length; i++){
-				concatenation += hits[i]._source[selectedField]
-				if(i<(hits.length-1)) concatenation += ', '
-			}
-			results.push(concatenation);
-		}else if(aggType==='Sum'){
-			var sum = 0;
-			for(var i=0; i<hits.length; i++){
-				sum += hits[i]._source[selectedField];
-			}
-			results.push(sum);
-		}else if(aggType==='Max'){
-			var max = null;
-			for(var i=0; i<hits.length; i++){
-				var hitValue = hits[i]._source[selectedField];
-				if(max===null){
-					max = hits[i]._source[selectedField];
-				}else if(hitValue>max){
-					max = hitValue;
-				}
-			}
-			results.push(max);
-		}else if(aggType==='Min'){
-			var min = null;
-			for(var i=0; i<hits.length; i++){
-				var hitValue = hits[i]._source[selectedField];
-				if(min===null){
-					min = hits[i]._source[selectedField];
-				}else if(hitValue<min){
-					min = hitValue;
-				}
-			}
-			results.push(min);
-		}else if(aggType==='Average'){
-			var avg = null;
-			var sum = 0;
-			for(var i=0; i<hits.length; i++){
-				sum += hits[i]._source[selectedField];
-			}
-
-			avg = (hits.length>0) ? sum/hits.length : 0;
-
-			results.push(avg);
-		}
+	private _getTopHitsResult(aggResponse: any, agg: AggregationData): any[]{
+		let results = [];
+		let hitsArr = aggResponse.hits.hits;
+		let orderLabel = (agg.params.sortOrder==='asc') ? 'First' : 'Last';
+
+		results.push({
+			label: (orderLabel + ' ' + agg.params.size + ' ' + agg.params.field),
+			result: this._getTopHitsResut(aggResponse, agg)
+		});
 
 		return results;
 	}
 
-	private getDataTableAggregation(aggregationData: any): any {
-		var aggregation = aggregationData.name;
-		if(aggregation==='Histogram'){
-			return {
-				"result": {
-					"histogram": {
-						"field": aggregationData.field,
-						"interval": aggregationData.interval
-					}
-				}
-			}
-		}else if(aggregation==='Range'){
-			return {
-				"result": {
-					"range" : {
-						"field" : aggregationData.field,
-						"ranges" : aggregationData.ranges/*[
-							{ "from" : 0, "to" : 20 },
-							{ "from" : 20, "to" : 25 },
-							{ "from" : 25, "to" : 40 }
-						]*/
-					}
-				}
-			}
-		}else{
-			return null;
+	private _getTopHitsResut(aggResponse: any, agg: AggregationData): any{
+		let hits = aggResponse.hits.hits;
+		let selectedField =agg.params.field;
+		let aggType = agg.params.aggregate;
+
+		if(aggType==='Concatenate'){
+			return this._getConcatenation(hits, selectedField);
+		}else if(aggType==='Sum'){
+			return this._getSummation(hits, selectedField);
+		}else if(aggType==='Max'){
+			return this._getMaximum(hits, selectedField);
+		}else if(aggType==='Min'){
+			return this._getMinimum(hits, selectedField);
+		}else if(aggType==='Average'){
+			return this._getAverage(hits, selectedField);
 		}
+		return null;
+	}
+
+	private _getConcatenation(hits: any[], selectedField: string): any{
+		let concatenation = '';
+		for(let i=0; i<hits.length; i++){
+			concatenation += hits[i]._source[selectedField]
+			if(i<(hits.length-1)) concatenation += ', '
+		}
+		return concatenation;
+	}
+
+	private _getSummation(hits: any[], selectedField: string): any{
+		let sum = 0;
+		for(let i=0; i<hits.length; i++){
+			sum += hits[i]._source[selectedField];
+		}
+		return sum;
+	}
+
+	private _getMaximum(hits: any[], selectedField: string): any{
+		let max = null;
+		for(let i=0; i<hits.length; i++){
+			let hitValue = hits[i]._source[selectedField];
+			max = (!max || hitValue>max) ? hitValue : max;
+		}
+		return max;
+	}
+
+	private _getMinimum(hits: any[], selectedField: string): any{
+		let min = null;
+		for(let i=0; i<hits.length; i++){
+			let hitValue = hits[i]._source[selectedField];
+			min = (!min || hitValue<min) ? hitValue : min;
+		}
+		return min;
+	}
+
+	private _getAverage(hits: any[], selectedField: string): any{
+		let sum = 0;
+		for(let i=0; i<hits.length; i++){
+			sum += hits[i]._source[selectedField];
+		}
+		let avg = (hits.length>0) ? sum/hits.length : 0;
+		return avg;
 	}
 }
