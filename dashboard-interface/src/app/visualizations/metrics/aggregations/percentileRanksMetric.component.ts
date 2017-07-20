@@ -12,9 +12,10 @@ import { maxValidator } from '../../../shared/validators.directive';
 })
 
 export class PercentileRanksMetricComponent {
+	@Output() dataChange = new EventEmitter<any>();
+
 	@Input() numField: string = '';
 	@Input() savedData: any = null;
-	@Output() resultsEvent = new EventEmitter<number[]>();
 
 	form: FormGroup;
 	formErrors = {
@@ -37,6 +38,10 @@ export class PercentileRanksMetricComponent {
 		if(this.savedData && this.savedData.params){
 			this.loadSavedData();
 		}
+	}
+
+	dataChangeEvent(): void {
+		this.dataChange.emit();
 	}
 
 	loadSavedData(): void {
@@ -80,6 +85,7 @@ export class PercentileRanksMetricComponent {
 				new Set(this.percentileRankValues).add(percentile)
 			).sort((a,b) => a - b);
 		}
+		this.dataChangeEvent();
 	}
 
 }
