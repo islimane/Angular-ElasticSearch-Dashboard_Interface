@@ -63,10 +63,11 @@ export class TopHitMetricComponent {
 	) {}
 
 	ngOnInit(): void{
-		console.log('TOP HIT METRIC CMP - ngOnInit()');
+		console.log('TOP HIT METRIC - ngOnInit()');
 		this.buildForm();
 		console.log('savedData:', this.savedData);
-		this.dataChange.emit();
+		if(!this.savedData)
+			this.dataChange.emit();
 	}
 
 	dataChangeEvent(): void {

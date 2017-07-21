@@ -174,7 +174,7 @@ export class MetricsComponent {
 		// update metric data with saved data
 		if(agg) this.dynamicComponents.setInputs(uniqueId, { savedData: agg });
 
-		this.metricsMap.set(uniqueId, newMetricCmp.getAggregationData());
+		this.metricsMap.set(uniqueId, agg || newMetricCmp.getAggregationData());
 	}
 
 	guidGenerator(): string {
