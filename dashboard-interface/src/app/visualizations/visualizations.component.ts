@@ -108,12 +108,7 @@ export class VisualizationsComponent {
 		}
 	}
 
-	getNumFields(index: string): PromiseLike<string[]> {
-		return ;
-	}
-
 	// Service communication methods
-
 	private _sendFields(): void {
 		console.log('VISUALIZATIONS - sendFields()');
 		this._sendNumFields();

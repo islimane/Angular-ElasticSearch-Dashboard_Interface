@@ -73,12 +73,6 @@ export class TopHitMetricComponent {
 		this.dataChange.emit();
 	}
 
-	/*loadSavedData(): void {
-		this.selectedOrder = this.savedData.params.sortOrder;
-		this.selectedTopHitAgg = this.savedData.params.aggregate;
-		this.hitsSize = this.savedData.params.size;
-	}*/
-
 	buildForm(): void {
 		this.form = this.fb.group({
 			'topHits': ['', []]
