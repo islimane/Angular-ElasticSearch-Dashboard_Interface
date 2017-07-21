@@ -15,7 +15,7 @@ export class VisualizationsComponent {
 	@ViewChild(MetricsComponent) metricsComponent: MetricsComponent;
 
 	visualizations: string[] = ['Metric', 'Data Table'];
-	selectedVisualization: string = this.visualizations[1];
+	selectedVisualization: string = this.visualizations[0];
 	savedVisualizations: any[] = [];
 
 	indexes: string[] = [];
@@ -63,6 +63,7 @@ export class VisualizationsComponent {
 	setAllFields(): PromiseLike<void> {
 		return this._elasticsearch.getAllFields(this.selectedIndex)
 		.then((fields) => {
+			console.log('VISUALIZATIONS - SETTED FIELDS:', fields);
 			var numFields = [];
 			var textFields = [];
 			for(var field in fields){
@@ -74,7 +75,6 @@ export class VisualizationsComponent {
 			}
 			this.textFields = textFields;
 			this.numFields = numFields;
-			console.log('SETTED FIELDS 1');
 		});
 	}
 
@@ -89,8 +89,8 @@ export class VisualizationsComponent {
 		console.log('visState.type', visState.type);
 		this.selectedIndex = searchSource.index;
 		this.setAllFields().then(() => {
-				console.log('SETTED FIELDS 2');
-				this.metricsComponent.loadSavedMetrics(visState.aggs)
+				this._sendFields();
+				this.metricsComponent.loadSavedMetrics(visState.aggs);
 		});
 	}
 
