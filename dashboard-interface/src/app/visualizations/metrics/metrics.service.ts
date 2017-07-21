@@ -30,7 +30,7 @@ export class MetricsService {
 	}
 
 	private _getAggResult(response: any, agg: AggregationData): any {
-		let aggResponse = response.aggregations[agg.id];
+		let aggResponse = (response.aggregations) ? response.aggregations[agg.id] : null;
 		switch(agg.type){
 			case 'count':
 				return this._getCountResult(response);
