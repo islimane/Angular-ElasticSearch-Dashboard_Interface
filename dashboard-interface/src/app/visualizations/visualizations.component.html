@@ -38,7 +38,8 @@
 
 		<div *ngIf="selectedVisualization==='Metric'">
 			<metrics
-				[index]="selectedIndex">
+				[index]="selectedIndex"
+				(init)="onVisInit()">
 			</metrics>
 		</div>
 

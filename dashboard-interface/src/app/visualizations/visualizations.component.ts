@@ -36,25 +36,27 @@ export class VisualizationsComponent {
 	}
 
 	onIndexChange(newIndex): void {
-		this.setAllFields();
+		this.setAllFields().then(() => this._sendFields());
+	}
+
+	onVisInit(): void {
+		this._sendFields();
 	}
 
 	setSavedVisualizations(): void {
-		var that = this;
-		this._elasticsearch.getSavedVisualizations().then(function(hits){
+		this._elasticsearch.getSavedVisualizations().then(hits => {
 			for(let i=0; i<hits.length; i++){
-				that.savedVisualizations.push(hits[i]);
+				this.savedVisualizations.push(hits[i]);
 			}
-			console.log('savedVisualizations', that.savedVisualizations);
+			console.log('savedVisualizations', this.savedVisualizations);
 		});
 	}
 
 	setIndexes(): void {
-		var that = this;
-		this._elasticsearch.getIndices().then(function(indices){
-			that.indexes = indices;
-			that.selectedIndex = (that.indexes.length>0) ? that.indexes[0] : '';
-			that.setAllFields();
+		this._elasticsearch.getIndices().then(indices => {
+			this.indexes = indices;
+			this.selectedIndex = (this.indexes.length>0) ? this.indexes[0] : '';
+			this.setAllFields().then(() => this._sendFields());
 		});
 	}
 
@@ -73,7 +75,6 @@ export class VisualizationsComponent {
 			this.textFields = textFields;
 			this.numFields = numFields;
 			console.log('SETTED FIELDS 1');
-			this.sendFiedls();
 		});
 	}
 
@@ -113,16 +114,17 @@ export class VisualizationsComponent {
 
 	// Service communication methods
 
-	sendFiedls(): void {
-		this.sendNumFields();
-		this.sendTextFields();
+	private _sendFields(): void {
+		console.log('VISUALIZATIONS - sendFields()');
+		this._sendNumFields();
+		this._sendTextFields();
 	}
 
-	sendNumFields(): void {
+	private _sendNumFields(): void {
 		this._visualizationsService.sendNumFields(this.numFields);
 	}
 
-	sendTextFields(): void {
+	private _sendTextFields(): void {
 		this._visualizationsService.sendTextFields(this.textFields);
 	}
 }

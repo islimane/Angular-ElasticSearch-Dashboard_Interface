@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild } from '@angular/core';
+import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MetricComponent } from './metric.component';
 import { DynamicComponent } from '../../shared/dynamicComponent.component';
 
@@ -24,13 +24,15 @@ import { Subscription } from 'rxjs/Subscription';
 export class MetricsComponent {
 	@ViewChild(DynamicComponent) dynamicComponents;
 
+	@Output() init: EventEmitter<any> = new EventEmitter<any>();
+
 	@Input() widgetMode: boolean = false;
 	@Input() index: string;
 	// This fields come from _visualizationsService
-	numFields: string[] = [];
-	textFields: string[] = [];
+	private _numFields: string[];
+	private _textFields: string[];
 
-	subscriptions: Subscription[] = [];
+	private _subscriptions: Subscription[] = [];
 
 	metricComponentType: any = MetricComponent;
 	metricEvents: Array<string> = [ 'remove', 'dataChange' ];
@@ -46,17 +48,23 @@ export class MetricsComponent {
 	) {
 		let sub1 = _visualizationsService.numFieldsSent$.subscribe(numFields => {
 			console.log('METRICS - RECIEVED - numFields:', numFields);
-			this.numFields = numFields;
+			this._numFields = numFields;
 			if(numFields) this.updateMetricsInputs();
 		})
 
 		let sub2 = _visualizationsService.textFieldsSent$.subscribe(textFields => {
 			console.log('METRICS - RECIEVED - textFields:', textFields);
-			this.textFields = textFields;
+			this._textFields = textFields;
 			if(textFields) this.updateMetricsInputs();
 		})
 
-		this.subscriptions.push(sub1, sub2);
+		this._subscriptions.push(sub1, sub2);
+	}
+
+	ngOnInit(): void {
+		console.log('METRICS - ngOnInit()');
+		console.log('this._numFields:', this._numFields);
+		this.init.emit();
 	}
 
 	onEvent(event): void {
@@ -81,9 +89,9 @@ export class MetricsComponent {
 	}
 
 	ngOnDestroy() {
-		for(let i=0; i<this.subscriptions.length; i++){
+		for(let i=0; i<this._subscriptions.length; i++){
 			// prevent memory leak when component destroyed
-			this.subscriptions[i].unsubscribe();
+			this._subscriptions[i].unsubscribe();
 		}
 	}
 
@@ -92,8 +100,8 @@ export class MetricsComponent {
 		this.metricsMap.forEach((value, key, map) => {
 			let inputs = {
 				index: this.index,
-				numFields: this.numFields,
-				textFields: this.textFields
+				numFields: this._numFields,
+				textFields: this._textFields
 			}
 
 			this.dynamicComponents.setInputs(key, inputs);
@@ -149,8 +157,8 @@ export class MetricsComponent {
 	addMetric(agg: AggregationData): void {
 		let inputs = {
 			index: this.index,
-			numFields: this.numFields,
-			textFields: this.textFields,
+			numFields: this._numFields,
+			textFields: this._textFields,
 			widgetMode: false,
 			savedData: null
 		};
@@ -202,6 +210,7 @@ export class MetricsComponent {
 		console.log('%c metricsMap', 'background: #222; color: #bada55', this.metricsMap);
 		console.log('%c metrics', 'background: #222; color: #bada55', Array.from(this.metricsMap.values()));
 		console.log('%c results', 'background: #222; color: #bada55', this.results);
+		console.log('%c numFields', 'background: #222; color: #bada55', this._numFields);
+		console.log('%c textFields', 'background: #222; color: #bada55', this._textFields);
 	}
-
 }
