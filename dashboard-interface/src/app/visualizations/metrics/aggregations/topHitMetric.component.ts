@@ -25,8 +25,10 @@ export class TopHitMetricComponent {
 	@Input() savedData: any = null;
 	private _fields: string[] = [];
 	@Input() set fields(fields: string[]) {
+		if(!_.isEqual(fields,this._fields)){
+			this.selectedSortField = fields[0];
+		}
 		this._fields = fields;
-		this.selectedSortField = fields[0];
 	};
 	@Output() dataChange = new EventEmitter<any>();
 
@@ -71,19 +73,11 @@ export class TopHitMetricComponent {
 		this.dataChange.emit();
 	}
 
-	loadSavedData(): void {
+	/*loadSavedData(): void {
 		this.selectedOrder = this.savedData.params.sortOrder;
 		this.selectedTopHitAgg = this.savedData.params.aggregate;
 		this.hitsSize = this.savedData.params.size;
-		/*this.metricsService.getTextFields(this.index).then(textFields => {
-			this.textFields = textFields;
-			console.log('this.savedData.params.field:', this.savedData.params.field);
-			this.selectedField = this.savedData.params.field;
-			console.log('this.savedData.params.sortField:', this.savedData.params.sortField);
-			this.selectedSortField = this.savedData.params.sortField;
-			this.calculate(null);
-		});*/
-	}
+	}*/
 
 	buildForm(): void {
 		this.form = this.fb.group({
