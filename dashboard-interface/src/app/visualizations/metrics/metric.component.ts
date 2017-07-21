@@ -133,19 +133,19 @@ export class MetricComponent {
 
 	getAggParams(): any {
 		switch (this.selectedAggregation){
-			case 'count': {
+			case 'count':
 				return {};
-			}case 'avg': {
-			}case 'sum': {
-			}case 'min': {
-			}case 'max': {
-			}case 'median': {
-			}case 'extended_stats': {
-			}case 'cardinality': {
+			case 'avg':
+			case 'sum':
+			case 'min':
+			case 'max':
+			case 'median':
+			case 'extended_stats':
+			case 'cardinality':
 				return {
 					field: this.selectedField
 				};
-			}case 'percentiles': {
+			case 'percentiles': {
 				let cmp = this.percentilesMetricComponent;
 				return {
 					field: this.selectedField,
@@ -158,21 +158,16 @@ export class MetricComponent {
 					values: (cmp) ? cmp.percentileRankValues : []
 				};
 			}case 'top_hits': {
-				if(this.topHitMetricComponent){
-					let cmp = this.topHitMetricComponent;
-					return {
-						field: this.selectedField,
-						aggregate: (cmp) ? cmp.selectedTopHitAgg: 'Concatenate',
-						size: (cmp) ? cmp.hitsSize: '1',
-						sortField: (cmp) ? cmp.selectedSortField: this._numFields[0],
-						sortOrder: (cmp) ? cmp.selectedOrder: 'desc'
-					};
-				}else{
-					return null;
-				}
-			}default: {
+				let cmp = this.topHitMetricComponent;
+				return {
+					field: this.selectedField,
+					aggregate: (cmp) ? cmp.selectedTopHitAgg: 'Concatenate',
+					size: (cmp) ? cmp.hitsSize: '1',
+					sortField: (cmp) ? cmp.selectedSortField: this._numFields[0],
+					sortOrder: (cmp) ? cmp.selectedOrder: 'desc'
+				};
+			}default:
 				return null;
-			}
 		}
 	}
 
