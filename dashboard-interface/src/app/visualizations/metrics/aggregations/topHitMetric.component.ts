@@ -12,17 +12,19 @@ import * as _ from "lodash";
 })
 
 export class TopHitMetricComponent {
+	@Output() dataChange = new EventEmitter<any>();
+
 	private _selectedFieldData: any = {
 		field: '',
 		isTextField: false
-	}
+	};
 	@Input() set selectedFieldData(selectedFieldData: any) {
 		this._selectedFieldData = selectedFieldData;
 		this._aggsToDisplay = this.topHitAggregations.filter((agg) => this.isValidAgg(agg));
 		if(this._aggsToDisplay.length===1)
 			this.selectedTopHitAgg = this._aggsToDisplay[0];
 	};
-	@Input() savedData: any = null;
+
 	private _fields: string[] = [];
 	@Input() set fields(fields: string[]) {
 		if(!_.isEqual(fields,this._fields)){
@@ -30,7 +32,18 @@ export class TopHitMetricComponent {
 		}
 		this._fields = fields;
 	};
-	@Output() dataChange = new EventEmitter<any>();
+
+	private _savedData: any = null;
+	@Input() set savedData(savedData: any) {
+		console.log('TOP HIT - SET savedData:', savedData);
+		this._savedData = savedData;
+		if(savedData){
+			this.selectedTopHitAgg = savedData.params.aggregate;
+			this.hitsSize = savedData.params.size;
+			this.selectedSortField = savedData.params.sortField;
+			this.selectedOrder = savedData.params.sortOrder;
+		}
+	};
 
 	form: FormGroup;
 	formErrors = {
@@ -65,8 +78,8 @@ export class TopHitMetricComponent {
 	ngOnInit(): void{
 		console.log('TOP HIT METRIC - ngOnInit()');
 		this.buildForm();
-		console.log('savedData:', this.savedData);
-		if(!this.savedData)
+		console.log('_savedData:', this._savedData);
+		if(!this._savedData)
 			this.dataChange.emit();
 	}
 
