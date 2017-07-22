@@ -46,24 +46,12 @@ export class MetricsComponent {
 		private _visualizationsService: VisualizationsService,
 		private _elasticCli: Elasticsearch
 	) {
-		let sub1 = _visualizationsService.numFieldsSent$.subscribe(numFields => {
-			console.log('METRICS - RECIEVED - numFields:', numFields);
-			this._numFields = numFields;
-			if(numFields) this.updateMetricsInputs();
-		})
-
-		let sub2 = _visualizationsService.textFieldsSent$.subscribe(textFields => {
-			console.log('METRICS - RECIEVED - textFields:', textFields);
-			this._textFields = textFields;
-			if(textFields) this.updateMetricsInputs();
-		})
-
-		this._subscriptions.push(sub1, sub2);
+		this._subscribeToVisService();
 	}
 
 	ngOnInit(): void {
 		console.log('METRICS - ngOnInit()');
-		console.log('this._numFields:', this._numFields);
+		console.log('METRICS - this._numFields:', this._numFields);
 		this.init.emit();
 	}
 
@@ -93,6 +81,24 @@ export class MetricsComponent {
 			// prevent memory leak when component destroyed
 			this._subscriptions[i].unsubscribe();
 		}
+	}
+
+	private _subscribeToVisService(): void {
+		console.log('METTRICS - _subscribeToVisService()');
+
+		let sub1 = this._visualizationsService.numFieldsSent$.subscribe(numFields => {
+			console.log('METRICS - RECIEVED - numFields:', numFields);
+			this._numFields = numFields;
+			if(numFields) this.updateMetricsInputs();
+		})
+
+		let sub2 = this._visualizationsService.textFieldsSent$.subscribe(textFields => {
+			console.log('METRICS - RECIEVED - textFields:', textFields);
+			this._textFields = textFields;
+			if(textFields) this.updateMetricsInputs();
+		})
+
+		this._subscriptions.push(sub1, sub2);
 	}
 
 	updateMetricsInputs(): void {
