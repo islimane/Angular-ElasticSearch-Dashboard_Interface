@@ -27,9 +27,10 @@ export class TopHitMetricComponent {
 
 	private _fields: string[] = [];
 	@Input() set fields(fields: string[]) {
+		console.log('TOP HIT - SET - fields:', fields);
 		if(!_.isEqual(fields,this._fields)){
 			this.selectedSortField = fields[0];
-			this.dataChangeEvent();
+			if(this._lodaded) this.dataChangeEvent();
 		}
 		this._fields = fields;
 	};
@@ -45,6 +46,8 @@ export class TopHitMetricComponent {
 			this.selectedOrder = savedData.params.sortOrder;
 		}
 	};
+
+	private _lodaded: boolean = false;
 
 	form: FormGroup;
 	formErrors = {
@@ -78,13 +81,15 @@ export class TopHitMetricComponent {
 
 	ngOnInit(): void{
 		console.log('TOP HIT METRIC - ngOnInit()');
+		this._lodaded = true;
 		this.buildForm();
 		console.log('_savedData:', this._savedData);
 		if(!this._savedData)
-			this.dataChange.emit();
+			this.dataChangeEvent();
 	}
 
 	dataChangeEvent(): void {
+		console.log('TOP HIT - EMIT CHANGE');
 		this.dataChange.emit();
 	}
 
