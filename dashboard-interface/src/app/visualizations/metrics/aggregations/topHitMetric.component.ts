@@ -29,6 +29,7 @@ export class TopHitMetricComponent {
 	@Input() set fields(fields: string[]) {
 		if(!_.isEqual(fields,this._fields)){
 			this.selectedSortField = fields[0];
+			this.dataChangeEvent();
 		}
 		this._fields = fields;
 	};
