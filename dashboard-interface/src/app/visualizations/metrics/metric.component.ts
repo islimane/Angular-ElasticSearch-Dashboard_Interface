@@ -35,6 +35,7 @@ export class MetricComponent {
 		this._numFields = numFields;
 		if(numFields && numFields.length>0)
 			this.selectedField = numFields[0];
+		this.dataChangeEvent();
 	};
 	get numFields(): string[] {
 		return this._numFields;
@@ -44,6 +45,7 @@ export class MetricComponent {
 	@Input() set textFields(textFields: string[]) {
 		console.log('textFields:', textFields);
 		this._textFields = textFields;
+		this.dataChangeEvent();
 	};
 	get textFields(): string[] {
 		return this._textFields;
