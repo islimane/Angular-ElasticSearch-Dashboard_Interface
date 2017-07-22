@@ -46,7 +46,7 @@
 		<div *ngIf="selectedVisualization==='Data Table'">
 			<data-table
 			[index]="selectedIndex"
-			[numFields]="numFields">
+			(init)="onVisInit()">
 		</data-table>
 		</div>
 </div>

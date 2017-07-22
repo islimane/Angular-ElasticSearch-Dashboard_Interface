@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, SimpleChange } from '@angular/core';
+import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 
 import { MetricsComponent } from '../metrics/metrics.component';
 import { BucketsComponent } from '../buckets/buckets.component';
@@ -10,14 +10,23 @@ import { BucketsComponent } from '../buckets/buckets.component';
 
 export class DataTableComponent {
 	@ViewChild(MetricsComponent)
-	private metricsComponent: MetricsComponent
+	private metricsComponent: MetricsComponent;
+
+	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
 	@Input() index: string;
-	@Input() numFields: string[] = [];
+	private _numFields: string[];
+	private _textFields: string[];
 
 	results: any[] = [];
 	columns: string[] = []
 	rows: string[][] = [];
+
+	ngOnInit(): void {
+		console.log('DATA TABLE - ngOnInit()');
+		console.log('this._numFields:', this._numFields);
+		this.init.emit();
+	}
 
 	/*calculate(): void{
 		console.log('CALCULATE - interval:', this.interval);
