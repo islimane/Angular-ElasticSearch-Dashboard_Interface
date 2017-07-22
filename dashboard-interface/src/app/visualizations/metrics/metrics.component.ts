@@ -156,6 +156,7 @@ export class MetricsComponent {
 		console.log('METRICS - loadSavedMetrics():', aggs);
 		this.removeAll();
 		for(let i=0; i<aggs.length; i++){
+			console.log('METRICS - LOAD METRIC:', aggs[i]);
 			this.addMetric(aggs[i]);
 		}
 	}
