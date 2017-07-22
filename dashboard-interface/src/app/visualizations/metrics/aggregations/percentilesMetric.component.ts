@@ -1,22 +1,24 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder} from '@angular/forms';
 
-import { MetricsService } from '../metrics.service';
-
 import { maxValidator } from '../../../shared/validators.directive';
 
 @Component({
 	selector: 'percentiles-metric',
-	templateUrl: './percentilesMetric.component.html',
-	providers: [ MetricsService ]
+	templateUrl: './percentilesMetric.component.html'
 })
 
 export class PercentilesMetricComponent {
 	@Output() dataChange = new EventEmitter<any>();
 
-	@Input() index: string;
-	@Input() numField: string = '';
-	@Input() savedData: any = null;
+	private _savedData: any = null;
+	@Input() set savedData(savedData: any) {
+		console.log('PERCENTILES - SET savedData:', savedData);
+		this._savedData = savedData;
+		if(savedData){
+			this.percentileValues = savedData.params.percents;
+		}
+	};
 
 	form: FormGroup;
 	formErrors = {
@@ -30,25 +32,17 @@ export class PercentilesMetricComponent {
 
 	percentileValues: number[] = [];
 
-	constructor(
-		private fb: FormBuilder
-	) { }
+	constructor( private fb: FormBuilder ) {}
 
-	ngOnInit(): void{
+	ngOnInit(): void {
+		console.log('PERCENTILES - ngOnInit()');
 		this.buildForm();
-		console.log('savedData:', this.savedData);
-		if(this.savedData && this.savedData.params){
-			this.loadSavedData();
-		}
+		if(!this._savedData)
+			this.dataChange.emit();
 	}
 
 	dataChangeEvent(): void {
 		this.dataChange.emit();
-	}
-
-	loadSavedData(): void {
-		console.log(3);
-		this.percentileValues = this.savedData.params.percents;
 	}
 
 	buildForm(): void {

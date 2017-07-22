@@ -1,4 +1,4 @@
-<div *ngIf="numField">
+<div>
 	<div>
 		<form novalidate [formGroup]="form">
 			<input
@@ -20,8 +20,4 @@
 			{{'[' + value + ']'}}
 		</span>
 	</div>
-</div>
-
-<div *ngIf="!numField">
-	There is no number field to process this metric aggergation.
 </div>

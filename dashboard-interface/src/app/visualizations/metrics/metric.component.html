@@ -28,16 +28,14 @@
 
 	<div *ngIf="selectedAggregation==='percentiles'">
 		<percentiles-metric
-			[numField]="selectedField"
-			[savedData]="childrenData.percentilesMetricData"
+			[savedData]="savedData"
 			(dataChange)="dataChangeEvent()">
 		</percentiles-metric>
 	</div>
 
 	<div *ngIf="selectedAggregation==='percentile_ranks'">
 		<percentileRanks-metric
-			[numField]="selectedField"
-			[savedData]="childrenData.percentileRanksMetricData"
+			[savedData]="savedData"
 			(dataChange)="dataChangeEvent()">
 		</percentileRanks-metric>
 	</div>

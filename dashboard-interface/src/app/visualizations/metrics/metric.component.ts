@@ -35,7 +35,6 @@ export class MetricComponent {
 		this._numFields = numFields;
 		if(numFields && numFields.length>0)
 			this.selectedField = numFields[0];
-		//this.dataChangeEvent();
 	};
 	get numFields(): string[] {
 		return this._numFields;
@@ -45,7 +44,6 @@ export class MetricComponent {
 	@Input() set textFields(textFields: string[]) {
 		console.log('textFields:', textFields);
 		this._textFields = textFields;
-		//this.dataChangeEvent();
 	};
 	get textFields(): string[] {
 		return this._textFields;
@@ -57,7 +55,6 @@ export class MetricComponent {
 		this._savedData = savedData;
 		if(savedData)
 			this.loadSavedMetric(savedData);
-		//this.dataChangeEvent();
 	};
 	get savedData(): any {
 		return this._savedData;
@@ -84,12 +81,6 @@ export class MetricComponent {
 		'cardinality', 'percentiles', 'percentile_ranks', 'top_hits'
 	];
 	selectedField: string = '';
-
-	childrenData: any = {
-		percentilesMetricData: null,
-		percentileRanksMetricData: null,
-		topHitMetricData: null
-	}
 
 	constructor( public metricsService: MetricsService ) { }
 
