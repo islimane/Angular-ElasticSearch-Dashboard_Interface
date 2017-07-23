@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject }	from 'rxjs/Subject';
 
+import { AggregationData } from '../object-classes/aggregationData';
+
+
 /*
 	The reason why numFieldsSent and textFieldsSent observables are necessary
 	is becasuse the angular 2 livecycle hook order is problematic with fields
@@ -10,22 +13,29 @@ import { Subject }	from 'rxjs/Subject';
 @Injectable()
 export class VisualizationsService {
 
-	// Observable string sources
+	// Observable sources
 	private numFieldsSource = new Subject<string[]>();
 	private textFieldsSource = new Subject<string[]>();
+	private aggsSource = new Subject<AggregationData[]>();
 
-	// Observable string streams
+	// Observable streams
 	numFieldsSent$ = this.numFieldsSource.asObservable();
 	textFieldsSent$ = this.textFieldsSource.asObservable();
+	aggsSent$ = this.aggsSource.asObservable();
 
 	// Service fields commands
 	sendNumFields(numFields: string[]) {
-		console.log('SEND - sendNumFields:', numFields);
+		console.log('VISUALIZATIONS SERVICE - SEND - sendNumFields:', numFields);
 		this.numFieldsSource.next(numFields);
 	}
 
 	sendTextFields(textFields: string[]) {
-		console.log('SEND - sendTextFiedls:', textFields);
+		console.log('VISUALIZATIONS SERVICE - SEND - sendTextFiedls:', textFields);
 		this.textFieldsSource.next(textFields);
+	}
+
+	loadVis(aggs: AggregationData[]) {
+		console.log('VISUALIZATIONS SERVICE - SEND - loadVis:', aggs);
+		this.aggsSource.next(aggs);
 	}
 }

@@ -102,7 +102,7 @@ export class Elasticsearch {
 		}
 	}
 
-	public getSavedVisualizations(): PromiseLike<any> {
+	getSavedVisualizations(): PromiseLike<any> {
 		return this.cli.search({
 				"index": '.sakura',
 				"type": 'visualization',
@@ -117,7 +117,7 @@ export class Elasticsearch {
 		);
 	}
 
-	public saveVisualization(visualizationObj: VisualizationObj): void{
+	saveVisualization(visualizationObj: VisualizationObj): void{
 		this._isNewVisualization(visualizationObj.title).then(isNew => {
 			console.log('isNew:', isNew);
 			(isNew) ? this._createVis(visualizationObj) : this._updateVis(visualizationObj);

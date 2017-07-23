@@ -2,22 +2,21 @@
 	<h3>Metrics: </h3>
 
 	<dynamic-component
-		[componentType]="metricComponentType"
 		(event)="onEvent($event)">
 	</dynamic-component>
 
 	<div>
-		<button (click)="addMetric(null)">Add Metric</button>
+		<button (click)="_addMetric(null)">Add Metric</button>
 		<button (click)="debug()">Debug</button>
 	</div>
 
 	<div>
-		<button (click)="removeAll()">Remove all</button>
+		<button (click)="_removeAll()">Remove all</button>
 	</div>
 
 	<div *ngIf="!widgetMode">
 		<div>
-			<button (click)="calculateMetrics()">Calculate</button>
+			<button (click)="_calculateMetrics()">Calculate</button>
 		</div>
 
 		<div *ngIf="results.length" style="margin-top:1rem;margin-bottom:1rem;">
@@ -38,7 +37,7 @@
 				type="text"
 				required
 			/>
-			<button (click)="save(visTitle.value)">Save</button>
+			<button (click)="_save(visTitle.value)">Save</button>
 		</form>
 	</div>
 </div>

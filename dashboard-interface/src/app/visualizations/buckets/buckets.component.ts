@@ -29,7 +29,6 @@ export class BucketsComponent {
 
 	subscriptions: Subscription[] = [];
 
-	bucketComponentType: any = BucketComponent;
 	bucketEvents: Array<string> = [ 'remove', 'dataChange' ];
 	bucketsMap: Map<string, AggregationData> = new Map<string, AggregationData>();
 
@@ -95,7 +94,7 @@ export class BucketsComponent {
 		});
 	}
 
-	loadSavedBuckets(aggs: AggregationData[]): void {
+	loadBuckets(aggs: AggregationData[]): void {
 		console.log('BUCKETS - loadSavedBuckets():', aggs);
 		this._removeAll();
 		for(let i=0; i<aggs.length; i++){
@@ -113,7 +112,8 @@ export class BucketsComponent {
 		let newBucketCmp = this.dynamicComponents.addComponent(
 			uniqueId,
 			inputs,
-			this.bucketEvents
+			this.bucketEvents,
+			BucketComponent
 		);
 
 		// update bucket data with saved data

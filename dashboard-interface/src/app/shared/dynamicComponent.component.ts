@@ -18,14 +18,21 @@ export class DynamicComponent {
 	// This event will return a <string, eventData> object, with the event name
 	// as a string key
 	@Output() event: EventEmitter<any> = new EventEmitter<any>();
+	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
 	private _componentsMap: Map<string, any> = new Map<string, any>();
 
 	constructor(private resolver: ComponentFactoryResolver) {}
 
+	ngOnInit(): void {
+		console.log('DYNAMIC COMPONENT - ngOnInit()');
+		this.init.emit();
+	}
+
 	// Append a new component instance on the container
-	addComponent(uniqueId: string, inputs: any, events: Array<string>): any {
-		const factory = this.resolver.resolveComponentFactory(this.componentType);
+	addComponent(uniqueId: string, inputs: any, events: Array<string>, componentType: any): any {
+		console.log('DYNAMIC COMPONENT - addComponent():', uniqueId);
+		const factory = this.resolver.resolveComponentFactory(componentType);
 		let componentRef: any = this.dynamicComponentContainer.createComponent(factory);
 		this._componentsMap.set(uniqueId, componentRef);
 		this.setInputs(uniqueId, inputs);
@@ -70,6 +77,7 @@ export class DynamicComponent {
 	}
 
 	destroyCmp(uniqueId: string): void {
+		console.log('DYNAMIC COMPONENT - destroyCmp():', uniqueId);
 		this._componentsMap.get(uniqueId).destroy();
 		this._componentsMap.delete(uniqueId);
 	}

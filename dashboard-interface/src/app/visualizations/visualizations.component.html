@@ -3,7 +3,7 @@
 		<h3>Saved Visualizations</h3>
 		<ul>
 			<li *ngFor="let visualization of savedVisualizations">
-				<span (click)="loadVis(visualization)" style="cursor: pointer; color: blue;">{{visualization._source.title}}</span>
+				<span (click)="_loadVis(visualization)" style="cursor: pointer; color: blue;">{{visualization._source.title}}</span>
 			</li>
 		</ul>
 	</div>
@@ -15,7 +15,7 @@
 			<span>Index:</span>
 			<select
 				#index
-				[(ngModel)]="selectedIndex"
+				[(ngModel)]="_selectedIndex"
 				(change)="onIndexChange(index.value)">
 				<option
 					*ngFor="let index of indexes"
@@ -27,7 +27,9 @@
 
 		<div>
 			<span>Visualization:</span>
-			<select [(ngModel)]="selectedVisualization">
+			<select
+				[(ngModel)]="_selectedVisualization"
+				(change)="onVisChange()">
 				<option
 					*ngFor="let visualization of visualizations"
 					[value]="visualization">
@@ -36,7 +38,13 @@
 			</select>
 		</div>
 
-		<div *ngIf="selectedVisualization==='Metric'">
+		<dynamic-component
+			[componentType]="_cmpType"
+			(event)="onEvent($event)"
+			(init)="onDynCmpInit()">
+		</dynamic-component>
+
+		<!-- <div *ngIf="selectedVisualization==='Metric'">
 			<metrics
 				[index]="selectedIndex"
 				(init)="onVisInit()">
@@ -48,5 +56,5 @@
 			[index]="selectedIndex"
 			(init)="onVisInit()">
 		</data-table>
-		</div>
+	</div> -->
 </div>

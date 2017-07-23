@@ -60,6 +60,11 @@ import { MissionService } from './example/mission.service';
 		MissionService
 	],
 	bootstrap: [AppComponent],
-	entryComponents: [ MetricComponent, BucketComponent ]
+	entryComponents: [
+		MetricsComponent,
+		DataTableComponent,
+		MetricComponent,
+		BucketComponent
+	]
 })
 export class AppModule { }

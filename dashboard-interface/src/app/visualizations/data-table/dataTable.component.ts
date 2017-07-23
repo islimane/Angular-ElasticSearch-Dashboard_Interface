@@ -5,6 +5,13 @@ import { BucketsComponent } from '../buckets/buckets.component';
 
 import { DataTableService } from './data-table.service';
 
+import { VisualizationState } from '../../object-classes/visualizationState';
+import { AggregationData } from '../../object-classes/aggregationData';
+import { SearchSourceJSON } from '../../object-classes/searchSourceJSON';
+import { VisualizationObj } from '../../object-classes/visualizationObj';
+
+import * as _ from "lodash";
+
 @Component({
 	selector: 'data-table',
 	templateUrl: './dataTable.component.html',
@@ -40,27 +47,48 @@ export class DataTableComponent {
 		this._dataTableService.getResults(this.index, metricAggs, bucketAggs);
 	}
 
+	private _save(visTitle: string): void {
+		let allAggs = this._getAllAggs();
+		if(visTitle !== ''){
+			var visualizationState = new VisualizationState();
+			visualizationState.title = visTitle;
+			visualizationState.type = 'table';
+			visualizationState.aggs = allAggs;
+			console.log(visualizationState);
+
+			var searchSourceJSON = new SearchSourceJSON(
+				(this.index) ? this.index : '', {}
+			);
+
+			var visualizationObject = new VisualizationObj(
+				visTitle,
+				JSON.stringify(visualizationState),
+				JSON.stringify(searchSourceJSON)
+			);
+
+			this._dataTableService.saveDataTable(visualizationObject);
+		}
+	}
+
+	loadVis(aggs: AggregationData[]): void {
+		console.log('DATA TABLE - loadVis():', aggs);
+		let metrics = _.filter(aggs, (agg) => agg.id.split('_')[0]==='metric');
+		let buckets = _.filter(aggs, (agg) => agg.id.split('_')[0]==='bucket');
+		console.log('DATA TABLE - metrics:', metrics);
+		console.log('DATA TABLE - buckets:', buckets);
+		this._metricsComponent.loadMetrics(metrics);
+		this._bucketsComponent.loadBuckets(buckets);
+	}
+
+	private _getAllAggs(): AggregationData[] {
+		let metricAggs = this._metricsComponent.getAggs();
+		let bucketAggs = this._bucketsComponent.getAggs();
+		return _.concat(metricAggs, bucketAggs);
+	}
+
 	resetTable(): void{
 		this.columns = [];
 		this.rows = [];
 	}
 
-	/*private _getDataTableData(): any {
-		switch (this.selectedAgg) {
-			case 'Histogram':
-				return {
-					name: this.selectedAgg,
-					field: this.selectedNumField,
-					interval: this.interval
-				};
-			case 'Range':
-				return {
-					name: this.selectedAgg,
-					field: this.selectedNumField,
-					ranges: this.ranges
-				};
-			default:
-				return null;
-		}
-	}*/
 }

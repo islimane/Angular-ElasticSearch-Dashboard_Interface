@@ -1,9 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
+import { DynamicComponent } from '../shared/dynamicComponent.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
+import { DataTableComponent } from './data-table/dataTable.component';
 
 import { Elasticsearch } from '../elasticsearch';
 import { VisualizationsService } from './visualizations.service';
+
+import { AggregationData } from '../object-classes/aggregationData';
+import { VisualizationState } from '../object-classes/visualizationState';
 
 
 @Component({
@@ -12,14 +17,20 @@ import { VisualizationsService } from './visualizations.service';
 })
 
 export class VisualizationsComponent {
-	@ViewChild(MetricsComponent) metricsComponent: MetricsComponent;
+	@ViewChild(DynamicComponent) private _dynamicComponent;
+	//@ViewChild(MetricsComponent) private _metricsComponent: MetricsComponent;
+	//@ViewChild(DataTableComponent) private _dataTableComponent: DataTableComponent;
 
 	visualizations: string[] = ['Metric', 'Data Table'];
-	selectedVisualization: string = this.visualizations[0];
+	private _selectedVisualization: string = this.visualizations[1];
 	savedVisualizations: any[] = [];
+	private _cmpType: any = null;
+	// This variable will be a pair <cmpId, cmp>
+	private _visCmp: any = null;
+	private _visEvents: string[] = [ 'init' ];
 
 	indexes: string[] = [];
-	selectedIndex: string = '';
+	private _selectedIndex: string = '';
 	numFields: string[] = [];
 	textFields: string[] = [];
 
@@ -31,19 +42,88 @@ export class VisualizationsComponent {
 	) { }
 
 	ngOnInit(): void {
-		this.setIndexes();
-		this.setSavedVisualizations();
+		console.log('VISUALIZATIONS - ngOnInit()');
+		this._setIndexes();
+		this._setSavedVisualizations();
+		this._setVisCmpType();
 	}
 
 	onIndexChange(newIndex): void {
-		this.setAllFields().then(() => this._sendFields());
+		this._setAllFields().then(() => this._sendFields());
 	}
 
-	onVisInit(): void {
-		this._sendFields();
+	onVisChange(): void {
+		this._displayVis();
 	}
 
-	setSavedVisualizations(): void {
+	onDynCmpInit(): void {
+		this._displayVis();
+	}
+
+	onEvent(event): void {
+		console.log('event:', event);
+		switch(event.name){
+			case 'init':
+				this._sendFields();
+				break;
+			default:
+				console.error('ERROR: event name [' + event.name + '] not found.');
+		}
+	}
+
+	private _destroyVis(): void {
+		if(this._visCmp){
+			this._dynamicComponent.destroyCmp(this._visCmp.guid);
+		}
+	}
+
+	private _displayVis(): void {
+		this._destroyVis();
+		this._setVisCmpType();
+		if(this._cmpType){
+			let inputs = {
+				index: this._selectedIndex
+			};
+
+			let uniqueId = this._guidGenerator();
+
+			console.log('VISUALIZATIONS - _dynamicComponent:', this._dynamicComponent);
+
+			let visCmp = this._dynamicComponent.addComponent(
+				uniqueId,
+				inputs,
+				this._visEvents,
+				this._cmpType
+			);
+
+			this._visCmp = {guid: uniqueId, cmp: visCmp};
+		}
+	}
+
+	private _guidGenerator(): string {
+			let S4 = function() {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+			};
+			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+	}
+
+	private _setVisCmpType(): any {
+		switch(this._selectedVisualization){
+			case 'Metric':
+				console.log('IS METRIC');
+				this._cmpType = MetricsComponent;
+				break;
+			case 'Data Table':
+			console.log('IS DATA TABLE');
+				this._cmpType = DataTableComponent;
+				break;
+			default:
+				console.error('Error: visualization [' + this._selectedVisualization + '] not found.');
+				return null;
+		}
+	}
+
+	private _setSavedVisualizations(): void {
 		this._elasticsearch.getSavedVisualizations().then(hits => {
 			for(let i=0; i<hits.length; i++){
 				this.savedVisualizations.push(hits[i]);
@@ -52,21 +132,21 @@ export class VisualizationsComponent {
 		});
 	}
 
-	setIndexes(): void {
+	private _setIndexes(): void {
 		this._elasticsearch.getIndices().then(indices => {
 			this.indexes = indices;
-			this.selectedIndex = (this.indexes.length>0) ? this.indexes[0] : '';
-			this.setAllFields().then(() => this._sendFields());
+			this._selectedIndex = (this.indexes.length>0) ? this.indexes[0] : '';
+			this._setAllFields().then(() => this._sendFields());
 		});
 	}
 
-	setAllFields(): PromiseLike<void> {
-		return this._elasticsearch.getAllFields(this.selectedIndex)
+	private _setAllFields(): PromiseLike<void> {
+		return this._elasticsearch.getAllFields(this._selectedIndex)
 		.then((fields) => {
 			console.log('VISUALIZATIONS - SETTED FIELDS:', fields);
-			var numFields = [];
-			var textFields = [];
-			for(var field in fields){
+			let numFields = [];
+			let textFields = [];
+			for(let field in fields){
 				if(['text'].indexOf(fields[field].type)>=0){
 					textFields.push(field);
 				}else if(['integer', 'long'].indexOf(fields[field].type)>=0){
@@ -78,34 +158,36 @@ export class VisualizationsComponent {
 		});
 	}
 
-	loadVis(visualization: any): void {
+	private _loadVis(visualization: any): void {
 		this.visualizationObj = visualization;
 		console.log('visualization', visualization);
-		var source = visualization._source;
-		var searchSource = JSON.parse(source.kibanaSavedObjectMeta.searchSourceJSON);
-		this.selectedIndex = searchSource.index;
-		var visState = JSON.parse(source.visState);
-		this.setVisType(visState.type);
-		console.log('visState.type', visState.type);
-		this.selectedIndex = searchSource.index;
-		this.setAllFields().then(() => {
-				this._sendFields();
-				this.metricsComponent.loadSavedMetrics(visState.aggs);
-		});
+		let source = visualization._source;
+		let searchSource = JSON.parse(source.kibanaSavedObjectMeta.searchSourceJSON);
+		this._selectedIndex = searchSource.index;
+		let visState = JSON.parse(source.visState);
+		this._selectedIndex = searchSource.index;
+		this._processVisType(visState.type, visState.aggs);
 	}
 
-	setVisType(type: string): void {
+	private _processVisType(type: string, aggs: AggregationData[]): void {
+		console.log('VISUALIZATIONS - TYPE:', type);
 		switch(type){
 			case 'metric':{
-				this.selectedVisualization = 'Metric';
+				this._selectedVisualization = 'Metric';
 				break;
 			}case 'table':{
-				this.selectedVisualization = 'Data Table';
+				this._selectedVisualization = 'Data Table';
 				break;
 			}default:{
 				console.error('Error - Visualization type not found.');
 			}
 		}
+
+		this._displayVis();
+		this._setAllFields().then(() => {
+				this._sendFields();
+				this._visCmp.cmp.loadVis(aggs);
+		});
 	}
 
 	// Service communication methods

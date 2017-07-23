@@ -16,6 +16,10 @@ export class DataTableService {
 		);
 	}
 
+	saveDataTable(visualizationObj: VisualizationObj): void {
+		this._elasticCli.saveVisualization(visualizationObj);
+	}
+
 	/*count(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {
 		console.log('dataTableData', dataTableData);
 
