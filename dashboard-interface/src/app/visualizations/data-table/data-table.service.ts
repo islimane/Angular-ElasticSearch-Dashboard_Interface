@@ -2,37 +2,18 @@ import { Injectable } from '@angular/core';
 
 import { Elasticsearch } from '../../elasticsearch';
 
+import { AggregationData } from '../../object-classes/aggregationData';
 import { VisualizationObj } from '../../object-classes/visualizationObj';
 
 @Injectable()
 export class DataTableService {
-	private getDataTableAggregation(aggregationData: any): any {
-		var aggregation = aggregationData.name;
-		if(aggregation==='Histogram'){
-			return {
-				"result": {
-					"histogram": {
-						"field": aggregationData.field,
-						"interval": aggregationData.interval
-					}
-				}
-			}
-		}else if(aggregation==='Range'){
-			return {
-				"result": {
-					"range" : {
-						"field" : aggregationData.field,
-						"ranges" : aggregationData.ranges/*[
-							{ "from" : 0, "to" : 20 },
-							{ "from" : 20, "to" : 25 },
-							{ "from" : 25, "to" : 40 }
-						]*/
-					}
-				}
-			}
-		}else{
-			return null;
-		}
+
+	constructor( private _elasticCli: Elasticsearch ) {}
+
+	getResults(index: string, aggs: AggregationData[], buckets: AggregationData[]): PromiseLike<any> {
+		return this._elasticCli.request(index, aggs, buckets).then(response =>
+			console.log(response) //this._getResults(response, aggs)
+		);
 	}
 
 	/*count(index: string, selectedNumField: string, dataTableData: any): PromiseLike<any> {

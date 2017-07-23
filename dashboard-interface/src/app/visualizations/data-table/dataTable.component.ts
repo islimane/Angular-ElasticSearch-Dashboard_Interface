@@ -3,14 +3,17 @@ import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core
 import { MetricsComponent } from '../metrics/metrics.component';
 import { BucketsComponent } from '../buckets/buckets.component';
 
+import { DataTableService } from './data-table.service';
+
 @Component({
 	selector: 'data-table',
-	templateUrl: './dataTable.component.html'
+	templateUrl: './dataTable.component.html',
+	providers: [ DataTableService ]
 })
 
 export class DataTableComponent {
-	@ViewChild(MetricsComponent)
-	private metricsComponent: MetricsComponent;
+	@ViewChild(MetricsComponent) private _metricsComponent: MetricsComponent;
+	@ViewChild(BucketsComponent) private _bucketsComponent: BucketsComponent;
 
 	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
@@ -22,17 +25,20 @@ export class DataTableComponent {
 	columns: string[] = []
 	rows: string[][] = [];
 
+	constructor( private _dataTableService: DataTableService ) {}
+
 	ngOnInit(): void {
 		console.log('DATA TABLE - ngOnInit()');
 		console.log('this._numFields:', this._numFields);
 		this.init.emit();
 	}
 
-	/*calculate(): void{
-		console.log('CALCULATE - interval:', this.interval);
-		var dataTableData = this.getDataTableData();
-		this.metricsComponent.calculateMetrics();
-	}*/
+	calculate(): void{
+		console.log('DATA TABLE - calculate()');
+		let metricAggs = this._metricsComponent.getAggs();
+		let bucketAggs = this._bucketsComponent.getAggs();
+		this._dataTableService.getResults(this.index, metricAggs, bucketAggs);
+	}
 
 	resetTable(): void{
 		this.columns = [];

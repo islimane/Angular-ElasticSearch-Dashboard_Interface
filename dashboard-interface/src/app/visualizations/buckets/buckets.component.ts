@@ -79,6 +79,11 @@ export class BucketsComponent {
 		}
 	}
 
+	getAggs(): AggregationData[] {
+		this._setBucketIds();
+		return Array.from(this.bucketsMap.values());
+	}
+
 	updateBucketsInputs(): void {
 		console.log('BUCKETS - updateBucketsInputs()');
 		this.bucketsMap.forEach((value, key, map) => {
@@ -114,7 +119,7 @@ export class BucketsComponent {
 		// update bucket data with saved data
 		//if(agg) this.dynamicComponents.setInputs(uniqueId, { savedData: agg });
 
-		this.bucketsMap.set(uniqueId, null)//newBucketCmp.getAggregationData(/);
+		this.bucketsMap.set(uniqueId, newBucketCmp.getAggregationData());
 	}
 
 	private _removeBucket(uniqueId: string){
@@ -130,13 +135,13 @@ export class BucketsComponent {
 		});
 	}
 
-	/*setMetricIds(): void {
+	private _setBucketIds(): void {
 		let i = 0;
 		this.bucketsMap.forEach((value, key, map) => {
 			i++;
-			value.id = i + '';
+			value.id = 'bucket_' + i;
 		});
-	}*/
+	}
 
 	private _guidGenerator(): string {
 			var S4 = function() {

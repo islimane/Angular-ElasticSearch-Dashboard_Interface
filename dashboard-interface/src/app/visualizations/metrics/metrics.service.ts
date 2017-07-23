@@ -15,7 +15,7 @@ export class MetricsService {
 	}
 
 	getAggsResults(index: string, aggs: AggregationData[]): PromiseLike<any>{
-		return this._elasticCli.request(index, aggs).then(response =>
+		return this._elasticCli.request(index, aggs, null).then(response =>
 			this._getResults(response, aggs)
 		);
 	}

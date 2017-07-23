@@ -125,6 +125,10 @@ export class MetricsComponent {
 		});
 	}
 
+	getAggs(): AggregationData[] {
+		return Array.from(this.metricsMap.values());
+	}
+
 	save(visTitle: string): void {
 		this.setMetricIds();
 		if(visTitle !== ''){

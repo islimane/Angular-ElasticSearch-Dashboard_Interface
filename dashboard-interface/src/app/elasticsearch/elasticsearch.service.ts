@@ -29,29 +29,51 @@ export class Elasticsearch {
 		});
 	}
 
-	request(index: string, aggs: AggregationData[]): PromiseLike<any> {
+	request(index: string, aggs: AggregationData[], buckets: AggregationData[]): PromiseLike<any> {
 		console.log('METRICS SERVICE - request()');
-		var body = bodybuilder().size(0);
-		for(let i=0; i<aggs.length; i++){
-			if(aggs[i].type!='count'){
-				body = body.aggregation(
-					this._getAggType(aggs[i]),
-					null,
-					aggs[i].id,
-					this._getAggParams(aggs[i])
-				);
-			}
-		}
-		console.log(body.build());
+		let body = this._buildAggsBody(aggs);
+
+		// If there is some bucket
+		if(buckets) body = this._buildBucketsBody(buckets, body);
+
+		console.log('ELASTICSEARCH - request() - body:', body.build());
 
 		return this.cli.search({
 				"index": index,
-				"body": body.build()
-		})
-		.then(
+				"body": body.size(0).build()
+		}).then(
 			response => response,
 			this.handleError
 		);
+	}
+
+	private _buildBucketsBody(buckets: AggregationData[], aggsBody: any): any {
+		let body = aggsBody;
+		for(let i=0; i<buckets.length; i++){
+			body = bodybuilder().aggregation(
+				this._getAggType(buckets[i]),
+				null,
+				buckets[i].id,
+				this._getAggParams(buckets[i]),
+				(a) => body
+			);
+		}
+		return body;
+	}
+
+	private _buildAggsBody(aggs: AggregationData[]): any{
+		let body = bodybuilder();
+		for(let i=0; i<aggs.length; i++){
+			if(aggs[i].type!='count'){
+					body = body.aggregation(
+						this._getAggType(aggs[i]),
+						null,
+						aggs[i].id,
+						this._getAggParams(aggs[i])
+				);
+			}
+		}
+		return body;
 	}
 
 	private _getAggType(agg: AggregationData): any {
