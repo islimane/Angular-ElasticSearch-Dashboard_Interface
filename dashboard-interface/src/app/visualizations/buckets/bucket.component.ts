@@ -19,11 +19,18 @@ export class BucketComponent {
 		console.log('BUCKET - numFields:', numFields);
 		this._numFields = numFields;
 		if(numFields && numFields.length>0)
-			this.selectedNumField = numFields[0];
+			this._selectedNumField = numFields[0];
 	};
-	selectedNumField: string;
+	private _selectedNumField: string;
 
-	aggregations: any[] = [
+	private _savedData: any = null;
+	@Input() set savedData(savedData: any) {
+		console.log('METRIC - SET - savedData');
+		this._savedData = savedData;
+		if(savedData) this._loadSavedBucket(savedData);
+	};
+
+	private _aggregations: any[] = [
 		//{ label: 'Date Histogram', value: 'date_histogram'},
 		{ label: 'Histogram', value: 'histogram'},
 		{ label: 'Range', value: 'range'},
@@ -34,9 +41,10 @@ export class BucketComponent {
 		//{ label: 'Significant Terms', value: 'sig_terms'},
 		//{ label: 'Geohash', value: 'geo'}
 	];
-	selectedAgg: string = this.aggregations[0].value;
+	private _selectedAgg: string = this._aggregations[0].value;
 
 	interval: number = null;
+	ranges: any[] = [];
 
 	form: FormGroup;
 	formErrors = {
@@ -48,13 +56,11 @@ export class BucketComponent {
 		}
 	};
 
-	ranges: any[] = [];
 
-	constructor(
-		private fb: FormBuilder
-	) { }
+	constructor( private fb: FormBuilder ) {}
 
 	ngOnInit(): void{
+		console.log('BUCKET - ngOnInit()');
 		this.buildForm();
 	}
 
@@ -63,18 +69,26 @@ export class BucketComponent {
 	}
 
 	dataChangeEvent(): void {
-		console.log('METRIC - dataChangeEvent()');
+		console.log('BUCKET - dataChangeEvent()');
 		let aggregationData = this.getAggregationData();
-		console.log('aggregationData:', aggregationData);
+		console.log('BUCKET - aggregationData:', aggregationData);
 		if(aggregationData.params){
 			this.dataChange.emit(aggregationData);
 		}
 	}
 
+	private _loadSavedBucket(bucket: AggregationData): void {
+		console.log('BUCKET - _loadSavedBucket():', bucket);
+		this._selectedAgg = bucket.type;
+		this._selectedNumField = bucket.params.field;
+		this.interval = bucket.params.interval || null;
+		this.ranges = bucket.params.ranges || [];
+	}
+
 	getAggregationData(): AggregationData {
 		var aggregationData = new AggregationData();
 		aggregationData.enabled = true;
-		aggregationData.type = this.selectedAgg;
+		aggregationData.type = this._selectedAgg;
 		aggregationData.schema = 'metric';
 		aggregationData.params = this.getAggParams();
 
@@ -82,20 +96,19 @@ export class BucketComponent {
 	}
 
 	getAggParams(): any {
-		switch (this.selectedAgg){
+		switch (this._selectedAgg){
 			case 'histogram':
 				return {
-					field: this.selectedNumField,
+					field: this._selectedNumField,
 					interval: this.interval
 				};
 			case 'range':
 				return {
-					field: this.selectedNumField,
+					field: this._selectedNumField,
 					ranges: this.ranges
 				};
 			default:
 				return null;
-
 		}
 	}
 

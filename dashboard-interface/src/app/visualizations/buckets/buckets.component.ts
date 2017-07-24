@@ -117,7 +117,7 @@ export class BucketsComponent {
 		);
 
 		// update bucket data with saved data
-		//if(agg) this.dynamicComponents.setInputs(uniqueId, { savedData: agg });
+		if(agg) this.dynamicComponents.setInputs(uniqueId, { savedData: agg });
 
 		this.bucketsMap.set(uniqueId, newBucketCmp.getAggregationData());
 	}
