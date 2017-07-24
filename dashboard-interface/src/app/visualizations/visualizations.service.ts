@@ -16,12 +16,10 @@ export class VisualizationsService {
 	// Observable sources
 	private numFieldsSource = new Subject<string[]>();
 	private textFieldsSource = new Subject<string[]>();
-	private aggsSource = new Subject<AggregationData[]>();
 
 	// Observable streams
 	numFieldsSent$ = this.numFieldsSource.asObservable();
 	textFieldsSent$ = this.textFieldsSource.asObservable();
-	aggsSent$ = this.aggsSource.asObservable();
 
 	// Service fields commands
 	sendNumFields(numFields: string[]) {
@@ -32,10 +30,5 @@ export class VisualizationsService {
 	sendTextFields(textFields: string[]) {
 		console.log('VISUALIZATIONS SERVICE - SEND - sendTextFiedls:', textFields);
 		this.textFieldsSource.next(textFields);
-	}
-
-	loadVis(aggs: AggregationData[]) {
-		console.log('VISUALIZATIONS SERVICE - SEND - loadVis:', aggs);
-		this.aggsSource.next(aggs);
 	}
 }
