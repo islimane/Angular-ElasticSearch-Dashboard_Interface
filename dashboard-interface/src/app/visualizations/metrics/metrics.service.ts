@@ -20,7 +20,12 @@ export class MetricsService {
 		);
 	}
 
+	getAggResults(response: any, aggs: AggregationData[]): any {
+		return this._getResults(response, aggs);
+	}
+
 	private _getResults(response: any, aggs: AggregationData[]): any[] {
+		console.log('METRICS SERVICE - response:', response);
 		let aggByIdMap = this._getAggByIdMap(aggs);
 		let results = [];
 		for(let i=0; i<aggs.length; i++){
@@ -30,16 +35,21 @@ export class MetricsService {
 	}
 
 	private _getAggResult(response: any, agg: AggregationData): any {
-		let aggResponse = (response.aggregations) ? response.aggregations[agg.id] : null;
+		console.log('METRICS SERVICE - response:', response);
+		let aggResponse = (response.aggregations) ? response.aggregations[agg.id] : response[agg.id] || null;
 		switch(agg.type){
 			case 'count':
 				return this._getCountResult(response);
 			case 'avg':
+				return this._getSimpleResult('Average ' + agg.params.field, aggResponse, agg);
 			case 'sum':
+				return this._getSimpleResult('Sum of ' + agg.params.field, aggResponse, agg);
 			case 'min':
+				return this._getSimpleResult('Min ' + agg.params.field, aggResponse, agg);
 			case 'max':
+				return this._getSimpleResult('Max ' + agg.params.field, aggResponse, agg);
 			case 'cardinality':
-				return this._getSimpleResult(aggResponse, agg);
+				return this._getSimpleResult('Unique count of ' + agg.params.field, aggResponse, agg);
 			case 'median':
 				return this._getMedianResult(aggResponse, agg);
 			case 'extended_stats':
@@ -64,14 +74,14 @@ export class MetricsService {
 	private _getCountResult(response: any): any[]{
 		return [{
 				label: 'Count',
-				result: response.hits.total
+				result: (response.hits) ? response.hits.total : response.doc_count || '--'
 		}];
 	}
 
 	// This method is avilable for aggs: avg, sum, min, max, cardinality
-	private _getSimpleResult(aggResponse: any, agg: AggregationData): any[] {
+	private _getSimpleResult(label: string, aggResponse: any, agg: AggregationData): any[] {
 		return [{
-			label: ('Average ' + agg.params.field),
+			label: label,
 			result: aggResponse.value
 		}];
 	}
