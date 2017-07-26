@@ -32,6 +32,9 @@ export class DataTableComponent {
 	columns: string[] = []
 	rows: string[][] = [];
 
+	private _columnsHeaders: string[] = []
+	private _rows: string[][] = [];
+
 	constructor( private _dataTableService: DataTableService ) {}
 
 	ngOnInit(): void {
@@ -44,7 +47,25 @@ export class DataTableComponent {
 		console.log('DATA TABLE - calculate()');
 		let metricAggs = this._metricsComponent.getAggs();
 		let bucketAggs = this._bucketsComponent.getAggs();
-		this._dataTableService.getResults(this.index, metricAggs, bucketAggs);
+		let resultsObj: any = this._dataTableService.getResults(this.index, metricAggs, bucketAggs).then(
+			resultsObj => {
+				this._columnsHeaders = resultsObj.columnsHeaders;
+				this._rows = this._getFormattedRows(resultsObj.rows);
+				console.log('DATA TABLE - resultsObj:', resultsObj);
+			}
+		);
+	}
+
+	private _getFormattedRows(rows: any[]): any[]{
+		let formattedRows = [];
+		for(let i=0; i<rows.length; i++){
+			let formattedRow = _.flatMap(rows[i], (valueObj) => {
+				return (valueObj.value) ? valueObj.value : valueObj.result;
+			});
+			console.log('DATA TABLE - formattedRow:', formattedRow);
+			formattedRows.push(formattedRow);
+		}
+		return formattedRows;
 	}
 
 	private _save(visTitle: string): void {

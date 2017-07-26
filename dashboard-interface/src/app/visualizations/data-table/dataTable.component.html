@@ -31,9 +31,9 @@
 	</div>
 </div>
 
-<div *ngIf="rows.length>0">
+<div *ngIf="_rows.length>0">
 	<dataTable-table
-		[columns]="columns"
-		[rows]="rows">
+		[columns]="_columnsHeaders"
+		[rows]="_rows">
 	</dataTable-table>
 </div>
