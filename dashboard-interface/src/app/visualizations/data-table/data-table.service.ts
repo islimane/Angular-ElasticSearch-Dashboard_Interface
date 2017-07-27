@@ -29,7 +29,7 @@ export class DataTableService {
 	private _processResultsResponse(response: any, aggs: AggregationData[]): any {
 		console.log('DATA TABLE SERVICE - response:', response);
 		let aggByIdMap = this._getAggByIdMap(aggs);
-		let rows = this._getRows(response.aggregations, aggByIdMap);
+		let rows = this._getRows(response, aggByIdMap);
 		console.log('DATA TABLE SERVICE - rows:', rows);
 		let columnsHeaders = this._getColumnsHeaders(rows, aggByIdMap);
 		console.log('DATA TABLE SERVICE - columnsHeaders:', columnsHeaders);
@@ -75,11 +75,19 @@ export class DataTableService {
 		return null;
 	}
 
-	private _getRows(aggsResponse: any, aggByIdMap: Map<string, AggregationData>): any[] {
+	private _getRows(response: any, aggByIdMap: Map<string, AggregationData>): any[] {
+		let aggsResponse = response.aggregations;
 		let rows = null;
+		if(!aggsResponse){ // Could be just count metrics without buckets
+			return this._getRowMetricsResults(response, Array.from(aggByIdMap.values()));
+		}
 		console.log('DATA TABLE SERVICE - aggByIdMap:', aggByIdMap);
 		for(let aggId in aggsResponse){
-			rows = this._processBucketResponse(aggId, aggsResponse[aggId].buckets, aggByIdMap);
+			if(aggsResponse[aggId].buckets)
+				rows = this._processBucketResponse(aggId, aggsResponse[aggId].buckets, aggByIdMap);
+			else{ // Could be just metrics without buckets
+				rows = this._getRowMetricsResults(response, Array.from(aggByIdMap.values()));
+			}
 		}
 		return rows;
 	}
@@ -123,9 +131,17 @@ export class DataTableService {
 		}else{
 			console.log('DATA TABLE SERVICE - FOUND METRICS');
 			let aggs = Array.from(aggByIdMap.values());
-			let allResults = this._metricsService.getAggResults(bucket, this._getMetrics(aggs))
-			return [this._getConcatenatedResults(allResults)];
+			console.log('DATA TABLE SERVICE - metrics response:', bucket);
+			return this._getRowMetricsResults(bucket, aggs);
 		}
+	}
+
+	private _getRowMetricsResults(response: any, aggs: AggregationData[]): any[] {
+		let allResults = this._metricsService.getAggResults(
+			response,
+			this._getMetrics(aggs)
+		);
+		return [this._getConcatenatedResults(allResults)];
 	}
 
 	private _getConcatenatedResults(allResults: any[]): any[] {

@@ -72,6 +72,7 @@ export class MetricsService {
 	}
 
 	private _getCountResult(response: any): any[]{
+		console.log('METRICS SERVICE - response:', response);
 		return [{
 				label: 'Count',
 				result: (response.hits) ? response.hits.total : response.doc_count || '--'
