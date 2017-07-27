@@ -56,7 +56,7 @@ export class MetricComponent {
 		console.log('METRIC - SET - savedData');
 		this._savedData = savedData;
 		if(savedData)
-			this.loadSavedMetric(savedData);
+			this._loadSavedMetric(savedData);
 	};
 	get savedData(): any {
 		return this._savedData;
@@ -113,10 +113,10 @@ export class MetricComponent {
 		return aggregationData;
 	}
 
-	loadSavedMetric(agg: AggregationData): void {
+	private _loadSavedMetric(agg: AggregationData): void {
 		console.log('METRIC - load():', agg);
 		this.selectedAggregation = agg.type;
-		this.selectedField = agg.params.field;
+		this.selectedField = (agg.params.field) ? agg.params.field : this._numFields[0];
 	}
 
 	isNumFieldAgg(): Boolean{
@@ -180,5 +180,9 @@ export class MetricComponent {
 
 	getAllFields(): any {
 		return _.concat(this._numFields, this._textFields);
+	}
+
+	debug(): void {
+		console.log('METRIC - selectedField:', this.selectedField);
 	}
 }

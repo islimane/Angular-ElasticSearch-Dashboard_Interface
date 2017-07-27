@@ -15,7 +15,7 @@ export class PercentileRanksMetricComponent {
 	@Input() set savedData(savedData: any) {
 		console.log('PERCENTILERANKS - SET savedData:', savedData);
 		this._savedData = savedData;
-		if(this._savedData){
+		if(this._savedData && savedData.type==='percentile_ranks'){
 			this.percentileRankValues = this._savedData.params.values;
 		}
 	}

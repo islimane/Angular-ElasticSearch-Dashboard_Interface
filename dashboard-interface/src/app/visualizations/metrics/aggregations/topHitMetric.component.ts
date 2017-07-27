@@ -39,7 +39,7 @@ export class TopHitMetricComponent {
 	@Input() set savedData(savedData: any) {
 		console.log('TOP HIT - SET savedData:', savedData);
 		this._savedData = savedData;
-		if(savedData){
+		if(savedData && savedData.type==='top_hits'){
 			this.selectedTopHitAgg = savedData.params.aggregate;
 			this.hitsSize = savedData.params.size;
 			this.selectedSortField = savedData.params.sortField;
@@ -75,9 +75,7 @@ export class TopHitMetricComponent {
 	selectedSortField: string = (this._fields) ? this._fields[0] : '';
 
 
-	constructor(
-		private fb: FormBuilder
-	) {}
+	constructor( private fb: FormBuilder ) {}
 
 	ngOnInit(): void{
 		console.log('TOP HIT METRIC - ngOnInit()');

@@ -15,7 +15,7 @@ export class PercentilesMetricComponent {
 	@Input() set savedData(savedData: any) {
 		console.log('PERCENTILES - SET savedData:', savedData);
 		this._savedData = savedData;
-		if(savedData){
+		if(savedData && savedData.type==='percentiles'){
 			this.percentileValues = savedData.params.percents;
 		}
 	};
