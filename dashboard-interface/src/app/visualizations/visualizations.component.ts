@@ -3,6 +3,7 @@ import { DynamicComponent } from '../shared/dynamicComponent.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
 import { DataTableComponent } from './data-table/dataTable.component';
+import { PieChartComponent } from './pie-chart/pieChart.component';
 
 import { Elasticsearch } from '../elasticsearch';
 import { VisualizationsService } from './visualizations.service';
@@ -21,8 +22,8 @@ export class VisualizationsComponent {
 	//@ViewChild(MetricsComponent) private _metricsComponent: MetricsComponent;
 	//@ViewChild(DataTableComponent) private _dataTableComponent: DataTableComponent;
 
-	visualizations: string[] = ['Metric', 'Data Table'];
-	private _selectedVisualization: string = this.visualizations[1];
+	visualizations: string[] = ['Metric', 'Data Table', 'Pie Chart'];
+	private _selectedVisualization: string = '';
 	savedVisualizations: any[] = [];
 	private _cmpType: any = null;
 	// This variable will be a pair <cmpId, cmp>
@@ -43,21 +44,25 @@ export class VisualizationsComponent {
 
 	ngOnInit(): void {
 		console.log('VISUALIZATIONS - ngOnInit()');
-		this._setIndexes();
 		this._setSavedVisualizations();
-		this._setVisCmpType();
+		this._setIndexes();
 	}
 
 	onIndexChange(newIndex): void {
-		this._setAllFields().then(() => this._sendFields());
+		console.log('VISUALIZATIONS - onIndexChange() - newIndex:', newIndex);
+		this._setAllFields().then(() => {
+			this._updateVisCmpInputs();
+			this._sendFields()
+		});
 	}
 
 	onVisChange(): void {
-		this._displayVis();
+		console.log('VISULIZATIONS - onVisChange()');
+		if(this._selectedVisualization) this._displayVis();
 	}
 
 	onDynCmpInit(): void {
-		this._displayVis();
+		//this._displayVis();
 	}
 
 	onEvent(event): void {
@@ -77,10 +82,18 @@ export class VisualizationsComponent {
 		}
 	}
 
+	private _updateVisCmpInputs(){
+		if(this._visCmp){
+			let inputs = { index: this._selectedIndex };
+			this._dynamicComponent.setInputs(this._visCmp.guid, inputs);
+		}
+	}
+
 	private _displayVis(): void {
 		this._destroyVis();
 		this._setVisCmpType();
 		if(this._cmpType){
+			console.log('VISUALIZATIONS - _selectedIndex:', this._selectedIndex);
 			let inputs = {
 				index: this._selectedIndex
 			};
@@ -114,9 +127,13 @@ export class VisualizationsComponent {
 				this._cmpType = MetricsComponent;
 				break;
 			case 'Data Table':
-			console.log('IS DATA TABLE');
+				console.log('IS DATA TABLE');
 				this._cmpType = DataTableComponent;
 				break;
+			case 'Pie Chart':
+				console.log('IS PIE CHART');
+					this._cmpType = PieChartComponent;
+					break;
 			default:
 				console.error('Error: visualization [' + this._selectedVisualization + '] not found.');
 				return null;
@@ -132,8 +149,8 @@ export class VisualizationsComponent {
 		});
 	}
 
-	private _setIndexes(): void {
-		this._elasticsearch.getIndices().then(indices => {
+	private _setIndexes(): PromiseLike<any> {
+		return this._elasticsearch.getIndices().then(indices => {
 			this.indexes = indices;
 			this._selectedIndex = (this.indexes.length>0) ? this.indexes[0] : '';
 			this._setAllFields().then(() => this._sendFields());
@@ -163,9 +180,10 @@ export class VisualizationsComponent {
 		console.log('visualization', visualization);
 		let source = visualization._source;
 		let searchSource = JSON.parse(source.kibanaSavedObjectMeta.searchSourceJSON);
-		this._selectedIndex = searchSource.index;
 		let visState = JSON.parse(source.visState);
-		this._selectedIndex = searchSource.index;
+		if(searchSource.index!==this._selectedIndex){
+			this._selectedIndex = searchSource.index;
+		}
 		this._processVisType(visState.type, visState.aggs);
 	}
 
@@ -178,14 +196,18 @@ export class VisualizationsComponent {
 			}case 'table':{
 				this._selectedVisualization = 'Data Table';
 				break;
+			}case 'pie':{
+				this._selectedVisualization = 'Pie Chart';
+				break;
 			}default:{
 				console.error('Error - Visualization type not found.');
 			}
 		}
 
-		this._displayVis();
+
 		this._setAllFields().then(() => {
 				this._sendFields();
+				this._displayVis();
 				this._visCmp.cmp.loadVis(aggs);
 		});
 	}

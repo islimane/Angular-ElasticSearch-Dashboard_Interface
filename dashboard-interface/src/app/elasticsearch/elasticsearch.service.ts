@@ -29,14 +29,16 @@ export class Elasticsearch {
 		});
 	}
 
-	request(index: string, aggs: AggregationData[], buckets: AggregationData[]): PromiseLike<any> {
+	//request(index: string, aggs: AggregationData[], buckets: AggregationData[]): PromiseLike<any> {
+	request(index: string, body: any): PromiseLike<any> {
 		console.log('METRICS SERVICE - request()');
-		let body = this._buildAggsBody(aggs);
+		console.log('METRICS SERVICE - body:', body);
+		/*let body = this._buildAggsBody(aggs);
 
 		// If there is some bucket
 		if(buckets) body = this._buildBucketsBody(buckets, body);
 
-		console.log('ELASTICSEARCH - request() - body:', body.build());
+		console.log('ELASTICSEARCH - request() - body:', body.build());*/
 
 		return this.cli.search({
 				"index": index,
@@ -47,21 +49,11 @@ export class Elasticsearch {
 		);
 	}
 
-	private _buildBucketsBody(buckets: AggregationData[], aggsBody: any): any {
-		let body = aggsBody;
-		for(let i=0; i<buckets.length; i++){
-			body = bodybuilder().aggregation(
-				this._getAggType(buckets[i]),
-				null,
-				buckets[i].id,
-				this._getAggParams(buckets[i]),
-				(a) => body
-			);
-		}
-		return body;
+	getAggsBody(aggs: AggregationData[]): any{
+		return this._getAggsBody(aggs);
 	}
 
-	private _buildAggsBody(aggs: AggregationData[]): any{
+	private _getAggsBody(aggs: AggregationData[]): any{
 		let body = bodybuilder();
 		for(let i=0; i<aggs.length; i++){
 			if(aggs[i].type!='count'){
@@ -76,12 +68,20 @@ export class Elasticsearch {
 		return body;
 	}
 
+	getAggType(agg: AggregationData): any {
+		return this._getAggType(agg);
+	}
+
 	private _getAggType(agg: AggregationData): any {
 		if(agg.type=='median'){
 			return 'percentiles';
 		}else{
 			return agg.type;
 		}
+	}
+
+	getAggParams(agg: AggregationData): any {
+		return this._getAggParams(agg);
 	}
 
 	private _getAggParams(agg: AggregationData): any {

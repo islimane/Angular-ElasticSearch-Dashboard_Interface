@@ -7,6 +7,7 @@ import { AggregationData } from '../../object-classes/aggregationData';
 import { VisualizationObj } from '../../object-classes/visualizationObj';
 
 import * as _ from "lodash";
+declare let bodybuilder: any;
 
 @Injectable()
 export class DataTableService {
@@ -21,9 +22,25 @@ export class DataTableService {
 	}
 
 	getResults(index: string, metrics: AggregationData[], buckets: AggregationData[]): PromiseLike<any> {
-		return this._elasticCli.request(index, metrics, buckets).then(response =>
+		let body = this._getRequestBody(buckets, metrics);
+		return this._elasticCli.request(index, body).then(response =>
 			this._processResultsResponse(response, _.concat(metrics, buckets))
 		);
+	}
+
+	private _getRequestBody(buckets: AggregationData[], metrics: AggregationData[]): any {
+		let metricsBody = this._elasticCli.getAggsBody(metrics);
+		let body = metricsBody;
+		for(let i=0; i<buckets.length; i++){
+			body = bodybuilder().aggregation(
+				this._elasticCli.getAggType(buckets[i]),
+				null,
+				buckets[i].id,
+				this._elasticCli.getAggParams(buckets[i]),
+				(a) => body
+			);
+		}
+		return body;
 	}
 
 	private _processResultsResponse(response: any, aggs: AggregationData[]): any {

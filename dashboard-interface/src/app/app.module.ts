@@ -14,6 +14,7 @@ import { DataTableComponent } from './visualizations/data-table/dataTable.compon
 import { TableComponent } from './visualizations/data-table/table.component';
 import { BucketsComponent } from './visualizations/buckets/buckets.component';
 import { BucketComponent } from './visualizations/buckets/bucket.component';
+import { PieChartComponent } from './visualizations/pie-chart/pieChart.component';
 import { DynamicComponent } from './shared/dynamicComponent.component';
 
 import { DataService } from './data.service';
@@ -23,6 +24,7 @@ import { VisualizationsService } from './visualizations/visualizations.service';
 import { HiddenDirective } from './shared/hidden.directive';
 
 import { Elasticsearch } from './elasticsearch';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { MissionControlComponent } from './example/missioncontrol.component';
 import { AstronautComponent } from './example/astronaut.component';
@@ -39,6 +41,7 @@ import { MissionService } from './example/mission.service';
 		PercentileRanksMetricComponent,
 		TopHitMetricComponent,
 		TableComponent,
+		PieChartComponent,
 		DynamicComponent,
 		HiddenDirective,
 		MissionControlComponent,
@@ -50,7 +53,8 @@ import { MissionService } from './example/mission.service';
 		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpModule
+		HttpModule,
+		ChartsModule
 	],
 	providers: [
 		DataService,
@@ -64,7 +68,8 @@ import { MissionService } from './example/mission.service';
 		MetricsComponent,
 		DataTableComponent,
 		MetricComponent,
-		BucketComponent
+		BucketComponent,
+		PieChartComponent
 	]
 })
 export class AppModule { }

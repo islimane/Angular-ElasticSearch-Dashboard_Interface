@@ -15,7 +15,8 @@ export class MetricsService {
 	}
 
 	getAggsResults(index: string, aggs: AggregationData[]): PromiseLike<any>{
-		return this._elasticCli.request(index, aggs, null).then(response =>
+		let body = this._elasticCli.getAggsBody(aggs);
+		return this._elasticCli.request(index, body).then(response =>
 			this._getResults(response, aggs)
 		);
 	}
@@ -34,8 +35,12 @@ export class MetricsService {
 		return results;
 	}
 
+	getAggResult(response: any, agg: AggregationData): any {
+		return this._getAggResult(response, agg);
+	}
+
 	private _getAggResult(response: any, agg: AggregationData): any {
-		console.log('METRICS SERVICE - response:', response);
+		//console.log('METRICS SERVICE - response:', response);
 		let aggResponse = (response.aggregations) ? response.aggregations[agg.id] : response[agg.id] || null;
 		switch(agg.type){
 			case 'count':

@@ -1,0 +1,39 @@
+<div>
+	<h3>Pie Chart: </h3>
+
+	<div style="display: block; position: relative; width: 8rem; height: 8rem">
+		<canvas baseChart id="myChart"></canvas>
+		<button (click)="calculate()">Calculate</button>
+	</div>
+
+	<div style="margin-top: 2rem; margin-bottom: 2rem;">
+		<!-- METRICS -->
+		<metrics
+			[index]="index"
+			[widgetMode]="true">
+		</metrics>
+
+		<!-- BUCKETS -->
+		<buckets
+			[index]="index">
+		</buckets>
+	</div>
+
+	<div>
+		<div>
+			<button (click)="calculate()">Calculate</button>
+			<button (click)="debug()">Debug</button>
+		</div>
+		<div>
+			<form #saveForm>
+				<!-- TODO: include validation -->
+				<input
+					#visTitle
+					type="text"
+					required
+				/>
+				<button (click)="_save(visTitle.value)">Save</button>
+			</form>
+		</div>
+	</div>
+</div>

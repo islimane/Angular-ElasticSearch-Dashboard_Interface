@@ -21,7 +21,10 @@
       "styles": [
         "styles.css"
       ],
-      "scripts": [ "../node_modules/chart.js/dist/Chart.min.js" ],
+      "scripts": [
+        "../node_modules/chart.js/dist/Chart.min.js",
+        "../node_modules/jquery/dist/jquery.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
