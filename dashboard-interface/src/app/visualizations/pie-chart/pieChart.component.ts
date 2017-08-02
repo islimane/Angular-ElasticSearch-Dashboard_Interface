@@ -32,6 +32,8 @@ export class PieChartComponent {
 	private _numFields: string[];
 	private _textFields: string[];
 
+	private _chart: Chart = null;
+
 	private _options: any = {
 		responsive: true,
 		legend: {
@@ -124,8 +126,9 @@ export class PieChartComponent {
 	private _renderChart(chartObj: any): void {
 		console.log('DATA TABLE - _renderChart()');
 		console.log('DATA TABLE - chartObj:', chartObj);
+		if(this._chart) this._chart.destroy();
 		var ctx = $("#myChart");
-		var myChart = new Chart(ctx, chartObj);
+		this._chart= new Chart(ctx, chartObj);
 	}
 
 	private _getChartObj(resultsMap: Map<string, any[]>): any {
