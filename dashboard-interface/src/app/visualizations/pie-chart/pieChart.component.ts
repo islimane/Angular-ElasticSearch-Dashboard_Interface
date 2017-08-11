@@ -14,6 +14,7 @@ import { VisualizationTools } from "../../shared/visualization-tools";
 
 import * as _ from "lodash";
 import Chart from "chart.js";
+import table from "text-table";
 declare var $: any;
 
 @Component({
@@ -37,16 +38,22 @@ export class PieChartComponent {
 	private _options: any = {
 		responsive: true,
 		legend: {
-			display: false,
+			display: true,
 		},
+		fullWidth: true,
+		tooltipFontSize: 10,
 		tooltips: {
 			callbacks: {
 				label: (tooltipItem, data) => {
 					var dataset = data.datasets[tooltipItem.datasetIndex];
 					var index = tooltipItem.index;
-					return dataset.labels[index] + ': ' + dataset.data[index];
+					console.log('PIE CHART - tooltipItem:', tooltipItem);
+					console.log('PIE CHART - data:', data);
+					return dataset.labels[index].split('\n');
 				}
-			}
+			},
+			displayColors: false,
+			tooltipCaretSize: 0
 		}
 	}
 
@@ -56,57 +63,6 @@ export class PieChartComponent {
 		console.log('DATA TABLE - ngOnInit()');
 		console.log('this._numFields:', this._numFields);
 		this.init.emit();
-		// var ctx = $("#myChart");
-		// var myChart = new Chart(ctx, {
-		// 	type: 'pie',
-		// 	data: {
-		// 		datasets: [{
-		// 			data: [
-		// 				1232, 2373, 1476,
-		// 				1427, 2906, 2205,
-		// 				1682, 3086, 1743,
-		// 				1588, 2246, 1752,
-		// 				1597, 2986, 1872
-		// 			],
-		// 			backgroundColor: [
-		// 				'green',
-		// 				'yellow',
-		// 				'red',
-		// 				'green',
-		// 				'yellow',
-		// 				'red',
-		// 				'green',
-		// 				'yellow',
-		// 				'red',
-		// 				'green',
-		// 				'yellow',
-		// 				'red',
-		// 				'green',
-		// 				'yellow',
-		// 				'red',
-		// 			],
-		// 			labels: [
-		// 				'green',
-		// 				'yellow',
-		// 				'red',
-		// 			]
-		// 		}, {
-		// 			data: [5081, 6538, 6511, 5586, 6455],
-		// 			backgroundColor: [
-		// 				'#bc52bc',
-		// 				'#9e3533',
-		// 				'#daa05d',
-		// 				'#bfaf40',
-		// 				'#4050bf'
-		// 			],
-		// 			labels: [
-		// 				'black',
-		// 				'grey',
-		// 				'lightgrey'
-		// 			],
-		// 		}, ]
-		// 	}
-		// });
 	}
 
 	calculate(): void{
@@ -114,9 +70,9 @@ export class PieChartComponent {
 		let metricAggs = this._metricsComponent.getAggs();
 		let bucketAggs = this._bucketsComponent.getAggs();
 		if(metricAggs.length>0 && bucketAggs.length>0){
-			let resultsObj: any = this._pieChartService.getResults(this.index, metricAggs[0], bucketAggs).then(
-				resultsObj => {
-					let chartObj = this._getChartObj(resultsObj);
+			let resultsObj = this._pieChartService.getResults(this.index, metricAggs[0], bucketAggs).then(
+				results => {
+					let chartObj = this._getChartObj(results);
 					this._renderChart(chartObj);
 				}
 			);
@@ -131,27 +87,75 @@ export class PieChartComponent {
 		this._chart= new Chart(ctx, chartObj);
 	}
 
-	private _getChartObj(resultsMap: Map<string, any[]>): any {
+	private _getChartObj(results: any): any {
 		console.log('DATA TABLE - _getChartObj()');
+		let rMap: Map<string, any[]> = results.rMap;
+		let rArray: any[] = results.rArray;
+		console.log('DATA TABLE - rMap:', rMap);
+		console.log('DATA TABLE - rArray:', rArray);
 		let datasets = [];
 		let hexColors = [];
 		let prevLength = null;
-		resultsMap.forEach((value, key, map) => {
+		rMap.forEach((value, key, map) => {
 			let values = value.map(resultObj => resultObj.metricResult.result);
 			console.log('DATA TABLE - values:', values);
 			let backgroundColors = this._getHexColors(prevLength, value.length, hexColors);
 			console.log('DATA TABLE - backgroundColors:', backgroundColors);
+			let labels = this._getLabels(value, rArray);
+			console.log('DATA TABLE - labels:', labels);
 			datasets.unshift({
 				data: values,
-				backgroundColor: backgroundColors
+				backgroundColor: backgroundColors,
+				labels: labels
 			});
 			prevLength = value.length;
 		});
 
 		return {
 			type: 'pie',
-			data: { datasets: datasets }
+			data: { datasets: datasets },
+			options: this._options
 		}
+	}
+
+	private _getLabels(results: any[], rArray: any[]): any[] {
+		let labels = [];
+		for(let i=0; i<results.length; i++){
+			console.log('PIE CHART - results[' + i + ']:', results[i]);
+			labels.push(this._getLabelTable(results[i], rArray));
+		}
+		return labels;
+	}
+
+	private _getLabelTable(result: any, rArray: any[]): string[][] {
+		/*console.log('PIE CHART - result.bucket.type:', result.bucket.type);
+		console.log('PIE CHART - result.bucket.bucketValue:', result.bucketValue);
+		console.log('PIE CHART - result.metricResult.result:', result.metricResult.result);*/
+		let type = result.bucket.type;
+		let bucketValue = result.bucketValue + '';
+		let metricResult = result.metricResult.result + '';
+		let tableStrings = [
+			['field', 'value', 'Sum of age']
+		];
+		let rows = this._getLabelRows(result, rArray);
+		console.log('PIE CHART - tableStrings:', _.concat(tableStrings, rows));
+		return _.concat(tableStrings, rows);
+	}
+
+	private _getLabelRows(result: any, rArray: any[]): any[] {
+		let type = result.bucket.type;
+		let bucketValue = result.bucketValue + '';
+		let metricResult = result.metricResult.result + '';
+		let rows = [
+			[type, bucketValue, metricResult]
+		];
+		console.log('PIE CHART - result.parentResultId:', result.parentResultId);
+		let parentResultId = result.parentResultId;
+		let filteredResults = _.filter(rArray, (r) => r.id===parentResultId);
+		console.log('PIE CHART - filteredResults:', filteredResults);
+		let parentRows = (filteredResults.length===1) ? this._getLabelRows(filteredResults[0], rArray) : [];
+		console.log('PIE CHART - parentRows:', parentRows);
+		return _.concat(rows, parentRows);
 	}
 
 	private _getHexColors(prevLength: number, currLength: number, hexColors: string[]): string[] {
