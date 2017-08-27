@@ -7,18 +7,19 @@ import { DataService } from './data.service';
 
 @Component({
 	selector: 'app-root',
-	templateUrl: './app.component.html'
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss']
 })
 
 export class AppComponent {
 	title: string = '';
 
-constructor(
+	constructor(
 		private dataService: DataService
 	) { }
 
 	ngOnInit(): void {
-			this.getTitle();
+		this.getTitle();
 	}
 
 	getTitle(): void {
