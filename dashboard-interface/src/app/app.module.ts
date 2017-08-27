@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent } from './app.component';
 import { VisualizationsComponent } from './visualizations/visualizations.component';
@@ -30,6 +32,42 @@ import { MissionControlComponent } from './example/missioncontrol.component';
 import { AstronautComponent } from './example/astronaut.component';
 import { MissionService } from './example/mission.service';
 
+// Angular Material
+import {
+	MdMenuModule,
+//	CdkTableModule,
+	MdAutocompleteModule,
+	MdButtonModule,
+	MdButtonToggleModule,
+	MdCardModule,
+	MdCheckboxModule,
+	MdChipsModule,
+	MdCoreModule,
+	MdDatepickerModule,
+	MdDialogModule,
+	MdExpansionModule,
+	MdGridListModule,
+	MdIconModule,
+	MdInputModule,
+	MdListModule,
+	MdNativeDateModule,
+	MdPaginatorModule,
+	MdProgressBarModule,
+	MdProgressSpinnerModule,
+	MdRadioModule,
+	MdRippleModule,
+	MdSelectModule,
+	MdSidenavModule,
+	MdSliderModule,
+	MdSlideToggleModule,
+	MdSnackBarModule,
+	MdSortModule,
+	MdTableModule,
+	MdTabsModule,
+	MdToolbarModule,
+	MdTooltipModule
+} from '@angular/material';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -54,7 +92,41 @@ import { MissionService } from './example/mission.service';
 		FormsModule,
 		ReactiveFormsModule,
 		HttpModule,
-		ChartsModule
+		ChartsModule,
+		BrowserAnimationsModule,
+		MdMenuModule,
+		MdAutocompleteModule,
+		MdButtonModule,
+		MdButtonToggleModule,
+		MdCardModule,
+		MdCheckboxModule,
+		MdChipsModule,
+		MdCoreModule,
+		MdDatepickerModule,
+		MdDialogModule,
+		MdExpansionModule,
+		MdGridListModule,
+		MdIconModule,
+		MdInputModule,
+		MdListModule,
+		MdMenuModule,
+		MdNativeDateModule,
+		MdPaginatorModule,
+		MdProgressBarModule,
+		MdProgressSpinnerModule,
+		MdRadioModule,
+		MdRippleModule,
+		MdSelectModule,
+		MdSidenavModule,
+		MdSliderModule,
+		MdSlideToggleModule,
+		MdSnackBarModule,
+		MdSortModule,
+		MdTableModule,
+		MdTabsModule,
+		MdToolbarModule,
+		MdTooltipModule,
+		FlexLayoutModule
 	],
 	providers: [
 		DataService,
