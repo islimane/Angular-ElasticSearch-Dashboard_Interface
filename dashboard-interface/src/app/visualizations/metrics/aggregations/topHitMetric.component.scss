@@ -1,0 +1,33 @@
+div.metric-opt {
+	display: flex;
+	flex-direction: column;
+	margin: 0.75rem 0 0.75rem 0;
+
+	span {
+		font-weight: bold;
+		font-size: 0.75rem;
+		padding-bottom: 0.25rem;
+	}
+
+	input {
+		font-size: 1rem;
+		border-radius: .25rem;
+		border: 1px solid #d4d4d4;
+		color: #0070d2;
+		padding-left: 0.5rem;
+		cursor: pointer;
+	}
+
+	select {
+		font-size: 1rem;
+		border-radius: .25rem;
+		height: 1.75rem;
+		color: rgb(0, 112, 210);
+		white-space: normal;
+		-webkit-user-select: none;
+		background-color: white;
+		padding-left: 0.5rem;
+		cursor: pointer;
+		border-color: #d4d4d4;
+	}
+}

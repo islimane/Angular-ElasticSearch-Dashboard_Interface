@@ -1,6 +1,6 @@
 <div>
-	<div>
-		<form novalidate [formGroup]="form">
+	<div class="metric-opt">
+		<!--<form novalidate [formGroup]="form">
 			<input
 				#percentileBox
 				formControlName="percentileBox"
@@ -13,6 +13,18 @@
 		</span>
 		<div *ngIf="!formErrors.percentileBox">
 			<button (click)="addPercentile(percentileBox.value)">Add</button>
+		</div>-->
+		<span class="opt-title">Percentile:</span>
+		<div class="add-percentile">
+			<div class="input">
+				<input
+					#percentileBox
+					type="number"
+				/>
+			</div>
+			<div class="icon" (click)="addPercentile(percentileBox.value)">
+				<span class="fa fa-plus"></span>
+			</div>
 		</div>
 	</div>
 	<div>

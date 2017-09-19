@@ -32,6 +32,8 @@ import { MissionControlComponent } from './example/missioncontrol.component';
 import { AstronautComponent } from './example/astronaut.component';
 import { MissionService } from './example/mission.service';
 
+import { Collapse } from './shared/collapse.directive';
+
 // Angular Material
 import {
 	MdMenuModule,
@@ -85,7 +87,8 @@ import {
 		MissionControlComponent,
 		AstronautComponent,
 		BucketsComponent,
-		BucketComponent
+		BucketComponent,
+		Collapse
 	],
 	imports: [
 		BrowserModule,

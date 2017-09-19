@@ -1,75 +1,90 @@
-<div style="padding: 2rem;">
-	<div>
-			<span>Aggregation:</span>
-			<select
-				[(ngModel)]="_selectedAgg"
-				(change)="dataChangeEvent()">
-				<option
-					*ngFor="let aggregation of _aggregations"
-					[value]="aggregation.value">
-						{{aggregation.label}}
-				</option>
-			</select>
-	</div>
-
-	<div>
-			<span>Field:</span>
-			<select
-				[(ngModel)]="_selectedNumField"
-				(change)="dataChangeEvent()">
-				<option
-					*ngFor="let numField of _numFields"
-					[value]="numField">
-						{{numField}}
-				</option>
-			</select>
-	</div>
-
-	<!-- HISTOGRAM -->
-	<div *ngIf="_selectedAgg==='histogram'">
-		<div>
-				<span>Interval:</span>
-				<form novalidate [formGroup]="form">
-					<input
-						formControlName="naturalNumber"
-						type="number"
-						[(ngModel)]="interval"
-						(change)="dataChangeEvent()"
-					/>
-					<span
-						*ngIf="formErrors.naturalNumber">
-						{{ formErrors.naturalNumber }}
-					</span>
-				</form>
+<div class="bucket">
+	<div class="bucket-header">
+		<div class="display-info" (click)="_displayed=!_displayed">
+			<span class="fa {{(_displayed) ? 'fa-caret-down' : 'fa-caret-right'}} icon"></span> {{_selectedAgg}} - {{_selectedNumField}}
+		</div>
+		<div class="remove" (click)="triggerRemoveEvent()">
+			<span class="fa fa-trash-o"></span>
 		</div>
 	</div>
 
-	<!-- RANGE -->
-	<div *ngIf="_selectedAgg==='range'">
-		<div>
-				<div *ngFor="let range of ranges; let i = index">
-					<span>From:</span>
-					<!-- TODO: Include validation -->
-					<input
-						[attr.data-type]="from"
-						type="number"
-						[(ngModel)]="range.from"
-						(change)="dataChangeEvent()"
-					/>
-					<span>to:</span>
-					<input
-						[attr.data-type]="to"
-						type="number"
-						[(ngModel)]="range.to"
-						(change)="dataChangeEvent()"
-					/>
-					<button [attr.data-index]="i" (click)="removeRange(i)">Remove</button>
-				</div>
-				<button (click)="addRange()">Add range</button>
+	<div *ngIf="_displayed" class="bucket-body">
+		<div class="bucket-opt">
+				<span>Aggregation:</span>
+				<select
+					[(ngModel)]="_selectedAgg"
+					(change)="dataChangeEvent()">
+					<option
+						*ngFor="let aggregation of _aggregations"
+						[value]="aggregation.value">
+							{{aggregation.label}}
+					</option>
+				</select>
 		</div>
-	</div>
 
-	<div>
-		<button (click)="triggerRemoveEvent()">Remove Bucket</button>
+		<div class="bucket-opt">
+				<span>Field:</span>
+				<select
+					[(ngModel)]="_selectedNumField"
+					(change)="dataChangeEvent()">
+					<option
+						*ngFor="let numField of _numFields"
+						[value]="numField">
+							{{numField}}
+					</option>
+				</select>
+		</div>
+
+		<!-- HISTOGRAM -->
+		<div *ngIf="_selectedAgg==='histogram'">
+			<div class="bucket-opt">
+					<span>Interval:</span>
+					<form novalidate [formGroup]="form">
+						<input
+							formControlName="naturalNumber"
+							type="number"
+							[(ngModel)]="interval"
+							(change)="dataChangeEvent()"
+						/>
+						<span
+							*ngIf="formErrors.naturalNumber">
+							{{ formErrors.naturalNumber }}
+						</span>
+					</form>
+			</div>
+		</div>
+
+		<!-- RANGE -->
+		<div *ngIf="_selectedAgg==='range'">
+			<div class="bucket-opt">
+					<div class="from-to" *ngFor="let range of ranges; let i = index">
+						<div class="range-field">
+							<span>From:</span>
+							<!-- TODO: Include validation -->
+							<input
+								[attr.data-type]="from"
+								type="number"
+								[(ngModel)]="range.from"
+								(change)="dataChangeEvent()"
+							/>
+						</div>
+						<div class="range-field">
+							<span>to:</span>
+							<input
+								[attr.data-type]="to"
+								type="number"
+								[(ngModel)]="range.to"
+								(change)="dataChangeEvent()"
+							/>
+						</div>
+						<div class="icon">
+							<span (click)="removeRange(i)" class="fa fa-minus"></span>
+						</div>
+					</div>
+					<div (click)="addRange()" class="add-range-button">
+						<span class="fa fa-plus"></span>
+					</div>
+			</div>
+		</div>
 	</div>
 </div>

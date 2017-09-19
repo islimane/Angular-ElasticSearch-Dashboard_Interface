@@ -14,7 +14,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 @Component({
 	selector: 'buckets',
-	templateUrl: './buckets.component.html'
+	templateUrl: './buckets.component.html',
+	styleUrls: ['./buckets.component.scss']
 })
 
 

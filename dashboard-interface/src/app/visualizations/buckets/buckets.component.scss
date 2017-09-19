@@ -1,0 +1,39 @@
+div.buckets-container{
+	border-bottom: 1px solid #d8d8d8;
+
+	div.buckets-header {
+		display: flex;
+
+		div.title {
+			flex: 5;
+			font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+			font-size: 1.2rem;
+			padding: 1rem;
+		}
+
+		div.buckets-actions {
+			display: flex;
+			flex-direction: row-reverse;
+			flex: 1;
+
+			div {
+				padding: 1rem;
+				border-radius: 0.25rem;
+				cursor: pointer;
+			}
+
+			div.add-bucket:hover {
+				background-color: #ccdffb;
+			}
+
+			div.remove-all {
+				color: red;
+			}
+
+			div.remove-all:hover {
+				background-color: #ffe6e6;
+			}
+		}
+	}
+
+}

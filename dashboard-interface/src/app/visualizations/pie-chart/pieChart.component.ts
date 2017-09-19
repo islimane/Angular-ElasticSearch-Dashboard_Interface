@@ -20,6 +20,7 @@ declare var $: any;
 @Component({
 	selector: 'pie-chart',
 	templateUrl: './pieChart.component.html',
+	styleUrls: ['./pieChart.component.scss'],
 	providers: [ PieChartService ]
 })
 
@@ -37,6 +38,7 @@ export class PieChartComponent {
 
 	private _options: any = {
 		responsive: true,
+		maintainAspectRatio: false,
 		legend: {
 			display: true,
 		},
@@ -60,13 +62,13 @@ export class PieChartComponent {
 	constructor( private _pieChartService: PieChartService ) {}
 
 	ngOnInit(): void {
-		console.log('DATA TABLE - ngOnInit()');
+		console.log('PIE CHART - ngOnInit()');
 		console.log('this._numFields:', this._numFields);
 		this.init.emit();
 	}
 
 	calculate(): void{
-		console.log('DATA TABLE - calculate()');
+		console.log('PIE CHART- calculate()');
 		let metricAggs = this._metricsComponent.getAggs();
 		let bucketAggs = this._bucketsComponent.getAggs();
 		if(metricAggs.length>0 && bucketAggs.length>0){
@@ -79,30 +81,37 @@ export class PieChartComponent {
 		}
 	}
 
+	private _getHeight(elemId: string): Number {
+		//console.log('PIE CHART - elemId:', elemId);
+		let configHeight = ($(window).height() - $('#' + elemId).position().top);
+		//console.log('PIE CHART - config height:', configHeight);
+		return configHeight;
+	}
+
 	private _renderChart(chartObj: any): void {
-		console.log('DATA TABLE - _renderChart()');
-		console.log('DATA TABLE - chartObj:', chartObj);
+		console.log('PIE CHART - _renderChart()');
+		console.log('PIE CHART - chartObj:', chartObj);
 		if(this._chart) this._chart.destroy();
 		var ctx = $("#myChart");
 		this._chart= new Chart(ctx, chartObj);
 	}
 
 	private _getChartObj(results: any): any {
-		console.log('DATA TABLE - _getChartObj()');
+		console.log('PIE CHART - _getChartObj()');
 		let rMap: Map<string, any[]> = results.rMap;
 		let rArray: any[] = results.rArray;
-		console.log('DATA TABLE - rMap:', rMap);
-		console.log('DATA TABLE - rArray:', rArray);
+		console.log('PIE CHART - rMap:', rMap);
+		console.log('PIE CHART - rArray:', rArray);
 		let datasets = [];
 		let hexColors = [];
 		let prevLength = null;
 		rMap.forEach((value, key, map) => {
 			let values = value.map(resultObj => resultObj.metricResult.result);
-			console.log('DATA TABLE - values:', values);
+			console.log('PIE CHART - values:', values);
 			let backgroundColors = this._getHexColors(prevLength, value.length, hexColors);
-			console.log('DATA TABLE - backgroundColors:', backgroundColors);
+			console.log('PIE CHART - backgroundColors:', backgroundColors);
 			let labels = this._getLabels(value, rArray);
-			console.log('DATA TABLE - labels:', labels);
+			console.log('PIE CHART - labels:', labels);
 			datasets.unshift({
 				data: values,
 				backgroundColor: backgroundColors,

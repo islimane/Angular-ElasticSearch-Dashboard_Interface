@@ -5,7 +5,8 @@ import { maxValidator } from '../../../shared/validators.directive';
 
 @Component({
 	selector: 'percentiles-metric',
-	templateUrl: './percentilesMetric.component.html'
+	templateUrl: './percentilesMetric.component.html',
+	styleUrls: ['./percentilesMetric.component.scss']
 })
 
 export class PercentilesMetricComponent {

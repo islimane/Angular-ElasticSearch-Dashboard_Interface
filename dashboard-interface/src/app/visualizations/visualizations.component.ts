@@ -11,46 +11,12 @@ import { VisualizationsService } from './visualizations.service';
 import { AggregationData } from '../object-classes/aggregationData';
 import { VisualizationState } from '../object-classes/visualizationState';
 
-/*import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-	MdMenuModule,
-	MdAutocompleteModule,
-	MdButtonModule,
-	MdButtonToggleModule,
-	MdCardModule,
-	MdCheckboxModule,
-	MdChipsModule,
-	MdCoreModule,
-	MdDatepickerModule,
-	MdDialogModule,
-	MdExpansionModule,
-	MdGridListModule,
-	MdIconModule,
-	MdInputModule,
-	MdListModule,
-	MdNativeDateModule,
-	MdPaginatorModule,
-	MdProgressBarModule,
-	MdProgressSpinnerModule,
-	MdRadioModule,
-	MdRippleModule,
-	MdSelectModule,
-	MdSidenavModule,
-	MdSliderModule,
-	MdSlideToggleModule,
-	MdSnackBarModule,
-	MdSortModule,
-	MdTableModule,
-	MdTabsModule,
-	MdToolbarModule,
-	MdTooltipModule
-} from '@angular/material';*/
+import { Collapse } from '../shared/collapse.directive';
 
 @Component({
 	selector: 'visualizations',
-	templateUrl: './visualizations.component.html'
+	templateUrl: './visualizations.component.html',
+	styleUrls: ['./visualizations.component.scss']
 })
 
 export class VisualizationsComponent {
@@ -72,6 +38,11 @@ export class VisualizationsComponent {
 	textFields: string[] = [];
 
 	visualizationObj: any = null;
+
+	private _panelStates: string[] = ['', ''];
+
+	private _displaySavedVis = false;
+	private _displayVisOpt = false;
 
 	constructor(
 		public _elasticsearch: Elasticsearch,

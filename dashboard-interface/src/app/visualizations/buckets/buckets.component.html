@@ -1,17 +1,25 @@
-<div>
-	<h3>Buckets: </h3>
-
-	<dynamic-component
-		(event)="onEvent($event)">
-	</dynamic-component>
-
-	<div>
-		<button (click)="_addBucket(null)">Add Bucket</button>
-		<button (click)="debug()">Debug</button>
+<div class="buckets-container">
+	<div class="buckets-header">
+		<div class="title">
+			Buckets
+		</div>
+		<div class="buckets-actions">
+			<div class="remove-all" (click)="_removeAll()">
+				<span class="fa fa-times"></span>
+			</div>
+			<div class="add-bucket" (click)="_addBucket(null)">
+				<span class="fa fa-plus"></span>
+			</div>
+			<div>
+				<!--<button (click)="debug()">Debug</button>-->
+			</div>
+		</div>
 	</div>
 
-	<div>
-		<button (click)="_removeAll()">Remove all</button>
+	<div class="buckets-body">
+		<dynamic-component
+			(event)="onEvent($event)">
+		</dynamic-component>
 	</div>
 
 </div>

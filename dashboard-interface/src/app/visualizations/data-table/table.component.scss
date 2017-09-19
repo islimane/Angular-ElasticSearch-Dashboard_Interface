@@ -1,0 +1,15 @@
+div.table-container {
+	display: flex;
+	padding: 1rem;
+	align-items: center;
+	justify-content: center;
+
+	table {
+		border-collapse: collapse;
+
+		th, td {
+			border: 1px solid #bfbfbf;
+			padding: 0.5rem;
+		}
+	}
+}

@@ -13,10 +13,12 @@ import { VisualizationsService } from '../visualizations.service';
 
 import { Subscription } from 'rxjs/Subscription';
 
+declare var $: any;
 
 @Component({
 	selector: 'metrics',
 	templateUrl: './metrics.component.html',
+	styleUrls: ['./metrics.component.scss'],
 	providers: [ MetricsService ]
 })
 
@@ -80,6 +82,27 @@ export class MetricsComponent {
 			// prevent memory leak when component destroyed
 			this._subscriptions[i].unsubscribe();
 		}
+	}
+
+	private _getResults(): any[] {
+		console.log('METRICS - this.results:', this.results);
+		let unwrappedResults = [];
+
+		for(let i=0; i<this.results.length; i++){
+			for(let j=0; j<this.results[i].length; j++){
+				unwrappedResults.push(this.results[i][j]);
+			}
+		}
+
+		console.log('METRICS - unwrappedResults:', unwrappedResults);
+		return unwrappedResults;
+	}
+
+	private _getHeight(elemId: string): Number {
+		//console.log('PIE CHART - elemId:', elemId);
+		let configHeight = ($(window).height() - $('#' + elemId).position().top);
+		//console.log('PIE CHART - config height:', configHeight);
+		return configHeight;
 	}
 
 	private _subscribeToVisService(): void {

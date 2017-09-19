@@ -12,6 +12,7 @@ import * as _ from "lodash";
 @Component({
 	selector: 'metric',
 	templateUrl: './metric.component.html',
+	styleUrls: ['./metric.component.scss'],
 	providers: [ MetricsService ]
 })
 
@@ -83,6 +84,8 @@ export class MetricComponent {
 		'cardinality', 'percentiles', 'percentile_ranks', 'top_hits'
 	];
 	selectedField: string = '';
+
+	private _displayed = false;
 
 	constructor( public metricsService: MetricsService ) { }
 

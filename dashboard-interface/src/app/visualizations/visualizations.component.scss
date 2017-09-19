@@ -1,0 +1,88 @@
+div.main {
+	background-color: white;
+	height: 100%;
+
+	div.saved-vis {
+		ul {
+			margin: 0px;
+			padding: 0px;
+			list-style-type: none;
+
+			li {
+				padding: 0.25rem;
+				padding-right: 1rem;
+				padding-left: 1rem;
+				border-bottom: 1px solid #efefef;
+				color: #676767;
+			}
+
+			li:hover {
+				background-color: #ecf5ff;
+				cursor: pointer;
+			}
+		}
+	}
+
+	div#visOptions {
+		display: flex;
+		padding: 1rem;
+
+		div#indexOpt {
+			flex: 1;
+			display: flex;
+			align-items: center;
+
+			span {
+				padding-right: 0.5rem;
+			}
+		}
+
+		div#visOpt {
+			flex: 1;
+			display: flex;
+			align-items: center;
+
+			span {
+				padding-right: 0.5rem;
+			}
+		}
+
+		select {
+			font-size: 1rem;
+			border-radius: .25rem;
+			height: 1.75rem;
+			color: rgb(0, 112, 210);
+			white-space: normal;
+			-webkit-user-select: none;
+			background-color: white;
+			padding-left: 0.5rem;
+			cursor: pointer;
+			border-color: #d4d4d4;
+		}
+	}
+
+	div.section-title {
+		font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+		font-size: 1.2rem;
+		padding: 1rem;
+		background-color: #ddd;
+		border-bottom: 1px solid #fbfbfb;
+		cursor: pointer;
+	}
+
+	div.section-title:hover {
+		background-color: #b7b7b7;
+	}
+
+	div.section-content {
+		background-color: #fbfbfb;
+	}
+
+	div.panel {
+		display: block;
+	}
+
+	div.panel:host {
+		display: block;
+	}
+}

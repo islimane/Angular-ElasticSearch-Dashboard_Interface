@@ -1,0 +1,126 @@
+div.bucket {
+
+	div.bucket-header {
+		display: flex;
+		align-items: center;
+
+		div {
+			flex: 1;
+			padding: 1rem;
+
+			span.fa-trash-o {
+				float: right;
+				color: red;
+			}
+		}
+
+		div.display-info {
+			flex: 5;
+		}
+
+		div.display-info:hover {
+			cursor: pointer;
+			background-color: #e8e8e8;
+		}
+
+		div.remove {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		div.remove:hover {
+			cursor: pointer;
+			background-color: #ffe6e6;
+		}
+	}
+
+	div.bucket-body {
+		padding: 0rem 1rem 1rem 1rem;
+
+		div.bucket-opt {
+			display: flex;
+			flex-direction: column;
+			margin: 0.5rem 0 0.5rem 0;
+
+			span {
+				font-weight: bold;
+				font-size: 0.75rem;
+				padding-bottom: 0.25rem;
+			}
+
+			select {
+				font-size: 1rem;
+				border-radius: .25rem;
+				height: 1.75rem;
+				color: rgb(0, 112, 210);
+				white-space: normal;
+				-webkit-user-select: none;
+				background-color: white;
+				padding-left: 0.5rem;
+				cursor: pointer;
+				border-color: #d4d4d4;
+			}
+
+			input {
+				height: 1.75rem;
+				font-size: 1rem;
+				border-radius: .25rem;
+				border: 1px solid #d4d4d4;
+				color: #0070d2;
+				padding-left: 0.5rem;
+				cursor: pointer;
+				box-sizing: border-box;
+				width: 100%;
+			}
+
+			div.from-to {
+				display: flex;
+				margin-bottom: 0.5rem;
+
+				div.range-field {
+					flex: 2;
+					padding-right: 0.5rem;
+				}
+
+				div.icon {
+					flex: 1;
+					padding-top: 1rem;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					color: red;
+					cursor: pointer;
+
+					span {
+						padding: 0.5rem;
+					}
+
+					span:hover {
+						background-color: #ffe6e6;
+						border-radius: 0.25rem;
+					}
+				}
+			}
+
+			div.add-range-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0.5rem;
+				border: 1px solid #d4d4d4;
+				border-radius: 0.25rem;
+				cursor: pointer;
+
+				span {
+					padding: 0px;
+				}
+			}
+
+			div.add-range-button:hover {
+				background-color: #ccdffb;
+			}
+		}
+	}
+}

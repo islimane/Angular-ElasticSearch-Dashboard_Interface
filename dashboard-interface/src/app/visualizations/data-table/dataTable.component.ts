@@ -11,10 +11,12 @@ import { SearchSourceJSON } from '../../object-classes/searchSourceJSON';
 import { VisualizationObj } from '../../object-classes/visualizationObj';
 
 import * as _ from "lodash";
+declare var $: any;
 
 @Component({
 	selector: 'data-table',
 	templateUrl: './dataTable.component.html',
+	styleUrls: ['./dataTable.component.scss'],
 	providers: [ DataTableService ]
 })
 
@@ -54,6 +56,13 @@ export class DataTableComponent {
 				console.log('DATA TABLE - resultsObj:', resultsObj);
 			}
 		);
+	}
+
+	private _getHeight(elemId: string): Number {
+		//console.log('PIE CHART - elemId:', elemId);
+		let configHeight = ($(window).height() - $('#' + elemId).position().top);
+		//console.log('PIE CHART - config height:', configHeight);
+		return configHeight;
 	}
 
 	private _getFormattedRows(rows: any[]): any[]{

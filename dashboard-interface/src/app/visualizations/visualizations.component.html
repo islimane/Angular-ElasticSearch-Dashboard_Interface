@@ -1,41 +1,50 @@
-<div>
+<div class="main">
 	<div>
-		<h3>Saved Visualizations</h3>
-		<ul>
-			<li *ngFor="let visualization of savedVisualizations">
-				<span (click)="_loadVis(visualization)" style="cursor: pointer; color: blue;">{{visualization._source.title}}</span>
-			</li>
-		</ul>
+		<!--<div class="section-title" (click)="isCollapsed = !isCollapsed">-->
+		<div class="section-title" (click)="_displaySavedVis = !_displaySavedVis">
+			Saved Visualizations
+		</div>
+		<div class="saved-vis section-content" *ngIf="_displaySavedVis">
+			<ul>
+				<li *ngFor="let visualization of savedVisualizations" (click)="_loadVis(visualization)">
+					<span>{{visualization._source.title}}</span>
+				</li>
+			</ul>
+		</div>
 	</div>
 
-	<div>
-		<h3>Select: </h3>
-
-		<div>
-			<span>Index:</span>
-			<select
-				#index
-				[(ngModel)]="_selectedIndex"
-				(change)="onIndexChange(index.value)">
-				<option
-					*ngFor="let index of indexes"
-					[value]="index">
-						{{index}}
-				</option>
-			</select>
+	<div style="background-color: white">
+		<div class="section-title" (click)="_displayVisOpt = !_displayVisOpt">
+			<span>Visualization Options - {{_selectedIndex}}</span><span *ngIf="_selectedVisualization"> - {{_selectedVisualization}}</span>
 		</div>
 
-		<div>
-			<span>Visualization:</span>
-			<select
-				[(ngModel)]="_selectedVisualization"
-				(change)="onVisChange()">
-				<option
-					*ngFor="let visualization of visualizations"
-					[value]="visualization">
-						{{visualization}}
-				</option>
-			</select>
+		<div id="visOptions" class="section-content" *ngIf="_displayVisOpt">
+			<div id="indexOpt">
+				<span>Index:</span>
+				<select
+					#index
+					[(ngModel)]="_selectedIndex"
+					(change)="onIndexChange(index.value)">
+					<option
+						*ngFor="let index of indexes"
+						[value]="index">
+							{{index}}
+					</option>
+				</select>
+			</div>
+
+			<div id="visOpt">
+				<span>Visualization:</span>
+				<select
+					[(ngModel)]="_selectedVisualization"
+					(change)="onVisChange()">
+					<option
+						*ngFor="let visualization of visualizations"
+						[value]="visualization">
+							{{visualization}}
+					</option>
+				</select>
+			</div>
 		</div>
 
 		<dynamic-component

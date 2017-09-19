@@ -1,0 +1,45 @@
+div.metric-opt {
+	display: flex;
+	flex-direction: column;
+	margin: 0.75rem 0 0.75rem 0;
+
+	span.opt-title {
+		font-weight: bold;
+		font-size: 0.75rem;
+		padding-bottom: 0.25rem;
+	}
+
+	div.add-percentile-rank {
+		display: flex;
+
+		div.input {
+			flex: 9;
+
+			input {
+				height: 1.75rem;
+				font-size: 1rem;
+				border-radius: .25rem;
+				border: 1px solid #d4d4d4;
+				color: #0070d2;
+				padding-left: 0.5rem;
+				cursor: pointer;
+				box-sizing: border-box;
+				width: 100%;
+			}
+		}
+
+		div.icon {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-left: 0.25rem;
+		}
+
+		div.icon:hover {
+			background-color: #ccdffb;
+			cursor: pointer;
+			border-radius: 0.25rem;
+		}
+	}
+}

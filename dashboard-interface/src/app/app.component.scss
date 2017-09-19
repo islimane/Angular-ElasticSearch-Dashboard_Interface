@@ -12,13 +12,13 @@ div.header{
 	display: flex;
 	position: fixed;
 	width: 100%;
-	height: 12vh;
+	height: 3rem;
 	background-color: #57c17b;
 	box-shadow: 0px 0px 15px 0px;
 	z-index: 20;
 
 	div {
-		height: 12vh;
+		//height: 9vh;
 		display: flex;
 		/* crée un contexte flex pour centrer le contenu de la balise a */
 		justify-content: center;
@@ -33,11 +33,12 @@ div.header{
 		flex: 1;
 
 		img{
-			height: 10vh;
+			max-width: 70%;
 		}
 	}
 
 	div.title-container {
+		box-shadow: 20px -20px 10px 20px black;
 		flex: 21;
 		font: 600 16px 'Open Sans', sans-serif;
 		line-height: 50px;
@@ -56,7 +57,7 @@ div.header{
 div.main {
 	display: flex;
 	flex: 1;
-	padding: 12vh 0 0 0;
+	padding: 3rem 0 0 0;
 	flex-flow: wrap;
 	height: 100%;
 
@@ -70,7 +71,7 @@ div.main {
 		height: 100%;
 		//height: calc(100% - 25vh);
 		/*hauteur des li : 12vh + hauteur du footer 10vh = 25vh*/
-		background: #8d9edc;
+		background: #749cf7;
 
 		ul {
 			flex: 1;/* occupe toute la place restante */
@@ -102,7 +103,7 @@ div.main {
 		margin-left: 4.45%;
 		box-shadow: -10px 0px 10px 1px rgba(0, 0, 0, 0.14);
 		z-index: 10;
-		overflow-y: auto;
+		overflow: hidden;
 	}
 }
 

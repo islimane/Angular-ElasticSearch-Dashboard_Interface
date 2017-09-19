@@ -7,7 +7,8 @@ import { minValidator } from '../../shared/validators.directive';
 
 @Component({
 	selector: 'bucket',
-	templateUrl: './bucket.component.html'
+	templateUrl: './bucket.component.html',
+	styleUrls: ['./bucket.component.scss']
 })
 
 export class BucketComponent {

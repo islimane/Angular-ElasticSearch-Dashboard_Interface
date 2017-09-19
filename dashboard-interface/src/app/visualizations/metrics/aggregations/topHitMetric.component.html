@@ -1,5 +1,5 @@
 <div *ngIf=" _selectedFieldData.field!=='' ">
-	<div>
+	<div class="metric-opt">
 		<span>Aggregate With:</span>
 		<select
 			[(ngModel)]="selectedTopHitAgg"
@@ -12,24 +12,31 @@
 		</select>
 	</div>
 
-	<div>
-		<form novalidate [formGroup]="form">
-			<span>Size:</span>
-			<input
-				#topHits
-				[(ngModel)]="hitsSize"
-				formControlName="topHits"
-				type="number"
-				(change)="dataChangeEvent()"
-			/>
+	<div class="metric-opt">
+		<!--<form novalidate [formGroup]="form">
+		<span>Size:</span>
+		<input
+			#topHits
+			[(ngModel)]="hitsSize"
+			formControlName="topHits"
+			type="number"
+			(change)="dataChangeEvent()"
+		/>
 		</form>
 		<span
 			*ngIf="formErrors.topHits">
 			{{ formErrors.topHits }}
-		</span>
+		</span>-->
+		<span>Size:</span>
+		<input
+			#topHits
+			[(ngModel)]="hitsSize"
+			type="number"
+			(change)="dataChangeEvent()"
+		/>
 	</div>
 
-	<div>
+	<div class="metric-opt">
 		<span>Sort On:</span>
 		<select
 			[(ngModel)]="selectedSortField"
@@ -42,7 +49,7 @@
 		</select>
 	</div>
 
-	<div>
+	<div class="metric-opt">
 		<span>Order:</span>
 		<select
 			[(ngModel)]="selectedOrder"

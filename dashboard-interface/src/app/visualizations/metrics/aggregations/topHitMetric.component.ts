@@ -8,7 +8,8 @@ import * as _ from "lodash";
 
 @Component({
 	selector: 'topHit-metric',
-	templateUrl: './topHitMetric.component.html'
+	templateUrl: './topHitMetric.component.html',
+	styleUrls: ['./topHitMetric.component.scss']
 })
 
 export class TopHitMetricComponent {

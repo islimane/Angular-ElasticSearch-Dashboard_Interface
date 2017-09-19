@@ -1,0 +1,45 @@
+div.vis-container {
+	display: flex;
+
+	div#table-config {
+		flex: 1;
+		min-width: 115px;
+
+		div#metricsAndBuckets {
+			overflow-y: scroll;
+		}
+
+		div#configFunctions {
+			display: flex;
+			align-items: center;
+			background-color: #dddddd;
+
+			span.function-icon {
+				cursor: pointer;
+				background-color: #dddddd;
+				color: #3c75ca;
+				padding: 0.75rem;
+			}
+
+			span.function-icon:hover {
+				background-color: #b3b3b3;
+			}
+
+			input {
+				height: 1.25rem;
+				width: 100%;
+				font-size: 1rem;
+				border: 0px;
+				padding-left: 0.5rem;
+				padding-right: 0.5rem;
+			}
+		}
+	}
+
+	div#tableContainer {
+		flex: 3;
+		position: relative;
+		min-width: 0px;
+		overflow-y: scroll;
+	}
+}

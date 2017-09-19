@@ -1,0 +1,67 @@
+div.metric {
+
+	div.metric-header {
+		display: flex;
+		align-items: center;
+
+		div {
+			flex: 1;
+			padding: 1rem;
+
+			span.fa-trash-o {
+				float: right;
+				color: red;
+			}
+		}
+
+		div.display-info {
+			flex: 5;
+		}
+
+		div.display-info:hover {
+			cursor: pointer;
+			background-color: #e8e8e8;
+		}
+
+		div.remove {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		div.remove:hover {
+			cursor: pointer;
+			background-color: #ffe6e6;
+		}
+	}
+
+	div.metric-body {
+		padding: 0rem 1rem 1rem 1rem;
+
+		div.metric-opt {
+			display: flex;
+			flex-direction: column;
+			margin: 0.5rem 0 0.5rem 0;
+
+			span {
+				font-weight: bold;
+				font-size: 0.75rem;
+				padding-bottom: 0.25rem;
+			}
+		}
+
+		select {
+			font-size: 1rem;
+			border-radius: .25rem;
+			height: 1.75rem;
+			color: rgb(0, 112, 210);
+			white-space: normal;
+			-webkit-user-select: none;
+			background-color: white;
+			padding-left: 0.5rem;
+			cursor: pointer;
+			border-color: #d4d4d4;
+		}
+	}
+}

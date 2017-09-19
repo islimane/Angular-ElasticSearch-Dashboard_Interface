@@ -1,0 +1,95 @@
+div.metrics-container{
+	display: flex;
+	border-bottom: 1px solid #d8d8d8;
+
+	div#metricsConfig {
+		flex: 1;
+		min-width: 115px;
+		overflow-y: scroll;
+
+		div#configFunctions {
+			display: flex;
+			align-items: center;
+			background-color: #dddddd;
+
+			span.function-icon {
+				cursor: pointer;
+				background-color: #dddddd;
+				color: #3c75ca;
+				padding: 0.75rem;
+			}
+
+			span.function-icon:hover {
+				background-color: #b3b3b3;
+			}
+
+			input {
+				height: 1.25rem;
+				width: 100%;
+				font-size: 1rem;
+				border: 0px;
+				padding-left: 0.5rem;
+				padding-right: 0.5rem;
+			}
+		}
+
+		div.metrics-header {
+			display: flex;
+
+			div.title {
+				flex: 5;
+				font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+				font-size: 1.2rem;
+				padding: 1rem;
+			}
+
+			div.metrics-actions {
+				display: flex;
+				flex-direction: row-reverse;
+				flex: 1;
+
+				div {
+					padding: 1rem;
+					border-radius: 0.25rem;
+					cursor: pointer;
+				}
+
+				div.add-metric:hover {
+					background-color: #ccdffb;
+				}
+
+				div.remove-all {
+					color: red;
+				}
+
+				div.remove-all:hover {
+					background-color: #ffe6e6;
+				}
+			}
+		}
+	}
+
+	div#resultsContainer {
+		flex: 3;
+		overflow-y: scroll;
+		display: flex;
+		flex-wrap: wrap;
+
+		div.result-container {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 2rem;
+			white-space: nowrap;
+
+			span.result {
+				font-size: 5rem;
+				font-weight: bold;
+			}
+
+			span.result-label {}
+		}
+	}
+}
