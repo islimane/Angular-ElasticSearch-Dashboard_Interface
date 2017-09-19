@@ -24,8 +24,8 @@
 		</form>
 	</div>-->
 
-	<div id="metricsConfig" *ngIf="!widgetMode" [style.height.px]="_getHeight('metricsConfig')">
-		<div id="configFunctions">
+	<div id="metricsConfig" [style.height.px]="_getHeight('metricsConfig')">
+		<div id="configFunctions"  *ngIf="!widgetMode" >
 			<span (click)="_calculateMetrics()" class="fa fa-play function-icon"></span>
 			<span (click)="_save(visTitle.value)" class="fa fa-floppy-o function-icon"></span>
 			<!-- TODO: include validation -->
