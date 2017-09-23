@@ -1,4 +1,4 @@
-<div class="metrics-container">
+<div class="metrics-vis">
 
 	<div id="resultsContainer" *ngIf="!widgetMode" [style.height.px]="_getHeight('resultsContainer')">
 		<!--<div *ngFor="let metricResults of results">
@@ -24,8 +24,8 @@
 		</form>
 	</div>-->
 
-	<div id="metricsConfig" [style.height.px]="_getHeight('metricsConfig')">
-		<div id="configFunctions"  *ngIf="!widgetMode" >
+	<div id="metricsConfig" >
+		<div id="configFunctions" *ngIf="!widgetMode">
 			<span (click)="_calculateMetrics()" class="fa fa-play function-icon"></span>
 			<span (click)="_save(visTitle.value)" class="fa fa-floppy-o function-icon"></span>
 			<!-- TODO: include validation -->
@@ -39,26 +39,28 @@
 			</div>-->
 		</div>
 
-		<div class="metrics-header">
-			<div class="title">
-				Metrics
+		<div id="metricsContainer" class="{{(!widgetMode) ? 'scrollable' : ''}}" [style.height.px]="(!widgetMode) ? _metricsContainerHeight : ''">
+			<div class="metrics-header">
+				<div class="title">
+					Metrics
+				</div>
+
+				<div class="metrics-actions">
+					<div class="remove-all" (click)="_removeAll()">
+						<span class="fa fa-times"></span>
+					</div>
+					<div class="add-metric" (click)="_addMetric(null)">
+						<span class="fa fa-plus"></span>
+					</div>
+					<div>
+						<!--<button (click)="debug()">Debug</button>-->
+					</div>
+				</div>
 			</div>
 
-			<div class="metrics-actions">
-				<div class="remove-all" (click)="_removeAll()">
-					<span class="fa fa-times"></span>
-				</div>
-				<div class="add-metric" (click)="_addMetric(null)">
-					<span class="fa fa-plus"></span>
-				</div>
-				<div>
-					<!--<button (click)="debug()">Debug</button>-->
-				</div>
-			</div>
+			<dynamic-component
+				(event)="onEvent($event)">
+			</dynamic-component>
 		</div>
-
-		<dynamic-component
-			(event)="onEvent($event)">
-		</dynamic-component>
 	</div>
 </div>

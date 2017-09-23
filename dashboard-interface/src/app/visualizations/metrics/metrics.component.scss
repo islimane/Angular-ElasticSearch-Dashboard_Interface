@@ -1,11 +1,14 @@
-div.metrics-container{
+div.metrics-vis{
 	display: flex;
 	border-bottom: 1px solid #d8d8d8;
+
+	div.scrollable {
+		overflow-y: scroll;
+	}
 
 	div#metricsConfig {
 		flex: 1;
 		min-width: 115px;
-		overflow-y: scroll;
 
 		div#configFunctions {
 			display: flex;
@@ -33,37 +36,40 @@ div.metrics-container{
 			}
 		}
 
-		div.metrics-header {
-			display: flex;
+		div#metricsContainer {
 
-			div.title {
-				flex: 5;
-				font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
-				font-size: 1.2rem;
-				padding: 1rem;
-			}
-
-			div.metrics-actions {
+			div.metrics-header {
 				display: flex;
-				flex-direction: row-reverse;
-				flex: 1;
 
-				div {
+				div.title {
+					flex: 5;
+					font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+					font-size: 1.2rem;
 					padding: 1rem;
-					border-radius: 0.25rem;
-					cursor: pointer;
 				}
 
-				div.add-metric:hover {
-					background-color: #ccdffb;
-				}
+				div.metrics-actions {
+					display: flex;
+					flex-direction: row-reverse;
+					flex: 1;
 
-				div.remove-all {
-					color: red;
-				}
+					div {
+						padding: 1rem;
+						border-radius: 0.25rem;
+						cursor: pointer;
+					}
 
-				div.remove-all:hover {
-					background-color: #ffe6e6;
+					div.add-metric:hover {
+						background-color: #ccdffb;
+					}
+
+					div.remove-all {
+						color: red;
+					}
+
+					div.remove-all:hover {
+						background-color: #ffe6e6;
+					}
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, Input, Output, ViewChild, EventEmitter, HostListener } from '@angular/core';
 import { MetricComponent } from './metric.component';
 import { DynamicComponent } from '../../shared/dynamicComponent.component';
 
@@ -36,11 +36,16 @@ export class MetricsComponent {
 
 	private _subscriptions: Subscription[] = [];
 
+	private _metricsContainerHeight: Number = 0;
+
 	metricEvents: Array<string> = [ 'remove', 'dataChange' ];
 	metricsMap: Map<string, AggregationData> = new Map<string, AggregationData>();
 
 	results: any = [];
 
+	@HostListener('window:resize', ['$event']) onResize(event) {
+		this._metricsContainerHeight = this._getHeight('metricsContainer');
+	}
 
 	constructor(
 		private _metricsService: MetricsService,
@@ -54,6 +59,8 @@ export class MetricsComponent {
 		console.log('METRICS - ngOnInit()');
 		console.log('METRICS - this._numFields:', this._numFields);
 		this.init.emit();
+
+		this._metricsContainerHeight = this._getHeight('metricsContainer');
 	}
 
 	onEvent(event): void {
@@ -99,9 +106,10 @@ export class MetricsComponent {
 	}
 
 	private _getHeight(elemId: string): Number {
-		//console.log('PIE CHART - elemId:', elemId);
+		console.log('METRICS - _getHeight()');
+		console.log('METRICS - elemId:', elemId);
 		let configHeight = ($(window).height() - $('#' + elemId).position().top);
-		//console.log('PIE CHART - config height:', configHeight);
+		console.log('METRICS - config height:', configHeight);
 		return configHeight;
 	}
 
