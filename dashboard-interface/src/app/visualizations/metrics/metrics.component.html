@@ -39,7 +39,7 @@
 			</div>-->
 		</div>
 
-		<div id="metricsContainer" class="{{(!widgetMode) ? 'scrollable' : ''}}" [style.height.px]="(!widgetMode) ? _metricsContainerHeight : ''">
+		<div id="metricsContainer" class="{{(!widgetMode) ? 'scrollable' : ''}}" [style.height.px]="(!widgetMode) ? _getHeight('metricsContainer') : ''">
 			<div class="metrics-header">
 				<div class="title">
 					Metrics

@@ -26,6 +26,9 @@ declare var $: any;
 export class MetricsComponent {
 	@ViewChild(DynamicComponent) dynamicComponents;
 
+	// This is necessary for recalculation on windows resize
+	@HostListener('window:resize', ['$event']) onResize(event) {}
+
 	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
 	@Input() widgetMode: boolean = false;
@@ -36,16 +39,11 @@ export class MetricsComponent {
 
 	private _subscriptions: Subscription[] = [];
 
-	private _metricsContainerHeight: Number = 0;
-
 	metricEvents: Array<string> = [ 'remove', 'dataChange' ];
 	metricsMap: Map<string, AggregationData> = new Map<string, AggregationData>();
 
 	results: any = [];
 
-	@HostListener('window:resize', ['$event']) onResize(event) {
-		this._metricsContainerHeight = this._getHeight('metricsContainer');
-	}
 
 	constructor(
 		private _metricsService: MetricsService,
@@ -59,8 +57,6 @@ export class MetricsComponent {
 		console.log('METRICS - ngOnInit()');
 		console.log('METRICS - this._numFields:', this._numFields);
 		this.init.emit();
-
-		this._metricsContainerHeight = this._getHeight('metricsContainer');
 	}
 
 	onEvent(event): void {
