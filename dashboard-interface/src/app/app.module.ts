@@ -50,6 +50,11 @@ import { Collapse } from './shared/collapse.directive';
 		Collapse
 	],
 	imports: [
+		BrowserModule,
+		FormsModule,
+		ReactiveFormsModule,
+		HttpModule,
+		ChartsModule,
 		FlexLayoutModule
 	],
 	providers: [
