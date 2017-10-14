@@ -1,0 +1,39 @@
+<div class="vis-container">
+	<div id="chart-container" [style.height.px]="_getHeight('chart-container')" style="position: relative;">
+		<canvas baseChart id="myChart"></canvas>
+	</div>
+
+	<div id="chart-config">
+		<div id="configFunctions">
+
+			<span (click)="calculate()" class="fa fa-play function-icon"></span>
+
+			<span (click)="_save(visTitle.value)" class="fa fa-floppy-o function-icon"></span>
+
+			<!-- TODO: include validation -->
+			<input
+				#visTitle
+				type="text"
+				required
+			/>
+			<!--<div>
+				<button (click)="debug()">Debug</button>
+			</div>-->
+		</div>
+
+		<div id="metricsAndBuckets" [style.height.px]="_getHeight('metricsAndBuckets')">
+			<!-- METRICS -->
+			<metrics
+				[index]="index"
+				[widgetMode]="true">
+			</metrics>
+
+			<!-- BUCKETS -->
+			<buckets
+				[index]="index">
+			</buckets>
+		</div>
+	</div>
+
+
+</div>

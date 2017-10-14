@@ -4,6 +4,7 @@ import { DynamicComponent } from '../shared/dynamicComponent.component';
 import { MetricsComponent } from './metrics/metrics.component';
 import { DataTableComponent } from './data-table/dataTable.component';
 import { PieChartComponent } from './pie-chart/pieChart.component';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
 
 import { Elasticsearch } from '../elasticsearch';
 import { VisualizationsService } from './visualizations.service';
@@ -24,7 +25,7 @@ export class VisualizationsComponent {
 	//@ViewChild(MetricsComponent) private _metricsComponent: MetricsComponent;
 	//@ViewChild(DataTableComponent) private _dataTableComponent: DataTableComponent;
 
-	visualizations: string[] = ['Metric', 'Data Table', 'Pie Chart'];
+	visualizations: string[] = ['Metric', 'Data Table', 'Pie Chart', 'Bar Chart'];
 	private _selectedVisualization: string = '';
 	savedVisualizations: any[] = [];
 	private _cmpType: any = null;
@@ -141,6 +142,10 @@ export class VisualizationsComponent {
 				console.log('IS PIE CHART');
 					this._cmpType = PieChartComponent;
 					break;
+				case 'Bar Chart':
+					console.log('IS BAR CHART');
+						this._cmpType = BarChartComponent;
+						break;
 			default:
 				console.error('Error: visualization [' + this._selectedVisualization + '] not found.');
 				return null;
@@ -205,6 +210,9 @@ export class VisualizationsComponent {
 				break;
 			}case 'pie':{
 				this._selectedVisualization = 'Pie Chart';
+				break;
+			}case 'bar':{
+				this._selectedVisualization = 'Bar Chart';
 				break;
 			}default:{
 				console.error('Error - Visualization type not found.');

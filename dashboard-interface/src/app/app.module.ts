@@ -17,6 +17,7 @@ import { TableComponent } from './visualizations/data-table/table.component';
 import { BucketsComponent } from './visualizations/buckets/buckets.component';
 import { BucketComponent } from './visualizations/buckets/bucket.component';
 import { PieChartComponent } from './visualizations/pie-chart/pieChart.component';
+import { BarChartComponent } from './visualizations/bar-chart/bar-chart.component';
 import { DynamicComponent } from './shared/dynamicComponent.component';
 
 import { DataService } from './data.service';
@@ -82,6 +83,7 @@ import {
 		TopHitMetricComponent,
 		TableComponent,
 		PieChartComponent,
+		BarChartComponent,
 		DynamicComponent,
 		HiddenDirective,
 		MissionControlComponent,
@@ -144,7 +146,8 @@ import {
 		DataTableComponent,
 		MetricComponent,
 		BucketComponent,
-		PieChartComponent
+		PieChartComponent,
+		BarChartComponent
 	]
 })
 export class AppModule { }

@@ -1,0 +1,68 @@
+div.vis-container {
+	display: flex;
+
+	div#chart-config {
+		flex: 1;
+		min-width: 115px;
+		/*background-color: #f1f6ff;
+		box-shadow: -5px 0px 10px 0px rgba(0, 0, 0, 0.14);*/
+
+		div#metricsAndBuckets {
+			overflow-y: scroll;
+		}
+
+		div#configFunctions {
+			display: flex;
+			align-items: center;
+			background-color: #dddddd;
+
+			span.function-icon {
+				cursor: pointer;
+				background-color: #dddddd;
+				color: #3c75ca;
+				//border-radius: 0.25rem;
+				padding: 0.75rem;
+			}
+
+			span.function-icon:hover {
+				background-color: #b3b3b3;
+			}
+
+			/*div#calculateButton {
+				flex: 1;
+				//padding: 0.25rem;
+			}*/
+
+			input {
+				height: 1.25rem;
+				width: 100%;
+				//border-radius: 0.25rem;
+				font-size: 1rem;
+				border: 0px;
+				padding-left: 0.5rem;
+				padding-right: 0.5rem;
+				margin-left: 0.5rem;
+				margin-right: 0.5rem;
+				border-radius: 0.25rem;
+			}
+
+			/*div#saveForm {
+				flex: 5;
+				//padding: 0.25rem;
+
+				input {
+					height: 1.25rem;
+					//border-radius: 0.25rem;
+					font-size: 1rem;
+					border: 0px;
+				}
+			}*/
+		}
+	}
+
+	div#chart-container {
+		flex: 3;
+		position: relative;
+		min-width: 0px;
+	}
+}
