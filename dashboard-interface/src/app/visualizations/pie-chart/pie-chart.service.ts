@@ -154,17 +154,19 @@ export class PieChartService {
 			console.log('PIE CHART SERVICE - bucket:', buckets[i]);
 			console.log('PIE CHART SERVICE - aggType:', this._elasticCli.getAggType(buckets[i]));
 			console.log('PIE CHART SERVICE - aggParams:', this._elasticCli.getAggParams(buckets[i]));
+			let nestedBody = body.aggregation(
+				this._elasticCli.getAggType(metric),
+				null,
+				metric.id,
+				this._elasticCli.getAggParams(metric)
+			);
+			console.log('PIE CHART SERVICE - nestedBody:', body.build());
 			body = bodybuilder().aggregation(
 				this._elasticCli.getAggType(buckets[i]),
 				null,
 				buckets[i].id,
 				this._elasticCli.getAggParams(buckets[i]),
-				(a) => body.aggregation(
-					this._elasticCli.getAggType(metric),
-					null,
-					metric.id,
-					this._elasticCli.getAggParams(metric)
-				)
+				(a) => nestedBody
 			);
 		}
 		console.log('PIE CHART SERVICE - body:', body.build());
