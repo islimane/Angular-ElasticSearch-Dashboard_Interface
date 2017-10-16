@@ -190,6 +190,7 @@ export class MetricsComponent {
 			console.log('METRICS - LOAD METRIC:', aggs[i]);
 			this._addMetric(aggs[i]);
 		}
+		this._calculateMetrics();
 	}
 
 	private _addMetric(agg: AggregationData): void {

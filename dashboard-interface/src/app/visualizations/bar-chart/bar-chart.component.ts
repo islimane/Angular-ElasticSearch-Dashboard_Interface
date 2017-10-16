@@ -177,6 +177,7 @@ export class BarChartComponent {
 		console.log('DATA TABLE - buckets:', buckets);
 		this._metricsComponent.loadMetrics(metrics);
 		this._bucketsComponent.loadBuckets(buckets);
+		this.calculate();
 	}
 
 	private _getAllAggs(): AggregationData[] {
