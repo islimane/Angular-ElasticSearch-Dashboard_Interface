@@ -1,9 +1,12 @@
 <div class="vis-container">
-	<div id="chart-container" [style.height.px]="_getHeight('chart-container')" style="position: relative;">
+	<div id="chart-container" [style.height.px]="_getHeight('chart-container')" style="position: relative;" *ngIf="!dashMode">
 		<canvas baseChart id="myChart"></canvas>
 	</div>
+	<div id="chart-container" style="position: relative;" *ngIf="dashMode">
+		<canvas baseChart [attr.id]="_canvasId"></canvas>
+	</div>
 
-	<div id="chart-config">
+	<div id="chart-config" [style.display]="_getDisplayStyle()">
 		<div id="configFunctions">
 
 			<span (click)="calculate()" class="fa fa-play function-icon"></span>
@@ -34,6 +37,4 @@
 			</buckets>
 		</div>
 	</div>
-
-
 </div>

@@ -26,6 +26,7 @@ export class DataTableComponent {
 
 	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
+	@Input() dashMode: boolean = false;
 	@Input() index: string;
 	private _numFields: string[];
 	private _textFields: string[];
@@ -63,6 +64,11 @@ export class DataTableComponent {
 		let configHeight = ($(window).height() - $('#' + elemId).position().top);
 		//console.log('PIE CHART - config height:', configHeight);
 		return configHeight;
+	}
+
+	private _getDisplayStyle(): string {
+		if(this.dashMode) return 'none';
+		return '';
 	}
 
 	private _getFormattedRows(rows: any[]): any[]{

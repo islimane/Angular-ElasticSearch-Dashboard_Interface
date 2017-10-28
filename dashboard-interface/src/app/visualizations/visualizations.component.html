@@ -1,6 +1,5 @@
 <div class="main">
-	<div>
-		<!--<div class="section-title" (click)="isCollapsed = !isCollapsed">-->
+	<div *ngIf="!dashMode">
 		<div class="section-title" (click)="_displaySavedVis = !_displaySavedVis">
 			Saved Visualizations
 		</div>
@@ -14,7 +13,7 @@
 	</div>
 
 	<div style="height: 100%; background-color: white">
-		<div class="section-title" (click)="_displayVisOpt = !_displayVisOpt">
+		<div class="section-title" *ngIf="!dashMode" (click)="_displayVisOpt = !_displayVisOpt">
 			<span>Visualization Options - {{_selectedIndex}}</span><span *ngIf="_selectedVisualization"> - {{_selectedVisualization}}</span>
 		</div>
 
@@ -33,7 +32,7 @@
 				</select>
 			</div>
 
-			<div id="visOpt">
+			<div id="visOpt" *ngIf="!dashMode">
 				<span>Visualization:</span>
 				<select
 					[(ngModel)]="_selectedVisualization"
@@ -52,4 +51,5 @@
 			(event)="onEvent($event)"
 			(init)="onDynCmpInit()">
 		</dynamic-component>
+	</div>
 </div>

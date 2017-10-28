@@ -1,0 +1,143 @@
+:host {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	transition: all 200ms ease;
+	transition-property: left, top;
+}
+
+:host-context(.css-transform) {
+	transition-property: transform;
+}
+
+:host.is-dragging, :host.is-resizing {
+	-webkit-transition: none;
+	transition: none;
+	z-index: 9999;
+}
+
+:host.no-transition {
+	-webkit-transition: none;
+	transition: none;
+}
+.gridster-item-resizable-handler {
+	position: absolute;
+	z-index: 2;
+	display: none;
+}
+
+.gridster-item-resizable-handler.handle-n {
+	cursor: n-resize;
+	height: 10px;
+	right: 0;
+	top: 0;
+	left: 0;
+}
+
+.gridster-item-resizable-handler.handle-e {
+	cursor: e-resize;
+	width: 10px;
+	bottom: 0;
+	right: 0;
+	top: 0;
+}
+
+.gridster-item-resizable-handler.handle-s {
+	cursor: s-resize;
+	height: 10px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.gridster-item-resizable-handler.handle-w {
+	cursor: w-resize;
+	width: 10px;
+	left: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.gridster-item-resizable-handler.handle-ne {
+	cursor: ne-resize;
+	width: 10px;
+	height: 10px;
+	right: 0;
+	top: 0;
+}
+
+.gridster-item-resizable-handler.handle-nw {
+	cursor: nw-resize;
+	width: 10px;
+	height: 10px;
+	left: 0;
+	top: 0;
+}
+
+.gridster-item-resizable-handler.handle-se {
+	cursor: se-resize;
+	width: 0;
+	height: 0;
+	right: 0;
+	bottom: 0;
+	border-style: solid;
+	border-width: 0 0 10px 10px;
+	border-color: transparent;
+}
+
+.gridster-item-resizable-handler.handle-sw {
+	cursor: sw-resize;
+	width: 10px;
+	height: 10px;
+	left: 0;
+	bottom: 0;
+}
+
+:host(:hover) .gridster-item-resizable-handler.handle-se {
+	border-color: transparent transparent #ccc
+}
+
+.gridster-item-inner {
+	position: absolute;
+	background: #fff;
+	border: 1px solid transparent;
+	top: 5px;
+	bottom: 5px;
+	left: 5px;
+	right: 5px;
+	-webkit-transition: background 3s;
+	transition: background 3s;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+:host.is-dragging .gridster-item-inner {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.48);
+	top: -3px;
+	bottom: 13px;
+}
+
+:host /deep/ .panel-heading {
+	border-bottom: 1px solid #F0F0F0;
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	top: 0;
+
+	.panel-title {
+		padding: 10px;
+		margin: 0;
+	}
+}
+
+:host /deep/ .panel-body {
+	//overflow: auto;
+	//padding: 0 10px 10px;
+	position: absolute;
+	top: 37px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}

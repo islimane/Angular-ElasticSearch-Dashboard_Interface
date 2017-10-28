@@ -30,6 +30,8 @@ export class BarChartComponent {
 	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
 	@Input() index: string;
+	@Input() dashMode: boolean = false;
+
 	private _numFields: string[];
 	private _textFields: string[];
 
@@ -52,6 +54,7 @@ export class BarChartComponent {
 			}]
 		}
 	}
+	private _canvasId: string = 'myChart';
 
 	constructor( private _barChartService: BarChartService ) {}
 
@@ -59,6 +62,7 @@ export class BarChartComponent {
 		console.log('BAR CHART - ngOnInit()');
 		console.log('this._numFields:', this._numFields);
 		this.init.emit();
+		this._setCanvasId();
 	}
 
 	calculate(): void{
@@ -82,11 +86,20 @@ export class BarChartComponent {
 		return configHeight;
 	}
 
+	private _getDisplayStyle(): string {
+		if(this.dashMode) return 'none';
+		return '';
+	}
+
+	private _setCanvasId(): any {
+		this._canvasId = (this.dashMode) ? this._guidGenerator() : this._canvasId;
+	}
+
 	private _renderChart(chartObj: any): void {
 		console.log('BAR CHART - _renderChart()');
 		console.log('BAR CHART - chartObj:', chartObj);
 		if(this._chart) this._chart.destroy();
-		var ctx = $("#myChart");
+		var ctx = $("#" + this._canvasId);
 		this._chart= new Chart(ctx, chartObj);
 	}
 
@@ -184,6 +197,13 @@ export class BarChartComponent {
 		let metricAggs = this._metricsComponent.getAggs();
 		let bucketAggs = this._bucketsComponent.getAggs();
 		return _.concat(metricAggs, bucketAggs);
+	}
+
+	private _guidGenerator(): string {
+			let S4 = function() {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+			};
+			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 	}
 
 	debug(){

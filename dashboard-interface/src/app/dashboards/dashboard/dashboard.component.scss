@@ -1,0 +1,104 @@
+div.container{
+	height: 100%;
+	overflow-y: scroll;
+	background-color: #eeeded;
+
+	div.section-title {
+		font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+		font-size: 1.2rem;
+		padding: 1rem;
+		background-color: #ddd;
+		border-bottom: 1px solid #fbfbfb;
+		cursor: pointer;
+	}
+
+	div.section-title:hover {
+		background-color: #b7b7b7;
+	}
+
+	div.section-content {
+		background-color: #fbfbfb;
+	}
+
+	div.saved-vis {
+		ul {
+			margin: 0px;
+			padding: 0px;
+			list-style-type: none;
+
+			li {
+				padding: 0.25rem;
+				padding-right: 1rem;
+				padding-left: 1rem;
+				border-bottom: 1px solid #efefef;
+				color: #676767;
+			}
+
+			li:hover {
+				background-color: #ecf5ff;
+				cursor: pointer;
+			}
+		}
+	}
+
+	.main-content {
+		//position: absolute;
+		top: 200px;
+		left: 0;
+		width: 100%;
+
+
+	}
+
+	h1 {
+		font-size: 22px;
+		padding: 0 20px;
+		height: 50px;
+		margin: 0;
+	}
+
+	.toolbar {
+		position: relative;
+		padding: 0 20px;
+	}
+
+	.widgetbar {
+		width: 100%;
+		position: relative;
+		height: 100px;
+		padding: 10px 0;
+
+		.gridster-item-prototype {
+			display: block;
+			background-color: #afafaf;
+			position: relative;
+			float: left;
+			z-index: 99;
+			text-align: center;
+			font-weight: bold;
+			margin: 5px;
+			width: 80px;
+			height: 60px;
+		}
+
+		.gridster-item-prototype.is-over .gridster-item-inner {
+			visibility: visible;
+		}
+
+		.gridster-item-inner {
+			position: absolute;
+			top:0;
+			left: 0;
+			overflow: auto;
+			width: 80px;
+			height: 60px;
+			visibility: hidden;
+			background-color: #eeeded;
+
+			-webkit-transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+			-moz-transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+			-o-transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+			transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+		}
+	}
+}

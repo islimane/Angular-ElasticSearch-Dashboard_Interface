@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { DynamicComponent } from '../shared/dynamicComponent.component';
 
 import { MetricsComponent } from './metrics/metrics.component';
@@ -24,6 +24,9 @@ export class VisualizationsComponent {
 	@ViewChild(DynamicComponent) private _dynamicComponent;
 	//@ViewChild(MetricsComponent) private _metricsComponent: MetricsComponent;
 	//@ViewChild(DataTableComponent) private _dataTableComponent: DataTableComponent;
+
+	@Input() dashMode: boolean = false;
+	@Input() savedVis: any = null;
 
 	visualizations: string[] = ['Metric', 'Data Table', 'Pie Chart', 'Bar Chart'];
 	private _selectedVisualization: string = '';
@@ -52,8 +55,12 @@ export class VisualizationsComponent {
 
 	ngOnInit(): void {
 		console.log('VISUALIZATIONS - ngOnInit()');
-		this._setSavedVisualizations();
-		this._setIndexes();
+		if(!this.dashMode){
+			this._setSavedVisualizations();
+			this._setIndexes();
+		}else{
+			if(this.savedVis) this._loadVis(this.savedVis);
+		}
 	}
 
 	onIndexChange(newIndex): void {
@@ -102,9 +109,11 @@ export class VisualizationsComponent {
 		this._setVisCmpType();
 		if(this._cmpType){
 			console.log('VISUALIZATIONS - _selectedIndex:', this._selectedIndex);
-			let inputs = {
+			let inputs: any = {
 				index: this._selectedIndex
 			};
+
+			if(this.dashMode) inputs.dashMode = true;
 
 			let uniqueId = this._guidGenerator();
 
@@ -218,7 +227,6 @@ export class VisualizationsComponent {
 				console.error('Error - Visualization type not found.');
 			}
 		}
-
 
 		this._setAllFields().then(() => {
 				this._sendFields();

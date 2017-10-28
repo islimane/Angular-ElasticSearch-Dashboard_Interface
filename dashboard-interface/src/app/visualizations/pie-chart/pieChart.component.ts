@@ -30,6 +30,7 @@ export class PieChartComponent {
 
 	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
+	@Input() dashMode: boolean = false;
 	@Input() index: string;
 	private _numFields: string[];
 	private _textFields: string[];
@@ -58,6 +59,7 @@ export class PieChartComponent {
 			tooltipCaretSize: 0
 		}
 	}
+	private _canvasId: string = 'myChart';
 
 	constructor( private _pieChartService: PieChartService ) {}
 
@@ -65,6 +67,7 @@ export class PieChartComponent {
 		console.log('PIE CHART - ngOnInit()');
 		console.log('this._numFields:', this._numFields);
 		this.init.emit();
+		this._setCanvasId();
 	}
 
 	calculate(): void{
@@ -88,11 +91,20 @@ export class PieChartComponent {
 		return configHeight;
 	}
 
+	private _getDisplayStyle(): string {
+		if(this.dashMode) return 'none';
+		return '';
+	}
+
+	private _setCanvasId(): any {
+		this._canvasId = (this.dashMode) ? this._guidGenerator() : this._canvasId;
+	}
+
 	private _renderChart(chartObj: any): void {
 		console.log('PIE CHART - _renderChart()');
 		console.log('PIE CHART - chartObj:', chartObj);
 		if(this._chart) this._chart.destroy();
-		var ctx = $("#myChart");
+		var ctx = $("#" + this._canvasId);
 		this._chart= new Chart(ctx, chartObj);
 	}
 
@@ -261,6 +273,13 @@ export class PieChartComponent {
 		let metricAggs = this._metricsComponent.getAggs();
 		let bucketAggs = this._bucketsComponent.getAggs();
 		return _.concat(metricAggs, bucketAggs);
+	}
+
+	private _guidGenerator(): string {
+			let S4 = function() {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+			};
+			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 	}
 
 	debug(){

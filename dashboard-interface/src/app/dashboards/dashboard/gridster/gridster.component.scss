@@ -1,0 +1,43 @@
+:host {
+	position: relative;
+	display: block;
+	left: 0;
+	width: 100%;
+}
+
+:host.gridster--dragging {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.gridster-container {
+	position: relative;
+	width: 100%;
+	list-style: none;
+	-webkit-transition: width 0.2s, height 0.2s;
+	transition: width 0.2s, height 0.2s;
+}
+
+.position-highlight {
+	display: block;
+	position: absolute;
+	z-index: 1;
+}
+
+.position-highlight .inner {
+	position: absolute;
+	top: 5px;
+	bottom: 5px;
+	left: 5px;
+	right: 5px;
+
+	background-color: #768294;
+	border: 1px solid transparent;
+	-webkit-transition: background 3s;
+	transition: background 3s;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}

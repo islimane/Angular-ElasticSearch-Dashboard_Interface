@@ -31,6 +31,7 @@ export class MetricsComponent {
 
 	@Output() init: EventEmitter<any> = new EventEmitter<any>();
 
+	@Input() dashMode: boolean = false;
 	@Input() widgetMode: boolean = false;
 	@Input() index: string;
 	// This fields come from _visualizationsService
@@ -44,6 +45,7 @@ export class MetricsComponent {
 
 	results: any = [];
 
+	private _resultsContainerId: string = this._guidGenerator();
 
 	constructor(
 		private _metricsService: MetricsService,
@@ -88,25 +90,34 @@ export class MetricsComponent {
 	}
 
 	private _getResults(): any[] {
-		console.log('METRICS - this.results:', this.results);
+		//console.log('METRICS - this.results:', this.results);
 		let unwrappedResults = [];
-
 		for(let i=0; i<this.results.length; i++){
 			for(let j=0; j<this.results[i].length; j++){
 				unwrappedResults.push(this.results[i][j]);
 			}
 		}
-
-		console.log('METRICS - unwrappedResults:', unwrappedResults);
+		//console.log('METRICS - unwrappedResults:', unwrappedResults);
 		return unwrappedResults;
+	}
+
+	private _getResultsContainerId(): string {
+		console.log('METTRICS - _getResultsContainerId()');
+		console.log('METTRICS - _resultsContainerId:', this._resultsContainerId);
+		return this._resultsContainerId;
 	}
 
 	private _getHeight(elemId: string): Number {
 		console.log('METRICS - _getHeight()');
 		console.log('METRICS - elemId:', elemId);
 		let configHeight = ($(window).height() - $('#' + elemId).position().top);
-		console.log('METRICS - config height:', configHeight);
+		//console.log('METRICS - config height:', configHeight);
 		return configHeight;
+	}
+
+	private _getDisplayStyle(): string {
+		if(this.dashMode) return 'none';
+		return '';
 	}
 
 	private _subscribeToVisService(): void {

@@ -1,6 +1,7 @@
 div.metrics-vis{
 	display: flex;
 	border-bottom: 1px solid #d8d8d8;
+	height: 100%;
 
 	div.scrollable {
 		overflow-y: scroll;
@@ -75,7 +76,7 @@ div.metrics-vis{
 		}
 	}
 
-	div#resultsContainer {
+	div.results-container {
 		flex: 3;
 		overflow-y: scroll;
 		display: flex;

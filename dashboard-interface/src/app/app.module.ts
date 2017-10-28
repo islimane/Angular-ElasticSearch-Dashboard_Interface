@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { AppRoutingModule } from './app-routing.module';
+//import { GridsterModule } from './dashboards/dashboard/gridster2/gridster.module';
 
 import { AppComponent } from './app.component';
 import { VisualizationsComponent } from './visualizations/visualizations.component';
@@ -19,6 +20,14 @@ import { BucketComponent } from './visualizations/buckets/bucket.component';
 import { PieChartComponent } from './visualizations/pie-chart/pieChart.component';
 import { BarChartComponent } from './visualizations/bar-chart/bar-chart.component';
 import { DynamicComponent } from './shared/dynamicComponent.component';
+import { DashboardsComponent } from './dashboards/dashboards.component';
+import { DashboardComponent } from './dashboards/dashboard/dashboard.component';
+
+// Gridster
+import { GridsterComponent } from './dashboards/dashboard/gridster2/gridster.component';
+import { GridsterItemComponent } from './dashboards/dashboard/gridster2/gridster-item/gridster-item.component';
+import { GridsterItemPrototypeDirective } from './dashboards/dashboard/gridster2/gridster-prototype/gridster-item-prototype.directive';
+import { GridsterPrototypeService } from './dashboards/dashboard/gridster2/gridster-prototype/gridster-prototype.service';
 
 import { DataService } from './data.service';
 import { MetricsService } from './visualizations/metrics/metrics.service';
@@ -48,7 +57,12 @@ import { Collapse } from './shared/collapse.directive';
 		HiddenDirective,
 		BucketsComponent,
 		BucketComponent,
-		Collapse
+		Collapse,
+		DashboardsComponent,
+		DashboardComponent,
+		GridsterComponent,
+		GridsterItemComponent,
+		GridsterItemPrototypeDirective
 	],
 	imports: [
 		BrowserModule,
@@ -57,13 +71,15 @@ import { Collapse } from './shared/collapse.directive';
 		HttpModule,
 		ChartsModule,
 		FlexLayoutModule,
-		AppRoutingModule
+		AppRoutingModule,
+		//GridsterModule
 	],
 	providers: [
 		DataService,
 		Elasticsearch,
 		MetricsService,
-		VisualizationsService
+		VisualizationsService,
+		GridsterPrototypeService
 	],
 	bootstrap: [
 		AppComponent
@@ -74,7 +90,8 @@ import { Collapse } from './shared/collapse.directive';
 		MetricComponent,
 		BucketComponent,
 		PieChartComponent,
-		BarChartComponent
+		BarChartComponent,
+		GridsterItemComponent
 	]
 })
 export class AppModule { }

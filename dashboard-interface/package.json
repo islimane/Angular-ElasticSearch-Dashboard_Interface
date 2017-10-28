@@ -25,6 +25,7 @@
     "@angular/router": "^4.0.0",
     "@types/elasticsearch": "^5.0.13",
     "@types/lodash": "^4.14.69",
+    "angular2-modal": "^3.0.3",
     "bodybuilder": "2.2.0",
     "chart.js": "^2.6.0",
     "core-js": "^2.4.1",
@@ -35,6 +36,7 @@
     "mobx-angular": "^1.5.0",
     "ng2-charts": "^1.6.0",
     "ng2-mobx": "^1.2.9",
+    "ngx-modialog": "^3.0.4",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.5"
   },

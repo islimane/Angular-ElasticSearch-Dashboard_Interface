@@ -1,11 +1,18 @@
 <div class="metrics-vis">
 
-	<div id="resultsContainer" *ngIf="!widgetMode" [style.height.px]="_getHeight('resultsContainer')">
+	<div id="resultsContainer" class="results-container" *ngIf="(!widgetMode && !dashMode)" [style.height.px]="_getHeight('resultsContainer')">
 		<!--<div *ngFor="let metricResults of results">
 			<div class="metric-result" *ngFor="let result of metricResults">
 				<span>{{result.label}}: {{result.result}}</span>
 			</div>
 		</div>-->
+		<div *ngFor="let metricResult of _getResults()" class="result-container">
+			<span class="result">{{metricResult.result}}</span>
+			<span class="result-label">{{metricResult.label}}</span>
+		</div>
+	</div>
+
+	<div [attr.id]="_resultsContainerId" class="results-container" *ngIf="(!widgetMode && dashMode)">
 		<div *ngFor="let metricResult of _getResults()" class="result-container">
 			<span class="result">{{metricResult.result}}</span>
 			<span class="result-label">{{metricResult.label}}</span>
@@ -24,7 +31,7 @@
 		</form>
 	</div>-->
 
-	<div id="metricsConfig" >
+	<div id="metricsConfig" [style.display]="_getDisplayStyle()">
 		<div id="configFunctions" *ngIf="!widgetMode">
 			<span (click)="_calculateMetrics()" class="fa fa-play function-icon"></span>
 			<span (click)="_save(visTitle.value)" class="fa fa-floppy-o function-icon"></span>
@@ -39,7 +46,11 @@
 			</div>-->
 		</div>
 
-		<div id="metricsContainer" class="{{(!widgetMode) ? 'scrollable' : ''}}" [style.height.px]="(!widgetMode) ? _getHeight('metricsContainer') : ''">
+		<div
+			id="metricsContainer"
+			class="{{(!widgetMode) ? 'scrollable' : ''}}"
+			[style.height.px]="(!widgetMode && !dashMode) ? _getHeight('metricsContainer') : ''"
+		>
 			<div class="metrics-header">
 				<div class="title">
 					Metrics
