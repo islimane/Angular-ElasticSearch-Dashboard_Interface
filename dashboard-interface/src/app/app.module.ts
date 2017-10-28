@@ -24,10 +24,10 @@ import { DashboardsComponent } from './dashboards/dashboards.component';
 import { DashboardComponent } from './dashboards/dashboard/dashboard.component';
 
 // Gridster
-import { GridsterComponent } from './dashboards/dashboard/gridster2/gridster.component';
-import { GridsterItemComponent } from './dashboards/dashboard/gridster2/gridster-item/gridster-item.component';
-import { GridsterItemPrototypeDirective } from './dashboards/dashboard/gridster2/gridster-prototype/gridster-item-prototype.directive';
-import { GridsterPrototypeService } from './dashboards/dashboard/gridster2/gridster-prototype/gridster-prototype.service';
+import { GridsterComponent } from './dashboards/dashboard/gridster/gridster.component';
+import { GridsterItemComponent } from './dashboards/dashboard/gridster/gridster-item/gridster-item.component';
+import { GridsterItemPrototypeDirective } from './dashboards/dashboard/gridster/gridster-prototype/gridster-item-prototype.directive';
+import { GridsterPrototypeService } from './dashboards/dashboard/gridster/gridster-prototype/gridster-prototype.service';
 
 import { DataService } from './data.service';
 import { MetricsService } from './visualizations/metrics/metrics.service';
