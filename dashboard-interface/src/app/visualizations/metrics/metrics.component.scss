@@ -1,7 +1,11 @@
+div.metrics-vis.widget {
+	height: 100%;
+}
+
 div.metrics-vis{
 	display: flex;
 	border-bottom: 1px solid #d8d8d8;
-	height: 100%;
+	//height: 100%;
 
 	div.scrollable {
 		overflow-y: scroll;

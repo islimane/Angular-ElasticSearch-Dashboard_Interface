@@ -1,4 +1,4 @@
-<div class="metrics-vis">
+<div class="metrics-vis {{(dashMode) ? 'widget' : ''}}">
 
 	<div id="resultsContainer" class="results-container" *ngIf="(!widgetMode && !dashMode)" [style.height.px]="_getHeight('resultsContainer')">
 		<!--<div *ngFor="let metricResults of results">
