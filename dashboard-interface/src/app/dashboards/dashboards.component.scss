@@ -1,3 +1,43 @@
 div.container {
 	height: 100%;
+	overflow-y: scroll;
+	background-color: #eeeded;
+
+	div.section-title {
+		font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+		font-size: 1.2rem;
+		padding: 1rem;
+		background-color: #ddd;
+		border-bottom: 1px solid #fbfbfb;
+		cursor: pointer;
+	}
+
+	div.section-title:hover {
+		background-color: #b7b7b7;
+	}
+
+	div.section-content {
+		background-color: #fbfbfb;
+	}
+
+	div.saved-dash {
+		ul {
+			margin: 0px;
+			padding: 0px;
+			list-style-type: none;
+
+			li {
+				padding: 0.25rem;
+				padding-right: 1rem;
+				padding-left: 1rem;
+				border-bottom: 1px solid #efefef;
+				color: #676767;
+			}
+
+			li:hover {
+				background-color: #ecf5ff;
+				cursor: pointer;
+			}
+		}
+	}
 }

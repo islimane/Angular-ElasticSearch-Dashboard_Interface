@@ -1,4 +1,16 @@
 <div class="container">
+	<div id="configFunctions">
+		<span (click)="_save(dashTitle.value)" class="fa fa-floppy-o function-icon"></span>
+		<input
+			#dashTitle
+			type="text"
+			required
+		/>
+		<!--<div>
+			<button (click)="debug()">Debug</button>
+		</div>-->
+	</div>
+
 	<div>
 		<div class="section-title" (click)="_displaySavedVis = !_displaySavedVis">
 			Saved Visualizations
@@ -10,6 +22,7 @@
 				</li>
 			</ul>
 		</div>
+		<!--<button (click)="_debug()">DEBUG</button>-->
 	</div>
 
 	<!--<h1>

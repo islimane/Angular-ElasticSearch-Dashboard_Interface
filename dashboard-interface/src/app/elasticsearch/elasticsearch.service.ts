@@ -102,6 +102,21 @@ export class Elasticsearch {
 		}
 	}
 
+	getSavedDashboards(): PromiseLike<any> {
+		return this.cli.search({
+				"index": '.sakura',
+				"type": 'dashboard',
+				"body": {
+					"query": {
+						"match_all": {}
+					}
+				}
+		}).then(
+			response => response.hits.hits,
+			this.handleError
+		);
+	}
+
 	getSavedVisualizations(): PromiseLike<any> {
 		return this.cli.search({
 				"index": '.sakura',
@@ -117,40 +132,55 @@ export class Elasticsearch {
 		);
 	}
 
-	saveVisualization(visualizationObj: VisualizationObj): void{
-		this._isNewVisualization(visualizationObj.title).then(isNew => {
-			console.log('isNew:', isNew);
-			(isNew) ? this._createVis(visualizationObj) : this._updateVis(visualizationObj);
+	saveDashboard(dashboardObj: any): void{
+		console.log('ELASTICSEARCH - SERVICE - saveDashboard()');
+		this._isNewDocument('dashboard', dashboardObj.title).then(isNew => {
+			console.log('ELASTICSEARCH - SERVICE - isNew:', isNew);
+			(isNew) ?
+				this._createDoc('dashboard', dashboardObj.title, dashboardObj) :
+				this._updateDoc('dashboard', dashboardObj.title, dashboardObj);
 		});
 	}
 
-	private _createVis(visualizationObj: VisualizationObj): void{
-		let index= '.sakura';
-		let type = 'visualization';
-		let newId = visualizationObj.title;
-		console.log('create:', newId)
+	saveVisualization(visualizationObj: VisualizationObj): void{
+		console.log('ELASTICSEARCH - SERVICE - saveVisualization()');
+		this._isNewDocument('visualization', visualizationObj.title).then(isNew => {
+			console.log('ELASTICSEARCH - SERVICE - isNew:', isNew);
+			(isNew) ?
+				this._createDoc('visualization', visualizationObj.title, visualizationObj) :
+				this._updateDoc('visualization', visualizationObj.title, visualizationObj);
+		});
+	}
+
+	private _createDoc(type: string, id: string, body: any): void{
+		console.log('ELASTICSEARCH - SERVICE - _createDoc()');
+		console.log('ELASTICSEARCH - SERVICE - type:', type);
+		console.log('ELASTICSEARCH - SERVICE - id:', id);
+		console.log('ELASTICSEARCH - SERVICE - body:', body);
+		let index = '.sakura';
 		this.cli.create({
-			index: '.sakura',
-			type: 'visualization',
-			id: newId,
-			body: visualizationObj
+			index: index,
+			type: type,
+			id: id,
+			body: body
 		}).then(
-			response => console.log('SUCCESS'),
+			response => console.log('ELASTICSEARCH - SERVICE - SUCCESS'),
 			this.handleError
 		);
 	}
 
-	private _updateVis(visualizationObj: VisualizationObj): void{
-		let index= '.sakura';
-		let type = 'visualization';
-		let id = visualizationObj.title;
-		console.log('update:', id)
+	private _updateDoc(type: string, id: string, doc: any): void{
+		console.log('ELASTICSEARCH - SERVICE - _updateDoc()');
+		console.log('ELASTICSEARCH - SERVICE - type:', type);
+		console.log('ELASTICSEARCH - SERVICE - id:', id);
+		console.log('ELASTICSEARCH - SERVICE - doc:', doc);
+			let index= '.sakura';
 		this.cli.update({
 			index: '.sakura',
-			type: 'visualization',
+			type: type,
 			id: id,
 			body: {
-				doc: visualizationObj
+				doc: doc
 			}
 		}).then(
 			response => console.log('SUCCESS'),
@@ -158,13 +188,13 @@ export class Elasticsearch {
 		);
 	}
 
-	private _isNewVisualization(title: string): PromiseLike<boolean> {
+	private _isNewDocument(type: string, title: string): PromiseLike<boolean> {
 		let body = bodybuilder().filter('term', '_id', title).build();
 		console.log('body:', body);
 
 		return this.cli.search({
 				"index": '.sakura',
-				"type": 'visualization',
+				"type": type,
 				"body": body
 		}).then(function(response){
 			console.log('response:', response)

@@ -1,7 +1,5 @@
 div.container{
 	height: 100%;
-	overflow-y: scroll;
-	background-color: #eeeded;
 
 	div.section-title {
 		font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
@@ -41,13 +39,60 @@ div.container{
 		}
 	}
 
+	div#configFunctions {
+		display: flex;
+		align-items: center;
+		background-color: #dddddd;
+		border-bottom: 1px solid #fbfbfb;
+
+		span.function-icon {
+			cursor: pointer;
+			background-color: #dddddd;
+			color: #3c75ca;
+			//border-radius: 0.25rem;
+			padding: 0.75rem;
+		}
+
+		span.function-icon:hover {
+			background-color: #b3b3b3;
+		}
+
+		/*div#calculateButton {
+			flex: 1;
+			//padding: 0.25rem;
+		}*/
+
+		input {
+			height: 1.25rem;
+			width: 100%;
+			//border-radius: 0.25rem;
+			font-size: 1rem;
+			border: 0px;
+			padding-left: 0.5rem;
+			padding-right: 0.5rem;
+			margin-left: 0.5rem;
+			margin-right: 0.5rem;
+			border-radius: 0.25rem;
+		}
+
+		/*div#saveForm {
+			flex: 5;
+			//padding: 0.25rem;
+
+			input {
+				height: 1.25rem;
+				//border-radius: 0.25rem;
+				font-size: 1rem;
+				border: 0px;
+			}
+		}*/
+	}
+
 	.main-content {
 		//position: absolute;
 		top: 200px;
 		left: 0;
 		width: 100%;
-
-
 	}
 
 	h1 {

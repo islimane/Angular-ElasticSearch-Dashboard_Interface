@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { GridsterComponent } from './gridster2/gridster.component';
-import { GridsterItemComponent } from './gridster2/gridster-item/gridster-item.component';
-import { IGridsterOptions } from './gridster2/IGridsterOptions';
-import { IGridsterDraggableOptions } from './gridster2/IGridsterDraggableOptions';
+import { GridsterComponent } from './gridster/gridster.component';
+import { GridsterItemComponent } from './gridster/gridster-item/gridster-item.component';
+import { IGridsterOptions } from './gridster/IGridsterOptions';
+import { IGridsterDraggableOptions } from './gridster/IGridsterDraggableOptions';
 import { DynamicComponent } from '../../shared/dynamicComponent.component';
 
 import { Elasticsearch } from '../../elasticsearch';
@@ -20,21 +20,21 @@ export class DashboardComponent {
 	@ViewChild(DynamicComponent) private _dynamicComponents;
 
 	private _itemOptions = {
-		maxWidth: 5,
-		maxHeight: 5
+		maxWidth: 20,
+		maxHeight: 20
 	};
 
 	gridsterOptions: IGridsterOptions = {
 		// core configuration is default one - for smallest view. It has hidden minWidth: 0.
-		lanes: 2, // amount of lanes (cells) in the grid
+		lanes: 20, // amount of lanes (cells) in the grid
 		direction: 'vertical', // floating top - vertical, left - horizontal
 		dragAndDrop: true, // enable/disable drag and drop for all items in grid
 		resizable: true, // enable/disable resizing by drag and drop for all items in grid
-		widthHeightRatio: 2.2, // proportion between item width and height
+		widthHeightRatio: 1.2, // proportion between item width and height
 		shrink: true,
 		useCSSTransforms: true,
-		responsiveView: true, // turn on adopting items sizes on window resize and enable responsiveOptions
-		responsiveDebounce: 500, // window resize debounce time
+		responsiveView: false, // turn on adopting items sizes on window resize and enable responsiveOptions
+		//responsiveDebounce: 500, // window resize debounce time
 		// List of different gridster configurations for different breakpoints.
 		// Each breakpoint is defined by name stored in "breakpoint" property. There is fixed set of breakpoints
 		// available to use with default minWidth assign to each.
@@ -44,7 +44,7 @@ export class DashboardComponent {
 		// - xl: 1200 - Extra large
 		// MinWidth for each breakpoint can be overwritten like it's visible below.
 		// ResponsiveOptions can overwrite default configuration with any option available.
-		responsiveOptions: [
+		/*responsiveOptions: [
 			{
 				breakpoint: 'sm',
 				// minWidth: 480,
@@ -65,7 +65,7 @@ export class DashboardComponent {
 				minWidth: 1800,
 				lanes: 8
 			}
-		]
+		]*/
 	};
 
 	gridsterDraggableOptions: IGridsterDraggableOptions = {
@@ -74,59 +74,10 @@ export class DashboardComponent {
 
 	title = 'Angular2Gridster';
 
-	widgets: Array<any> = [
-		/*{
-			x: 0, y: 0,
-			w: 1, h: 2,
-			dragAndDrop: true,
-			resizable: true,
-			title: 'Basic form inputs 1'
-		},
-		{
-			x: 1, y: 0, w: 3, h: 1,
-			dragAndDrop: true,
-			resizable: true,
-			title: 'Basic form inputs 2'
-		},
-		{
-			x: 1, y: 1, w: 2, h: 1,
-			dragAndDrop: true,
-			resizable: true,
-			title: 'Basic form inputs 3'
-		},
-		{
-			x: 3, y: 1, w: 1, h: 2,
-			dragAndDrop: true,
-			resizable: true,
-			title: 'Basic form inputs 4'
-		},
-		{
-			w: 1, h: 2,
-			dragAndDrop: true,
-			resizable: true,
-			title: 'Basic form inputs x'
-		}*/
-	];
+	widgets: Array<any> = [];
 
 	private _savedVisualizations: any[] = [];
 	private _displaySavedVis = false;
-
-	private _widgetsMap: Map<string, any> = new Map<string, any>();
-	private _gridsterItemEvents: Array<string> = [
-		'xChange',
-		'yChange',
-		'xSmChange',
-		'ySmChange',
-		'xMdChange',
-		'yMdChange',
-		'xLgChange',
-		'yLgChange',
-		'xXlChange',
-		'yXlChange',
-		'wChange',
-		'hChange',
-		'change'
-	];
 
 	constructor(
 		public _elasticsearch: Elasticsearch
@@ -137,50 +88,30 @@ export class DashboardComponent {
 		this._setSavedVisualizations();
 	}
 
-	onEvent(event): void {
-		console.log('event:', event);
-		switch(event.name){
-			case 'change':
-				this._itemChange(event);
-				break;
-			default:
-				let widget = this._widgetsMap.get(event.uniqueId);
-				widget[event.name] = event.data;
-				//console.error('ERROR: event name [' + event.name + '] not found.');
+	private _save(dashTitle: string): void {
+		console.log('DASHBOARD COMPONENT - _save()');
+		if(dashTitle!=='' && this.widgets.length>0){
+			var dashboardObj = {
+				title: dashTitle,
+				widgetsJSON: JSON.stringify(this.widgets)
+			};
+
+			console.log('DASHBOARD COMPONENT - dashboardObj:', dashboardObj);
+			this._elasticsearch.saveDashboard(dashboardObj);
 		}
 	}
 
 	private _pushGridItem(vis: any): void {
 		this.widgets.push({
 			title: vis._source.title,
-			w: 3,
-			h: 3,
+			w: 10,
+			h: 6,
 			dragAndDrop: true,
 			resizable: true,
 			visualization: vis
 		});
-		/*let widget = this._getWidget(vis);
 
-		let inputs = {
-			options: this._itemOptions,
-			dragAndDrop: widget.dragAndDrop,
-			resizable: widget.resizable,
-			w: 3,
-			h: 3,
-			title: widget.visualization._source.title,
-			visualization: widget.visualization
-		};
-
-		let uniqueId = this._guidGenerator();
-
-		let newGridItemCmp = this._dynamicComponents.addComponent(
-			uniqueId,
-			inputs,
-			this._gridsterItemEvents,
-			GridsterItemComponent
-		);
-
-		this._widgetsMap.set(uniqueId, widget);*/
+		this._displaySavedVis = !this._displaySavedVis;
 	}
 
 	private _getWidget(vis: any) {
@@ -323,8 +254,6 @@ export class DashboardComponent {
 		console.log('widget remove', index);
 	}
 
-
-
 	private _getHeight(elemId: string): Number {
 		//console.log('BAR CHART - elemId:', elemId);
 		let configHeight = ($(window).height() - $('#' + elemId).position().top);
@@ -340,6 +269,6 @@ export class DashboardComponent {
 	}
 
 	private _debug(box: any): any {
-		console.log(box.config)
+		console.log('DASHBOARD COMPONENT - widgets', this.widgets);
 	}
 }

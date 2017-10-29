@@ -1,3 +1,15 @@
 <div class="container">
+	<div>
+		<div class="section-title" (click)="_displaySavedDash = !_displaySavedDash">
+			Saved Dashboards
+		</div>
+		<div class="saved-dash section-content" *ngIf="_displaySavedDash">
+			<ul>
+				<li *ngFor="let dashboard of _savedDashboards" (click)="_loadDashboard(dashboard)">
+					<span>{{dashboard._source.title}}</span>
+				</li>
+			</ul>
+		</div>
+	</div>
 	<dashboard></dashboard>
 </div>
