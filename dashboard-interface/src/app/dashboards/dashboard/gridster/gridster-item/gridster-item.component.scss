@@ -119,16 +119,24 @@
 	bottom: 13px;
 }
 
+:host.is-dragging /deep/ .panel-heading .panel-title {
+	cursor: -webkit-grabbing;
+}
+
 :host /deep/ .panel-heading {
 	border-bottom: 1px solid #F0F0F0;
-	display: inline-block;
+	//display: inline-block;
 	position: relative;
 	width: 100%;
 	top: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
 	.panel-title {
 		padding: 10px;
 		margin: 0;
+		cursor: -webkit-grab;
 	}
 }
 

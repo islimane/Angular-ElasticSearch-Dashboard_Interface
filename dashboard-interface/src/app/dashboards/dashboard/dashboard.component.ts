@@ -248,7 +248,7 @@ export class DashboardComponent {
 		console.log('widget push', this.widgets[this.widgets.length - 1]);
 	}
 
-	remove($event, index: number, gridster: GridsterComponent) {
+	private _remove($event, index: number, gridster: GridsterComponent) {
 		$event.preventDefault();
 		this.widgets.splice(index, 1);
 		console.log('widget remove', index);
