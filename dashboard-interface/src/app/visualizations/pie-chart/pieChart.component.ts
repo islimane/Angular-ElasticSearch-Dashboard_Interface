@@ -41,7 +41,7 @@ export class PieChartComponent {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: true,
+			display: true
 		},
 		fullWidth: true,
 		tooltipFontSize: 10,
@@ -52,7 +52,8 @@ export class PieChartComponent {
 					var index = tooltipItem.index;
 					console.log('PIE CHART - tooltipItem:', tooltipItem);
 					console.log('PIE CHART - data:', data);
-					return dataset.labels[index].split('\n');
+					console.log('PIE CHART - dataset.labels[index]:', dataset.labels[index]);
+					return table(dataset.labels[index]).split('\n');
 				}
 			},
 			displayColors: false,
