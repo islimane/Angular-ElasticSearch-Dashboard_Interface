@@ -91,6 +91,10 @@ export class VisualizationsComponent {
 		}
 	}
 
+	private _deleteVis(title: string): void {
+		this._elasticsearch.deleteDoc('visualization', title).then(() => this._setSavedVisualizations());
+	}
+
 	private _destroyVis(): void {
 		if(this._visCmp){
 			this._dynamicComponent.destroyCmp(this._visCmp.guid);
@@ -163,6 +167,7 @@ export class VisualizationsComponent {
 
 	private _setSavedVisualizations(): void {
 		this._elasticsearch.getSavedVisualizations().then(hits => {
+			this.savedVisualizations = [];
 			for(let i=0; i<hits.length; i++){
 				this.savedVisualizations.push(hits[i]);
 			}

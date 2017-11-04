@@ -5,8 +5,15 @@
 		</div>
 		<div class="saved-dash section-content" *ngIf="_displaySavedDash">
 			<ul>
-				<li *ngFor="let dashboard of _savedDashboards" (click)="_loadDashboard(dashboard)">
-					<span>{{dashboard._source.title}}</span>
+				<li *ngFor="let dashboard of _savedDashboards">
+					<div class="option-container">
+						<div class="title-container" (click)="_loadDashboard(dashboard)">
+							<span>{{dashboard._source.title}}</span>
+						</div>
+						<div class="delete-icon-container" (click)="_deleteDashboard(dashboard._source.title)">
+							<span class="fa fa-trash-o"></span>
+						</div>
+					</div>
 				</li>
 			</ul>
 		</div>

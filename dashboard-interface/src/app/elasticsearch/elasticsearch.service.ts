@@ -132,50 +132,68 @@ export class Elasticsearch {
 		);
 	}
 
-	saveDashboard(dashboardObj: any): void{
+	saveDashboard(dashboardObj: any): PromiseLike<any>{
 		console.log('ELASTICSEARCH - SERVICE - saveDashboard()');
-		this._isNewDocument('dashboard', dashboardObj.title).then(isNew => {
+		return this._isNewDocument('dashboard', dashboardObj.title).then(isNew => {
 			console.log('ELASTICSEARCH - SERVICE - isNew:', isNew);
-			(isNew) ?
-				this._createDoc('dashboard', dashboardObj.title, dashboardObj) :
-				this._updateDoc('dashboard', dashboardObj.title, dashboardObj);
+			if(isNew)
+				return this._createDoc('dashboard', dashboardObj.title, dashboardObj);
+			else
+				return this._updateDoc('dashboard', dashboardObj.title, dashboardObj);
 		});
 	}
 
-	saveVisualization(visualizationObj: VisualizationObj): void{
+	saveVisualization(visualizationObj: VisualizationObj): PromiseLike<any>{
 		console.log('ELASTICSEARCH - SERVICE - saveVisualization()');
-		this._isNewDocument('visualization', visualizationObj.title).then(isNew => {
+		return this._isNewDocument('visualization', visualizationObj.title).then(isNew => {
 			console.log('ELASTICSEARCH - SERVICE - isNew:', isNew);
-			(isNew) ?
-				this._createDoc('visualization', visualizationObj.title, visualizationObj) :
-				this._updateDoc('visualization', visualizationObj.title, visualizationObj);
+			if(isNew)
+				return this._createDoc('visualization', visualizationObj.title, visualizationObj);
+			else
+				return this._updateDoc('visualization', visualizationObj.title, visualizationObj);
 		});
 	}
 
-	private _createDoc(type: string, id: string, body: any): void{
+	private _createDoc(type: string, id: string, body: any): PromiseLike<any>{
 		console.log('ELASTICSEARCH - SERVICE - _createDoc()');
 		console.log('ELASTICSEARCH - SERVICE - type:', type);
 		console.log('ELASTICSEARCH - SERVICE - id:', id);
 		console.log('ELASTICSEARCH - SERVICE - body:', body);
 		let index = '.sakura';
-		this.cli.create({
+		return this.cli.create({
 			index: index,
 			type: type,
 			id: id,
 			body: body
 		}).then(
-			response => console.log('ELASTICSEARCH - SERVICE - SUCCESS'),
+			response => console.log('ELASTICSEARCH - SERVICE - CREATE SUCCESS'),
 			this.handleError
 		);
 	}
 
-	private _updateDoc(type: string, id: string, doc: any): void{
+	deleteDoc(type: string, id: string): PromiseLike<any>{
+		console.log('ELASTICSEARCH - SERVICE - _deleteDoc()');
+		console.log('ELASTICSEARCH - SERVICE - type:', type);
+		console.log('ELASTICSEARCH - SERVICE - id:', id);
+		let index = '.sakura';
+		return this.cli.delete({
+			index: index,
+			type: type,
+			id: id,
+			refresh: 'wait_for'
+		}).then(
+			response => console.log('ELASTICSEARCH - SERVICE - DELETE SUCCESS'),
+			this.handleError
+		);
+	}
+
+	private _updateDoc(type: string, id: string, doc: any): PromiseLike<any>{
 		console.log('ELASTICSEARCH - SERVICE - _updateDoc()');
 		console.log('ELASTICSEARCH - SERVICE - type:', type);
 		console.log('ELASTICSEARCH - SERVICE - id:', id);
 		console.log('ELASTICSEARCH - SERVICE - doc:', doc);
 			let index= '.sakura';
-		this.cli.update({
+		return this.cli.update({
 			index: '.sakura',
 			type: type,
 			id: id,

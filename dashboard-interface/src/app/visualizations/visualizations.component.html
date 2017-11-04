@@ -5,8 +5,15 @@
 		</div>
 		<div class="saved-vis section-content" *ngIf="_displaySavedVis">
 			<ul>
-				<li *ngFor="let visualization of savedVisualizations" (click)="_loadVis(visualization)">
-					<span>{{visualization._source.title}}</span>
+				<li *ngFor="let visualization of savedVisualizations">
+					<div class="option-container">
+						<div class="title-container" (click)="_loadDashboard(dashboard)" (click)="_loadVis(visualization)">
+							<span>{{visualization._source.title}}</span>
+						</div>
+						<div class="delete-icon-container" (click)="_deleteVis(visualization._source.title)">
+							<span class="fa fa-trash-o"></span>
+						</div>
+					</div>
 				</li>
 			</ul>
 		</div>

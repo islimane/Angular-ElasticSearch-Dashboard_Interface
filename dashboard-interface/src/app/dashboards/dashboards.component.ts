@@ -28,6 +28,7 @@ export class DashboardsComponent {
 
 	private _setSavedDashboards(): void {
 		console.log('DASHBOARDS COMPONENT - _setSavedVisualizations()');
+		this._savedDashboards = [];
 		this._elasticsearch.getSavedDashboards().then(hits => {
 			for(let i=0; i<hits.length; i++){
 				this._savedDashboards.push(hits[i]);
@@ -42,5 +43,9 @@ export class DashboardsComponent {
 		let widgets = JSON.parse(dashboard._source.widgetsJSON);
 		console.log('DASHBOARDS COMPONENT - widgets', widgets);
 		this.dashboardComponent.widgets = widgets;
+	}
+
+	private _deleteDashboard(title: string): void {
+		this._elasticsearch.deleteDoc('dashboard', title).then(() => this._setSavedDashboards());
 	}
 }

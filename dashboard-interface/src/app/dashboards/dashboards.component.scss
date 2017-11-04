@@ -18,6 +18,32 @@ div.container {
 
 	div.section-content {
 		background-color: #fbfbfb;
+
+		.option-container {
+			display: flex;
+			//justify-content: space-between;
+			//align-items: center;
+
+			.title-container {
+				flex: 20;
+				padding: 0.5rem;
+				padding-left: 1rem;
+			}
+
+			.delete-icon-container {
+				padding: 0.5rem;
+				cursor: pointer;
+				color: red;
+				border-radius: 0.25rem;
+				flex: 1;
+				display: flex;
+				justify-content: center;
+			}
+
+			.delete-icon-container:hover {
+				background-color: #ffd3d3;
+			}
+		}
 	}
 
 	div.saved-dash {
@@ -27,9 +53,9 @@ div.container {
 			list-style-type: none;
 
 			li {
-				padding: 0.25rem;
-				padding-right: 1rem;
-				padding-left: 1rem;
+				//padding: 0.25rem;
+				//padding-right: 1rem;
+				//padding-left: 1rem;
 				border-bottom: 1px solid #efefef;
 				color: #676767;
 			}

@@ -88,6 +88,10 @@ export class DashboardComponent {
 		this._setSavedVisualizations();
 	}
 
+	private _deleteVis(title: string): void {
+		this._elasticsearch.deleteDoc('visualization', title).then(() => this._setSavedVisualizations());
+	}
+
 	private _save(dashTitle: string): void {
 		console.log('DASHBOARD COMPONENT - _save()');
 		if(dashTitle!=='' && this.widgets.length>0){
@@ -126,7 +130,9 @@ export class DashboardComponent {
 	}
 
 	private _setSavedVisualizations(): void {
+		console.log('DASHBOARD COMPONENT - _setSavedVisualizations()');
 		this._elasticsearch.getSavedVisualizations().then(hits => {
+			this._savedVisualizations = [];
 			for(let i=0; i<hits.length; i++){
 				this._savedVisualizations.push(hits[i]);
 			}
