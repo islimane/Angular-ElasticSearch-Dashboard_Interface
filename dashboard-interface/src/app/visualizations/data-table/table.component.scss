@@ -6,10 +6,15 @@ div.table-container {
 
 	table {
 		border-collapse: collapse;
+		width: 100%;
 
 		th, td {
 			border: 1px solid #bfbfbf;
 			padding: 0.5rem;
+			border-top: 0;
+			border-left: 0;
+			border-right: 0;
+			text-align: -webkit-left;
 		}
 	}
 }
