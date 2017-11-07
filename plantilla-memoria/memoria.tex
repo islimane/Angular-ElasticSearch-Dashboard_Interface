@@ -17,12 +17,13 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[a4paper, 12pt, spanish]{book}
-%\usepackage[T1]{fontenc}
+\documentclass[a4paper, 12pt, english]{book}
+\usepackage[T1]{fontenc}
+
 
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{times}
-\usepackage[spanish]{babel} % Comenta esta línea si tu memoria es en inglés
+%\usepackage[spanish]{babel} % Comenta esta línea si tu memoria es en inglés
 \usepackage{url}
 %\usepackage[dvipdfm]{graphicx}
 \usepackage{graphicx}
@@ -38,6 +39,8 @@
   Euro={€}
 }
 \usepackage{babel}
+
+\usepackage{hyperref}
 
 \title{Memoria del Proyecto}
 \author{Ismael Slimane Zubillaga}
@@ -81,6 +84,10 @@ Curso Académico 2017/2018
 Trabajo Fin de Grado/Máster
 
 \vspace{2.5cm}
+
+\LARGE
+SAKURA
+\vspace{0.1cm}
 
 \LARGE
 ANGULAR 4 - ELASTICSEARCH - DASHBOARD INTERFACE
@@ -321,16 +328,45 @@ En esta sección se debería introducir la esctura de la memoria. Así:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage % empezamos en página impar
-\chapter{Estado del Arte y Tecnologías} % título del capítulo (se muestra)
-\label{chap:estado-arte} % identificador del capítulo (no se muestra, es para poder referenciarlo)
+\chapter{State of Art} % título del capítulo (se muestra)
+\label{chap:state-of-art} % identificador del capítulo (no se muestra, es para poder referenciarlo)
 
 \section{ElasticSearch} % título de sección (se muestra)
 \label{sec:elasticsearch} % identificador de sección (no se muestra, es para poder referenciarla)
 
-Aquí vendría el objetivo general en una frase:
-Mi trabajo fin de grado consiste en crear de una herramienta de análisis de los comentarios jocosos en repositorios de software libre alojados en la plataforma GitHub.
+\textit{\textbf{Elasticsearch}} is an open-source, \textit{broadly-distributable}, \textit{readily-scalable}, \textit{enterprise-grade} search engine based on Lucene\footnote{\url{https://en.wikipedia.org/wiki/Apache\_Lucene}}. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
 
-Recuerda que los objetivos siempre vienen en infinitivo.
+\subsection{History}
+\label{subsec:elasticsearch-history}
+\textbf{Shay Banon} created the precursor to Elasticsearch, called \textit{Compass}, in 2004. While thinking about the third version of Compass he realized that it would be necessary to rewrite big parts of Compass to "create a scalable search solution". So he created "a solution built from the ground up to be distributed" and used a common interface, \textit{JSON} over \textit{HTTP}, suitable for programming languages other than \textit{Java} as well. Shay Banon released the first version of Elasticsearch in February 2010.
+
+\subsection{Main Concepts}
+\label{subsec:elasticsearch-main-concepts}
+
+All the following concepts definitions are extracted from the Elasticsearch documentation web page\footnote{\url{https://www.elastic.co/guide/en/elasticsearch/reference/current/_basic_concepts.html}}.
+
+\begin{itemize}
+    \item \textbf{Near Realtime (NRT)}:
+        Elasticsearch is a near real time search platform. What this means is there is a slight latency (normally one second) from the time you index a document until the time it becomes searchable.
+    \item \textbf{Index}:
+        An index is a collection of documents that have somewhat similar characteristics. For example, you can have an index for customer data, another index for a product catalog, and yet another index for order data. An index is identified by a name (that must be all lowercase) and this name is used to refer to the index when performing indexing, search, update, and delete operations against the documents in it.
+        In a single cluster, you can define as many indexes as you want.
+    \item \textbf{Shards & Replicas}:
+        An index can potentially store a large amount of data that can exceed the hardware limits of a single node.
+
+        To solve this problem, Elasticsearch provides the ability to subdivide your index into multiple pieces called \textbf{shards}. When you create an index, you can simply define the number of shards that you want. Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
+
+        In a network/cloud environment where failures can be expected anytime, it is very useful and highly recommended to have a failover mechanism in case a shard/node somehow goes offline or disappears for whatever reason. To this end, Elasticsearch allows you to make one or more copies of your index’s shards into what are called \textit{replica shards}, or \textbf{replicas} for short.
+    \item \textbf{Type}:
+        A type in Elasticsearch represents a class of similar documents. A type consists of a \textit{name}—such as user or blogpost—and a \textit{mapping}. The \textit{mapping}, like a database schema, describes the fields or properties that documents of that type may have, the datatype of each field—such as string, integer, or date—and how those fields should be indexed and stored by \textit{Lucene}.
+    \item \textbf{Document}:
+        A document is a basic unit of information that can be indexed. For example, you can have a document for a single customer, another document for a single product, and yet another for a single order. This document is expressed in JSON (JavaScript Object Notation) which is an ubiquitous internet data interchange format.
+    \item \textbf{Node}:
+        A node is a single server that is part of your cluster, stores your data, and participates in the cluster’s indexing and search capabilities.
+    \item \textbf{Cluster}:
+        A cluster is a collection of one or more nodes (servers) that together holds your entire data and provides federated indexing and search capabilities across all nodes.
+\end{itemize}
+
 
 \section{GitHub}
 \label{sec:github}
