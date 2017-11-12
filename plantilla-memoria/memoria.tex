@@ -42,6 +42,43 @@
 
 \usepackage{hyperref}
 
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
 \title{Memoria del Proyecto}
 \author{Ismael Slimane Zubillaga}
 
@@ -338,74 +375,468 @@ En esta sección se debería introducir la esctura de la memoria. Así:
 
 \subsection{History}
 \label{subsec:elasticsearch-history}
-\textbf{Shay Banon} created the precursor to Elasticsearch, called \textit{Compass}, in 2004. While thinking about the third version of Compass he realized that it would be necessary to rewrite big parts of Compass to "create a scalable search solution". So he created "a solution built from the ground up to be distributed" and used a common interface, \textit{JSON} over \textit{HTTP}, suitable for programming languages other than \textit{Java} as well. Shay Banon released the first version of Elasticsearch in February 2010.
+\textit{Compass} was the predecessor to Elasticsearch and it was created by \textbf{Shay Banon} in 2004. Through the implementation of the third version of Compass, came the necessity of a \textit{"scalable search solution"}. This necessity would have meant a lot of work rewriting big pieces of code, so Shay decided to build \textit{"a solution built from the ground up to be distributed"} and used a common interface, \textit{JSON} over \textit{HTTP}, available for other programming languages, and not only \textit{Java}.
 
-\subsection{Main Concepts}
-\label{subsec:elasticsearch-main-concepts}
+The first verision of Elasticsearch was released on February 2010.
+
+\subsection{Basic Concepts}
+\label{subsec:elasticsearch-basic-concepts}
 
 All the following concepts definitions are extracted from the Elasticsearch documentation web page\footnote{\url{https://www.elastic.co/guide/en/elasticsearch/reference/current/_basic_concepts.html}}.
 
 \begin{itemize}
     \item \textbf{Near Realtime (NRT)}:
-        Elasticsearch is a near real time search platform. What this means is there is a slight latency (normally one second) from the time you index a document until the time it becomes searchable.
+        Elasticsearch is a near real time search platform.
+        The practical meaning of this is that there is a little latency (about one second) from the moment you store a new document, to the moment it becomes available for searching.
     \item \textbf{Index}:
-        An index is a collection of documents that have somewhat similar characteristics. For example, you can have an index for customer data, another index for a product catalog, and yet another index for order data. An index is identified by a name (that must be all lowercase) and this name is used to refer to the index when performing indexing, search, update, and delete operations against the documents in it.
-        In a single cluster, you can define as many indexes as you want.
-    \item \textbf{Shards & Replicas}:
-        An index can potentially store a large amount of data that can exceed the hardware limits of a single node.
+        An \textbf{index} is a set of documents that share some type of characteristics. For example, you can have an index for a shop product, another index for employee data and another for bill data. An index is identified by its name (in lowercase), and this name is used for several operations as: searching, deleting, updating, etc.
+    \item \textbf{Shards \& Replicas}:
+        The index data can reach a large size exceeding the available physical memory.
+        But this problem can be fixed by defining multiple \textbf{shards}. Each shard is a portion of data from the index data. The number of shards is defined when the index is created.
 
-        To solve this problem, Elasticsearch provides the ability to subdivide your index into multiple pieces called \textbf{shards}. When you create an index, you can simply define the number of shards that you want. Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
-
-        In a network/cloud environment where failures can be expected anytime, it is very useful and highly recommended to have a failover mechanism in case a shard/node somehow goes offline or disappears for whatever reason. To this end, Elasticsearch allows you to make one or more copies of your index’s shards into what are called \textit{replica shards}, or \textbf{replicas} for short.
+        But there is still another potential problem. It always exists the possibility to have a failure on the network system and to loose a shard/node, so it is advisable to have \textbf{replicas} of our data. A replica is a copy of the index shards.
     \item \textbf{Type}:
-        A type in Elasticsearch represents a class of similar documents. A type consists of a \textit{name}—such as user or blogpost—and a \textit{mapping}. The \textit{mapping}, like a database schema, describes the fields or properties that documents of that type may have, the datatype of each field—such as string, integer, or date—and how those fields should be indexed and stored by \textit{Lucene}.
+        We can see a \textbf{type} like an object class, with fields of different data-types.
+
+        In Elasticsearch a type is defined by its \textit{name} and its \textit{mappings}. The \textit{mappings} are a schema of the type, where it's defined the properties that our type has, and the data-type of each property, such as \textit{integer, string, etc.}.
     \item \textbf{Document}:
-        A document is a basic unit of information that can be indexed. For example, you can have a document for a single customer, another document for a single product, and yet another for a single order. This document is expressed in JSON (JavaScript Object Notation) which is an ubiquitous internet data interchange format.
+        As we said about \textit{types} being like classes, we could see a \textbf{document} like a record from a single class.
+        Using the same example we used for \textit{indexes}, you can have a document for a single product, another document for a single employee and yet another for a single bill.
     \item \textbf{Node}:
-        A node is a single server that is part of your cluster, stores your data, and participates in the cluster’s indexing and search capabilities.
+        We can see a \textbf{node} like a single server, as a single unit that along with other nodes, make up a cluster. This node take part on cluster's indexing and searching tasks.
     \item \textbf{Cluster}:
-        A cluster is a collection of one or more nodes (servers) that together holds your entire data and provides federated indexing and search capabilities across all nodes.
+        As we said in the previous definition, a \textbf{cluster} is made up with multiple nodes(servers). The cluster stores all the data and allows to search and index all this data across all nodes.
+        A cluster is a collection of one or more nodes (servers) that together holds your entire data and provides federated indexing and search capabilities through all nodes.
+\end{itemize}
+
+
+\section{Kibana}
+\label{sec:kibana}
+
+\textbf{Kibana} is an \textit{Elasticsearch} open-source plug-in. It mainly works with Elasticsearch indexed data in order to represent it into different types of visualizations such as bar charts, scatter plot charts, pie charts, ...
+
+Kibana, as an exploration tool, can be used to log and time series analytics, application monitoring, and operational intelligence use cases.
+
+We can find another similar applications such as \textit{Grafna}\footnote{\url{https://grafana.com/}}, \textit{incubator-superset}\footnote{\url{https://github.com/apache/incubator-superset}} and \textit{Tableau}\footnote{\url{https://www.tableau.com/}}.
+
+\subsection{Main Features}
+\label{sec:kibana-functoinalities}
+
+In the Figure~\ref{fig:kibana-nav-bar}, we can see the Kibana's \textit{nav-bar}. Now we are going to speak about a couple of features.
+\begin{figure}
+  \centering
+  \includegraphics[height=6cm, keepaspectratio]{img/kibana-nav-bar}
+  \caption{Kibana's nav-bar.}
+  \label{fig:kibana-nav-bar}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Visualize}:
+
+        \textit{Visualize} allows you to represent data with a specific type of chart. The represented data will be chosen from the available index on Elasticsearch. In addition to the Elasticsearch index, we have to choose which type of \textit{aggregations} are we going to use in order to extract our data. We can see an example on Figure~\ref{fig:kibana-visualization-example}.
+        \begin{figure}
+          \centering
+          \includegraphics[width=15cm, keepaspectratio]{img/kibana-visualization-example}
+          \caption{Visualization example.}
+          \label{fig:kibana-visualization-example}
+        \end{figure}
+    \item \textbf{Dashboard}:
+
+        The Kibana's dashboard functionality allows us to display a collection of saved visualizations and organize them by dragging and dropping. We can see an example on Figure~\ref{fig:kibana-dashboard-example}.
+        \begin{figure}
+          \centering
+          \includegraphics[width=15cm, keepaspectratio]{img/kibana-dashboard-example}
+          \caption{Dashboard example.}
+          \label{fig:kibana-dashboard-example}
+        \end{figure}
 \end{itemize}
 
 
 \section{GitHub}
 \label{sec:github}
 
-Los objetivos específicos se pueden entender como las tareas en las que se ha desglosado el objetivo general.
-Y, sí, también vienen en infinitivo.
+"\textbf{GitHub} is a \textit{Web-based} \textbf{Git version control repository hosting service}". Github is used mainly for programming code. In addition to Git functionalities as \textit{deistributed version control} and \textit{source code management}, Github provides more features such as collaboration features for \textit{bug tracking} and for other porposes, task management, and \textit{wikis} for documentation porposes.
+
+For the current project, a repository was created on \textit{Github} with the name of '\textit{Angular-ElasticSearch-Dashboard\_Interface}'\footnote{\url{https://github.com/islimane/Angular-ElasticSearch-Dashboard\_Interface}}.
 
 
 \section{Webpack}
 \label{sec:webpack}
 
-\section{Angular 4}
-\label{sec:angular4}
+"\textbf{Webpack} is an \textit{open-source JavaScript} module bundler". The main reason for using Webpack is to have a modular structure on your web application project. This allows you to have a cleaner code and make it more reusable and scalable. Webpack can be used from the command line or be configured with a config file named \textit{webpack.config.js}.
+
+
+\section{Angular}
+\label{sec:angular}
+
+\textbf{Angular} is an open source \textit{web application platform} based on \textit{Typescript} and developed by Google and by a community of individuals and corporations.
+Angular is commonly referred to as Angular 2.0 or later versions.
+
+\subsection{Versions}
+\label{sec:angular-versions}
+Before Angular was created, there was a previous version called \textit{AngularJS} or Angular1.X. Angular was created as a complete rewrite of AngularJS.
+
+\begin{itemize}
+    \item 2.0.0:
+
+        This was the first version of Angular. Its announcing was made at the \textit{ng-Europe} conference on September 2014. This version was build up from the ground and these were the main characteristics:
+        \begin{itemize}
+            \item Introduced the components hierarchy.
+            \item Modules for core functionality, improving the speed of the Angular core.
+            \item Possibility of using \textit{TypeScript} language. The use of this language is recommended by the Angular team.
+            \item Improved \textit{dependency} injection.
+            \item Dynamic loading.
+            \item Reactive programming support using RxJS.
+        \end{itemize}
+        And much more features. The final version was released on September 14, 2016.
+    \item 4.0.0:
+
+        This version was called \textit{Angular 4} and was announced on 13 December 2016. Angular 3 was skipped due to some features already present on version 3.0.0 and to avoid confusion. This version introduced:
+        \begin{itemize}
+            \item \textit{Http} client.
+            \item A new \textit{Rout Live Cycle}.
+            \item Conditionally disable animations.
+        \end{itemize}
+    \item 5.0.0:
+
+        This version was released on November 2017 and the main introduced features were:
+        \begin{itemize}
+            \item Support for progressive Web apps.
+            \item A build optimizer and improvements related to \textit{Material Design}.
+        \end{itemize}
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/angular-architecture}
+  \caption{Architecture of an Angular application}
+  \label{fig:angular-architecture}
+\end{figure}
+
 
 \section{TypeScript}
 \label{sec:typeScript}
 
-A mí me gusta que aquí pongáis una descripción de lo que os ha llevado realizar el trabajo.
-Hay gente que añade un diagrama de GANTT.
-Lo importante es que quede claro cuánto tiempo llevas (tiempo natural, p.ej., 6 meses) y a qué nivel de esfuerzo (p.ej., principalmente los fines de semana).
+"\textbf{TypeScript} is a free and open-source programming language developed and maintained by Microsoft. It is a strict syntactical \textit{superset} of \textit{JavaScript}, and adds optional static typing to the language".
+
+\subsection{History}
+\label{sec:typescript-history}
+
+Before it was made public, \textit{TypeScript} gone through a two years of development process until it reached the 0.8 version. Then, was released on October 2012. Initially it had a lack of \textit{IDE} support, until 2013 when some IDE's began to have support for this language, such as \textit{Eclipse} with a dedicated pug-in, and some text editors such as \textit{Sublime}, \textit{Atom}, etc.
+
+The reason TypeScript was created came from the necessity of a front-end programming language that fulfill the task of the development of complex and large-scale front-end applications, since JavaScript has shortcomings on that sense.
+
+TypeScript is based on the \textit{EMACScript} approach, the reason why is because it is a standard and because it has support for \textit{class-based programming}.
+
+\subsection{Language Features}
+\label{sec:typescript-features}
+
+\begin{itemize}
+    \item Type annotations and compile-time type checking:
+
+        TypeScript provides an optional static typing, with annotations, that is checked at compile time. If this typing it is not used, then the Javascript's dynamic typing is used. Here is an example:
+
+        \begin{lstlisting}[language=javascript]
+function planetMoons(planetName: string, moonsNum: number, spanish: boolean): any {
+	if(spanish){
+	    console.log('El planeta ' + planetName + ' tiene ' + moonsNum + ' lunas');
+	}else{
+	    console.log(planetName + '  planet has ' + moonsNum + ' moons');
+	}
+
+	return null;
+}
+        \end{lstlisting}
+        \textit{string}, \textit{boolean} and \textit{number} are primitive types. For dynamic types it's used \textit{any}.
+
+    \item Type inference.
+    \item Type erasure.
+    \item Interfaces.
+    \item Enumerated type.
+    \item Mixin.
+    \item Generic.
+    \item Namespaces.
+    \item Tuple.
+    \item Await.
+    \item Classes (backported from EMACScript 2015).
+    \item Modules (backported from EMACScript 2015).
+
+\end{itemize}
 
 
 \section{JavaScript}
 \label{sec:typeScript}
 
+"\textbf{JavaScript}, often abbreviated as JS, is a high-level, dynamic, weakly typed, prototype-based, multi-paradigm, and interpreted programming language. Alongside HTML and CSS, JavaScript is one of the three core technologies of World Wide Web content production". Generally, the main purpose of Javascript is to make pages interactive and develop online programs such as online games. Javascript is supported by most of the web browsers, for that reason, the majority of the websites employ it. There are multiple engines for Javascript, but all are standardized with the \textit{EMACScript} specification.
+
+\subsection{History}
+\label{sec:javascript-history}
+
+Javascript came with the necessity of dynamism on web browsers. The founder of Netscape Communications, Marc Andreessen, thought that HTML needed a "glue language" to assemble component like images or plug-ins into the web markup. In 1995, Netscape Communications began to use \textit{Java} as a static programming language for Netscape Navigator, so the scripting language they had being searching for, had to be similar to Java and would complement it. Then, on May 1995, Brendan Eich wrote in 10 days this scripting language in order to compete against competing proposals. The first time this scripting language was called JavaScript was on December 1995, when the Netscape Navigator 2.0 beta 3 was released.
+
+\subsection{Syntax}
+\label{sec:javascript-syntax}
+
+These are a few examples to illustrate the JavaScript syntax:
+
+\begin{itemize}
+    \item Variables:
+        \begin{lstlisting}[language=javascript]
+var x; // defines the variable x and assigns to it the special value "undefined" (not to be confused with an undefined value)
+var y = 2; // defines the variable y and assigns to it the value 2
+var z = "Hello, World!"; // defines the variable z and assigns to it a string entitled "Hello, World!"
+        \end{lstlisting}
+    \item Printing:
+        \begin{lstlisting}[language=javascript]
+console.log("Hello World!");
+        \end{lstlisting}
+    \item Functions:
+        \begin{lstlisting}[language=javascript]
+function add(a, b){
+    return a + b;
+}
+add(1, 2); // returns 3
+        \end{lstlisting}
+\end{itemize}
+
+
 \section{Lodash}
 \label{sec:flexbox}
 
-\section{ChartJS}
-\label{sec:chartJS}
+Lodash is a \textit{JavaScript} library that provides extra functions for tasks that are often required on data structure managing, a lot of them, not implemented on the main JavaScript functionality.
 
-\section{Canvas}
-\label{sec:canvas}
+For example:
+\begin{itemize}
+    \item \textbf{\_.difference(array, [values])}: Creates an array of unique array values not included in the other provided arrays using SameValueZero for equality comparisons.
+        \begin{lstlisting}[language=javascript]
+_.difference([1, 2, 3], [4, 2]);
+// returns [1, 3]
+        \end{lstlisting}
+    \item \textbf{\_.pluck(collection, path)}: Gets the property value of path from all elements in \textit{collection}.
+        \begin{lstlisting}[language=javascript]
+var users = [
+  { 'user': 'barney', 'age': 36 },
+  { 'user': 'fred',   'age': 40 }
+];
+
+_.pluck(users, 'user');
+// returns ['barney', 'fred']
+        \end{lstlisting}
+\end{itemize}
+
+As we can see, Lodash functions are called through the global variable "\_". All this functions can be found on the Lodash documentation\footnote{\url{https://lodash.com/docs/3.10.1}} page. This JavaScript library saves a lot of time when managing data structures.
+
+There are other similar libraries such as \textit{UnderscoreJS}\footnote{\url{http://underscorejs.org/}}.
+
+
+\section{jQuery}
+\label{sec:jquery}
+
+"\textit{jQuery} is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML". jQuery it's the most used JavaScript library. jQuery's syntax is designed to make it easier to navigate a document, select DOM elements, create animations, handle events, and develop Ajax applications.
+
+\subsection{History}
+\label{sec:jquery-history}
+
+    jQuery was originally released in January 2006 at BarCamp NYC by John Resig and was influenced by Dean Edwards' earlier cssQuery library. It is currently maintained by a team of developers led by Timmy Willison.
+
+\subsection{Usage Examples}
+\label{sec:jquery-examples}
+\begin{itemize}
+    \item HTML:
+        \begin{lstlisting}[language=javascript]
+<p>Hello</p>
+        \end{lstlisting}
+    \item JavaScript:
+        \begin{lstlisting}[language=javascript]
+$("p").clone().add( "<span>Again</span>" ).appendTo(document.body);
+        \end{lstlisting}
+    \item Result:
+
+    See the result on Figure~\ref{fig:jquery-result-example}
+        \begin{figure}
+          \centering
+          \includegraphics[width=13cm, keepaspectratio]{img/jquery-result-example}
+          \caption{View result.}
+          \label{fig:jquery-result-example}
+        \end{figure}
+\end{itemize}
+
+
+\section{HTML5}
+\label{sec:html5}
+
+"\textbf{HTML5} is a markup language used for structuring and presenting content on the World Wide Web. It is the fifth and current major version of the HTML standard".
+
+The \textit{World Wide Web Consortium} released HTML5 on October 2014, their goal was "to improve the language with support for the latest multimedia".
+
+\subsection{Features}
+\label{sec:html5-features}
+These are some of the feature introduced in HTML5:
+\begin{itemize}
+    \item \textbf{Markup}:
+
+        HTML5 introduces some elements that are commonly used on modern websites, they usually are replacements of old HTML elements, between these new elements we can find: \textit{<nav>}, \textit{<footer>}, \textit{<audio>}, \textit{<video>}, ...
+    \item \textbf{New APIs}:
+
+        HTML5 introduces \textit{application programming interfaces} or \textit{APIs} in addition to the markup elements that we have seen, such as \textit{Canvas}, \textit{Timed Media Playback}, \textit{Drag and Drop}, \textit{MIME type}, \textit{Web Messaging}, \textit{Web storage}, ... In this project we have mainly used \textit{Canvas} through the \textit{ChartJS} library.
+\end{itemize}
+
+
+\section{ChartJS}
+\label{sec:chartjs}
+
+\textbf{ChartJS} is a JavaScript library for producing dynamic, interactive data visualizations in web browsers, this is achieved by using the \textit{HTML5} \textit{canvas} element. With ChartJS you create different charts such as pie charts, bar charts, line charts, etc. You can find visual examples of each type on the ChartJS samples page\footnote{\url{http://www.chartjs.org/samples/latest/}}.
+
+\subsection{Usage Examples}
+\label{sec:chatjs-examples}
+
+We have to instantiate the \textit{Chart} class in order to create a chart, an then assign it to a \textit{canvas} element on the DOM. The field \textit{type} indicates which chart are we going to use, and the field \textit{data} stores our chart info. Here is an example:
+
+\begin{itemize}
+    \item HTML:
+        \begin{lstlisting}[language=javascript]
+<canvas height='50' id='myChart' width='200'></canvas>
+        \end{lstlisting}
+    \item JavaScript:
+        \begin{lstlisting}[language=javascript]
+var ctx = document.getElementById("#myChart");
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ["Red", "Blue", "Yellow"],
+    datasets: [{
+      label: '# of Votes',
+      data: [12, 19, 3, 5, 2, 3],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)'
+      ],
+      borderWidth: 1
+    }]
+  }
+});
+        \end{lstlisting}
+    \item Result:
+
+    See the result on Figure~\ref{fig:chartjs-result-example}
+    \begin{figure}
+      \centering
+      \includegraphics[width=13cm, keepaspectratio]{img/chartjs-result-example}
+      \caption{View result.}
+      \label{fig:chartjs-result-example}
+    \end{figure}
+\end{itemize}
+
+There are a lot of libraries that allows you to render charts or graphs on a web page\footnote{\url{https://blog.sicara.com/compare-best-javascript-chart-libraries-2017-89fbe8cb112d}} such as \textit{C3.js}, \textit{Plotly.js}, etc. In this project we used ChartJS because it adapted well to the project requirements.
+
 
 \section{SASS}
 \label{sec:sass}
 
+"\textbf{Sass} is a scripting language that is interpreted or compiled into \textit{Cascading Style Sheets} (CSS)". Sass uses two types of syntax. The first is original syntax, similar to \textit{Haml}\footnote{\url{https://en.wikipedia.org/wiki/Haml}}. The second is \textit{SCSS}, a syntaxt that uses blocks formatting like \textit{CSS}
+
+\subsection{Features}
+\label{sec:sass-features}
+\begin{itemize}
+    \item \textbf{Variables}:
+
+        Sass allows defining variables using a dollar sign (\$).
+        \begin{lstlisting}[language=javascript]
+$primary-color: #3bbfce;
+
+.content-navigation {
+  border-color: $primary-color;
+  color: darken($primary-color, 10%);
+}
+        \end{lstlisting}
+
+    \item \textbf{Block Nesting}:
+
+        Sass allows nesting different style blocks, this a improves the code structure, makes it more readable and saves lines of code.
+        \begin{lstlisting}[language=javascript]
+table.hl {
+  margin: 2em 0;
+  td.ln {
+    text-align: right;
+  }
+}
+        \end{lstlisting}
+
+    \item \textbf{Loops}:
+
+        With Sass you can create loops of style blocks, this feature helps to save code when you have similar \textit{id's} or \textit{classes}. Her is an example:
+        \begin{lstlisting}[language=javascript]
+$squareCount: 3
+@for $i from 1 through $squareCount
+  #square-#{$i}
+   background-color: red
+   width: 50px * $i
+   height: 120px / $i
+        \end{lstlisting}
+
+    \item There are more Sass features such as \textit{arguments}, \textit{selector inheritance}, ... All of these features can be found on the Sass documentation web page\footnote{\url{http://sass-lang.com/documentation/file.SASS_REFERENCE.html}}.
+\end{itemize}
+
+
 \section{Flexbox}
 \label{sec:flexbox}
+
+"The \textit{CSS3 Flexible} Box, or \textbf{Flexbox}, is a layout mode intended to accommodate different screen sizes and different display devices". Flexbox is very useful when you have to organize your application view, so for example, sticking a \textit{footer} to the bottom of a page, designing a \textit{navigation bar}, creating a custom grid, ... is much easier using Flexbox.
+
+Related to the Flexbox concept, it allows to manage an element width and the height to improve its fitting in the available space on the display regardless of the device that is being used. This elements are shrunken to prevent overflow or expanded to fill remaining space.
+
+\subsection{Usage Examples}
+\label{sec:chatjs-examples}
+
+In order to use Flexbox styles, we have to apply the style "\textit{display: flex}" in our container element. Let's see a few Flexbox usage examples.
+
+\begin{itemize}
+    \item \textbf{flex-wrap}:
+
+        Defines if flexbox items appear on a single line or on multiple lines within a flexbox container.
+        \begin{lstlisting}[language=javascript]
+flex-wrap: nowrap;
+flex-wrap: wrap;
+        \end{lstlisting}
+        \begin{figure}
+          \centering
+          \includegraphics[width=11cm, keepaspectratio]{img/no-wrap-example}
+          \caption{no-wrap example.}
+          \label{fig:no-wrap-example}
+        \end{figure}
+        \begin{figure}
+          \centering
+          \includegraphics[width=11cm, keepaspectratio]{img/wrap-example}
+          \caption{wrap example.}
+          \label{fig:wrap-example}
+        \end{figure}
+
+    \item \textbf{justify-content}:
+
+        Defines how flexbox items are aligned according to the main axis, within a flexbox container.
+        \begin{lstlisting}[language=javascript]
+justify-content: flex-end;
+justify-content: center;
+        \end{lstlisting}
+        \begin{figure}
+          \centering
+          \includegraphics[width=11cm, keepaspectratio]{img/flex-end-example}
+          \caption{flex-end example.}
+          \label{fig:flex-end-example}
+        \end{figure}
+        \begin{figure}
+          \centering
+          \includegraphics[width=11cm, keepaspectratio]{img/center-example}
+          \caption{center example.}
+          \label{fig:center-example}
+        \end{figure}
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
