@@ -44,30 +44,43 @@
 
 \usepackage{listings}
 \usepackage{color}
-\definecolor{lightgray}{rgb}{.9,.9,.9}
-\definecolor{darkgray}{rgb}{.4,.4,.4}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{nd}{RGB}{98, 143, 217}
+\definecolor{keyword}{RGB}{255,51,102}
+\definecolor{bg}{RGB}{255, 255, 232}
+\definecolor{comment}{RGB}{73, 79, 92}
+\definecolor{str}{RGB}{30, 184, 135}
+
+\lstdefinelanguage{Sass}{
+	keywords={mixin, keyframe, include, import, extend, class, \@},
+	keywordstyle=\color{keyword},
+	indentifierstyle=\color{black}\bfseries,
+	sensitive=false,
+	comment=[l]{\#},
+  	morecomment=[s]{/*}{*/},
+    	commentstyle=\color{comment}\ttfamily
+}
 
 \lstdefinelanguage{JavaScript}{
-  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
-  keywordstyle=\color{blue}\bfseries,
-  ndkeywords={class, export, boolean, throw, implements, import, this},
-  ndkeywordstyle=\color{darkgray}\bfseries,
-  identifierstyle=\color{black},
-  sensitive=false,
-  comment=[l]{//},
-  morecomment=[s]{/*}{*/},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle=\color{red}\ttfamily,
-  morestring=[b]',
-  morestring=[b]"
+ 	keywords={constructor, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  	keywordstyle=\color{keyword},
+  	ndkeywords={public, Router, class, export, boolean, throw, implements, import, this,prototype, then},
+  	ndkeywordstyle=\color{nd}\bfseries,
+  	identifierstyle=\color{black},
+  	sensitive=false,
+  	comment=[l]{//},
+  	morecomment=[s]{/*}{*/},
+  	commentstyle=\color{comment}\ttfamily,
+  	stringstyle=\color{str}\ttfamily,
+  	morestring=[b]',
+  	morestring=[b]"
 }
 
 \lstset{
-   language=JavaScript,
-   backgroundcolor=\color{lightgray},
+frame=single,
+   language=Javascript,
+   backgroundcolor=\color{bg},
    extendedchars=true,
-   basicstyle=\footnotesize\ttfamily,
+   basicstyle=\small\ttfamily,
    showstringspaces=false,
    showspaces=false,
    numbers=left,
@@ -76,7 +89,8 @@
    tabsize=2,
    breaklines=true,
    showtabs=false,
-   captionpos=b
+   captionpos=b,
+   xleftmargin=\parindent,
 }
 
 \title{Memoria del Proyecto}
@@ -886,18 +900,176 @@ justify-content: center;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Desarrollo}
+\chapter{Development}
 
-Aquí viene todo lo que has hecho tú (tecnológicamente).
-Puedes entrar hasta el detalle.
-Es la parte más importante de la memoria, porque describe lo que has hecho tú.
-Eso sí, normalmente aconsejo no poner código, sino diagramas.
-
-\section{Metodología SCRUM}
+\section{SCRUM Methodology}
 \label{sec:scrum}
 
-\section{Arquitectura general}
-\label{sec:arquitectura}
+\textbf{SCRUM} is a work methodology designed mainly for \textit{software development}. The main philosophy of this methodology consists in subdividing the work into groups of smaller tasks, each group is called "\textit{Sprint}".
+
+"Scrum is an iterative and incremental agile software development framework for managing product development".
+
+A key principle of Scrum is the dual recognition:
+\begin{itemize}
+    \item Customers decision may change during the sprint development process (requirements volatility).
+    \item There will be unpredictable challenges—for which a predictive or planned approach is not suited.
+\end{itemize}
+
+In the \textit{SCRUM} framework we can find three main roles:
+\begin{itemize}
+    \item \textbf{Product owner}: Ensures that the team delivers value to the business and represents both the product's stakeholders and the voice of the customer. The product owner manage the work process defining the product, adding stories to the backlog and prioritizing work.
+    \item \textbf{Development team}: The team is the one that completes the tasks of a Sprint, building the product increments.
+    \item \textbf{SCRUM master}: Removes the impediments, allowing the team to deliver product goals. The SCRUM master  filters all distracting influences from the development team.
+\end{itemize}
+
+On Figure~\ref{fig:scrum-framework} we can see a general SCRUM framework.
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm, keepaspectratio]{img/Scrum_Framework}
+  \caption{SCRUM Framework}
+  \label{fig:scrum-framework}
+\end{figure}
+
+
+\section{Sprint 1}
+\label{sec:sprint-1}
+
+\subsection{Key Objectives}
+\label{sec:key-objectives}
+
+The main goals or tasks for this sprint are:
+\begin{itemize}
+    \item Basic Elasticsearch interface which allows to visualize a simple metric. The data must come from Elastcsearch through an API request.
+    \item Include more aggregations options and Index changing functionality.
+\end{itemize}
+
+\subsection{Implementing a simple metric request}
+\label{sec:simple-request}
+We are at the beginning of this project, the first thing we are going to do is to connect our Angular project to Elasticsearch. This can be achieved by installing the Elasticsearch library\footnote{\url{https://github.com/elastic/elasticsearch-js}} for Angular. This library will allow us to make requests to Elasticsearch through its javascript API.
+
+We need an Elasticsearch client instance, this instance will give us the access to the Elasticsearch API. Elasticsearch, by default, it listens on the '9200' port, so we'll need to specify it too.
+\begin{lstlisting}[language=javascript, caption=Client Insance, label=code:client-instance]
+export class Elasticsearch {
+	public clientElasticsearch: Client;
+	constructor() {
+		this.clientElasticsearch = new Client({
+			host: 'localhost:9200',
+			log: 'trace' // This is for debug purposes
+		});
+	}
+...
+}
+\end{lstlisting}
+This Elasticsearch class is created as an Angular \textbf{service}. In Angular, services are usually used for fetching data from the outside, this is what we are trying to achieve.
+
+The next thing we are going to do is to request a simple "count" from Elasticsearch. In order to get this, we need to specify an Elasticsearch \textbf{index}.
+\begin{lstlisting}[language=javascript]
+...
+public count(index): PromiseLike<number> {
+	return this.clientElasticsearch.count({
+			index: index
+	}).then(
+		response => response.count,
+		this.handleError
+	);
+}
+...
+\end{lstlisting}
+Now we just need to display the response.
+\begin{lstlisting}[language=javascript]
+// Html
+<button (click)="displayData()">Display</button>
+Count: <span>{{data}}</span>
+
+// Typescript
+...
+data: number = 0;
+...
+displayData(): void {
+	this.elasticsearch.count('bank')
+	.then(count => this.data = count);
+}
+...
+\end{lstlisting}
+
+
+\subsection{Adding aggregations and dynamic index}
+\label{sec:adding-aggregations}
+First, in order to fetch the available indexes we are going to use the "cat" request, supported by the javascript API.
+\begin{lstlisting}[language=javascript]
+...
+public getIndices(): PromiseLike<string[]>{
+     return this.clientElasticsearch.cat.indices({
+     	format: 'json'
+     })
+...
+\end{lstlisting}
+This method returns a JSON object, as we have specified in the "format" field. So we just need to parse this JSON response in order to build our indexes array. The next step is to retrieve all "number" fields for each index, since we are not going to implement aggregations that need another field type yet.
+\begin{lstlisting}[language=javascript]
+...
+public getIndexNumFields(index): PromiseLike<string[]> {
+ 		return this.map(index).then(function(response){
+...
+\end{lstlisting}
+The map method returns the index mappings, which we need to parse to build our "number fields" array.
+
+The \textbf{PromiseLike} class is very useful because allows us to wait until the request is finished, in order to execute the appropriate callback function and manage the retrieved data asynchronously.
+
+For now, we are going to include functionality for aggregations that works with fields of type "number" only. To achieve this we are going to use the "search" request provided by the Elasticsearch javascript API. This request returns a JSON object which we need to parse in a different way depending on the aggregation we are requesting, in order to get a displayable result.
+\begin{lstlisting}[language=javascript]
+...
+// avg, sum, min, max, median, std_deviation, unique_count
+public numFieldCalculation(index: string, aggs: any): PromiseLike<any>{
+	return this.clientElasticsearch.search({
+			"index": index,
+			"body": {"size": 0, "aggs": aggs}
+	})
+...
+\end{lstlisting}
+
+The final stage at the end of this sprint is shown on Figure~\ref{fig:sprint1-final-stage}.
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/final-stage-sprint1}
+  \caption{Final stage - Sprint 1}
+  \label{fig:sprint1-final-stage}
+\end{figure}
+
+For a better understanding a general architecture for this sprint is shown on Figure.
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/sprint1_architecture}
+  \caption{SCRUM Framework}
+  \label{fig:scrum-framework}
+\end{figure}
+
+
+\section{Sprint 2}
+\label{sec:sprint-2}
+\subsection{Key Objectives}
+\label{sec:key-objectives}
+
+The main goals or tasks for this sprint are:
+\begin{itemize}
+    \item Finishing metrics functionality implementation.
+    \item Implementing Data Table visualization functionality.
+    \item Allow to load and save visualizations.
+\end{itemize}
+
+\subsection{Finishing metrics}
+\label{sec:finishing-metrics}
+
+
+\section{Sprint 3}
+\label{sec:sprint-3}
+
+
+\section{Sprint 4}
+\label{sec:sprint-4}
+
+
+\section{General Structure}
+\label{sec:general-structure}
 
 Si tu proyecto es un software, siempre es bueno poner la arquitectura (que es cómo se estructura tu programa a ``vista de pájaro'').
 
