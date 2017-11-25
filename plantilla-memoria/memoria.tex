@@ -61,9 +61,9 @@
 }
 
 \lstdefinelanguage{JavaScript}{
- 	keywords={constructor, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+ 	keywords={\$, Number, constructor, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
   	keywordstyle=\color{keyword},
-  	ndkeywords={public, Router, class, export, boolean, throw, implements, import, this,prototype, then},
+  	ndkeywords={private, public, Router, class, export, boolean, throw, implements, import, this,prototype, then},
   	ndkeywordstyle=\color{nd}\bfseries,
   	identifierstyle=\color{black},
   	sensitive=false,
@@ -1049,6 +1049,7 @@ The main goals or tasks for this sprint are:
 \begin{itemize}
     \item Finish metrics functionality implementation.
     \item Implement Data Table visualization functionality.
+    \item Load multiple metrics or buckets and changing between visualizations, both dynamically.
     \item Allow to load and save visualizations.
 \end{itemize}
 
@@ -1097,9 +1098,53 @@ bodybuilder().aggregation('histogram', null, 'bucket_1', {
 }
 \end{lstlisting}
 
+\subsection{Load multiple metrics or buckets and changing between visualizations, both dynamically}
+\label{sec:loading-dynamically}
+During the implementation of this project we found several issues using the Angular live-cycle hook in order to load, create, delete or modify components dynamically, specially when the component had a complex structure. For this reason we decided to have a dedicated component that allows us to complete all this tasks. We named this component "DynamicComponent".
+
+This dynamic component works as a container for a single component or for multiple components.
+
+Let's see the component's API:
+\begin{lstlisting}[language=javascript]
+// This method allows us to insert one or more components, it requires:
+// - uniqueId: to store the component in a map for future modifications or access.
+// - inputs: an object with the component parameters values.
+// - events: an array with the event names we want to listen from this component.
+// - componentType: the component type we want to instantiate.
+addComponent(uniqueId: string, inputs: any, events: Array<string>, componentType: any): any{};
+
+// this method is already executed on the addComponent(), but we may need it after the component initialization to modify some component parameter
+setInputs(uniqueId:string, inputs: any): void{};
+
+// This method destroys a loaded component by its unique ID
+destroyCmp(uniqueId: string): void{};
+\end{lstlisting}
+
+Due to the Angular live-cycle hook defects we have commented before, we need a more efficient way to set specific component parameters. Usually when a parent component needs to pass parameters to a child component, we get it by adding attributes on the child component selector, but due to the complexity of the bucket and metric components, the Angular live-cycle hook was acting erratically and braking the parent-child parameters synchronization. We needed to communicate with grandchildren components too and this was bringing on more synchronizing problems.
+
+For this reason, we used a different technique for communicating a parent with its children or grandchildren components or even another component without direct relation. This approach for communicating components is made via \textbf{service}, we can see a diagram on Figure~\ref{fig:parent-child-via-service}.
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/parent-child-via-service.png}
+  \caption{Components communication via Service.}
+  \label{fig:parent-child-via-service}
+\end{figure}
+
+As we can see on Figure~\ref{fig:parent-child-via-service}, a "Parent Component" communicates with its grandchildren employing \textbf{observable} variables declared on a \textbf{service}, each time a method executes "\textbf{next}" on a observable, a callback function is executed on each grandchild that was subscribed to this observable accessing the data the sent data.
+
+To give an example, we can see this technique in the project applied for the components:
+\begin{itemize}
+    \item \textbf{VisualizationsComponent}: acting as a "Parent Component".
+    \item \textbf{VisualizationsService}: acting as the communicating service.
+    \item \textbf{BucketsComponent}: acting as a "Grandchild Component".
+\end{itemize}
+
+Another advantage of this technique is found when we need a bidirectional communication between components, in this case we wouldn't need \textit{input} variables or component events.
+
+
 \subsection{Loading and saving visualizations}
 \label{sec:loading-and-saving}
-Right now we are able to create two types of visualizations, "Metric" and "Data Table", but we are still not able to store them in Elasticsearch neither loading saved visualizations.
+At this point we are able to create two types of visualizations, "Metric" and "Data Table", but we are still not able to store them in Elasticsearch neither loading saved visualizations.
 
 To achieve this features we have to create a new Elasticsearch index which will store all visualizations data. The name of this index we'll be "sakura".
 
@@ -1197,9 +1242,198 @@ The general structure at the end of this sprint is shown on Figure~\ref{fig:spri
 \section{Sprint 3}
 \label{sec:sprint-3}
 
+\subsection{Key Objectives}
+\label{sec:key-objectives}
+The main goals or tasks for this sprint are:
+\begin{itemize}
+    \item Implement "Pie Chart" visualization.
+    \item Implement "Bar Chart" visualization.
+    \item Design the application user interface.
+    \item Implement deleting feature for visualizations.
+\end{itemize}
+
+\subsection{Implementing the "Pie Chart"}
+\label{sec:pie-chart}
+For this visualization we'll need a library that provides us chart features and allows us to display a "Pie Chart". In this case we decide to use \textit{ChartJS}.
+
+ChartJS provides a dedicated module for Angular but it has some defects and limitations and still needs improvements, for this reason we decide to import the ChartJS library directly to the HTML and arrange each chart to the HTML through \textit{jQuery}.
+
+For this visualizations, the process of request body building, and the process of response parsing are much higher compared with the visualizations already implemented.
+
+The request body has the following format:
+\begin{lstlisting}[language=javascript]
+-> aggs
+    ++ bucket_1
+        ** aggs
+            >> metric_aggregation
+            >> bucket_2
+                ## aggs
+                    ~~ metric_aggregation
+                    ~~ bucket_3
+                        -- ... // keeps going on with until we reach the desired number of levels
+                ## bucket_aggregation_2
+        ** bucket_aggregation_1
+\end{lstlisting}
+
+As we can see, each bucket object contains the selected metric, and this metric is the same for every bucket.
+
+The Elasticsearch response object doesn't fit at all with the way we want to display the received data, so we need to parse it into a more "friendly" object in order to make it easy creating the required data for the render process with ChartJS. The parsed object will have the following format:
+\begin{lstlisting}[language=javascript, caption=Custom results object, label=code:cutom-pie-chart-obj]
+// This map contains the bucket(level) id as key and the array of results as value.
+-> Map<String, Array<any>>
+    ++ bucket_1
+        ** [{result_obj_1}, {result_obj_2}, {result_obj_3}, ...]
+    ++ bucket_2
+        ** [{result_obj_1}, {result_obj_2}, {result_obj_3}, ...]
+    ...
+
+\end{lstlisting}
+
+To display a "Pie Chart" we have a canvas element which we have to reference from our component.
+\begin{lstlisting}[language=javascript]
+<canvas baseChart id="myChart"></canvas>
+\end{lstlisting}
+The chart object is formed by the following fields:
+\begin{itemize}
+    \item \textbf{type}: In this case this is 'pie'.
+    \item \textbf{data}: This will contain our \textbf{datasets} with the pie data defining each one of the different levels that forms our "Pie Chart".
+    \item \textbf{options}: This defines our chart configuration an characteristics such us responsiveness, tooltip customization, etc.
+\end{itemize}
+
+Each \textbf{dataset} defines a different level on our "Pie Chart" and is formed by the following fields:
+\begin{itemize}
+    \item \textbf{data}: An array of values where each value appertain to a slice of the current level. Examples of this array are shown on code snippet ~\ref{code:cutom-pie-chart-obj}.
+    \item \textbf{backgroundColor}: An array of hexadecimal colors for each slice of the current level. This array is created randomly, the way we created this array is keeping and array of colors that are already displayed and calculating a given distance between hexadecimal colors in a decimal form, thus we ensure that all colors will differ one from each other.
+    \item \textbf{labels}: An array of labels with value information for each slice of the current level. Here we had to use a library named "text-table". The reason we need this library is because ChartJS doesn't take \textit{HTML} code in order to display a label but it takes a simple \textit{String}, in this case we need to display a table within the label, since each row will represent an upper level, so this library parses an array of arrays and convert it into a table in a \textit{String} format with "line breaks".
+\end{itemize}
+
+\subsection{Implementing the "Bar Chart"}
+\label{sec:pie-chart}
+
+For this visualization we are also using ChartJS.
+
+The request and response objects have the same complexity as the request and response objects for the "Pie Chart" visualization.
+
+For the "Bar Chart" visualization, the request body is not as complex as the "Pie Chart" visualization request but still has some complexity. Let's see its format:
+\begin{lstlisting}[language=javascript, caption=Bar Chart request body format, label=code:bar-chart-request]
+-> aggs
+    ++ bucket_1
+        ** aggs
+            ~~ metric_aggregation_1
+            ~~ metric_aggregation_2
+            ~~ ...
+        ** bucket_aggregation_1
+\end{lstlisting}
+
+As we can see there is just a single bucket and over it we are going to calculate one or more metric aggregations.
+
+In this case we have to parse the response object into an object with a more "friendly" data structure like we did before with the "Pie Chart" visualization response. This new object has the following format:
+\begin{lstlisting}[language=javascript, caption=Custom results object, label=code:cutom-pie-chart-obj]
+// This map contains the metric result label as key and the array of results as value.
+-> Map<String, Array<any>>
+    ++ metric_result_label_1
+        ** [{result_obj_1}, {result_obj_2}, {result_obj_3}, ...]
+    ++ metric_result_label_2
+        ** [{result_obj_1}, {result_obj_2}, {result_obj_3}, ...]
+    ...
+\end{lstlisting}
+
+Each result object for a metric aggregation appertains to a bucket value, so that if we have 5 results for the requested bucket, we'll have 5 bars containing a single result from each requested metric.
+
+To display a "Bar Chart" we are going to use the same method as we did before with the "Pie Chart" visualization.
+
+The \textit{Chart} object contains the same fields we mentioned earlier, but now we set the \textit{type} to 'bar'.
+
+The \textit{dataset} object is now much simpler, now it only contains information for a single result, so this is how remains:
+\begin{itemize}
+    \item \textbf{data}: An array of values for each slice of the current level. Examples of this array are shown on code snippet ~\ref{code:cutom-pie-chart-obj}.
+    \item \textbf{backgroundColor}: A single hexadecimal color. This will be calculated randomly using the same logic as we did with the "Pie Chart".
+    \item \textbf{labels}: A single \textit{string} value which identifies the current values collection.
+\end{itemize}
+
+\subsection{Designing a user interface}
+\label{sec:pie-chart}
+
+We have reached a point on the development process where it would be great to have a more intuitive, colorful and dynamic user interface.
+
+For now we only have one view,  "Visualizations", so we are going to design a user interface thinking on elements that we already have and their functionality.
+
+On Figure~\ref{fig:user-interface-mockup} we can see a mock-up schema we want to get implemented.
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm, keepaspectratio]{img/user_interface_mockup}
+  \caption{Use Interface mock-up}
+  \label{fig:user-interface-mockup}
+\end{figure}
+
+To get all elements in their right position, such as the nav-bar or the metrics and buckets side-bar we are going to use \textbf{Flexbox}.
+
+The tough task comes when we have to implement the metrics and buckets window. As we can see, it has a \textit{scroll-bar} and the window is not positioned on the top of the page, it position depends always on the elements above it, and this elements can expand when we click on them, so the metrics and buckets window needs a dynamic height.
+
+We achieve this dynamic height by employing two things: Angular dynamic attributes and \textit{jQuery}.
+
+As we can see bellow, the attribute takes a dynamic value through the \textit{getHeight()} function, this function receives the element \textit{id} as a parameter in order to reference it later with \textit{jQuery}:
+\begin{lstlisting}[language=javascript, caption=Dynamic height with Angular, label=code:angular-dynamic-heigh]
+<div
+    id="metricsAndBuckets"
+    [style.height.px]="_getHeight('metricsAndBuckets')">
+        <metrics ...></metrics>
+        <buckets ...></buckets>
+</div>
+\end{lstlisting}
+
+Bellow we can see how the function calculates the element's height give the current window height and the current top position of our element:
+\begin{lstlisting}[language=javascript, caption=Dynamic height with Angular, label=code:cutom-pie-chart-obj]
+private _getHeight(elemId: string): Number {
+	let configHeight = ($(window).height() - $('#' + elemId).position().top);
+	return configHeight;
+}
+\end{lstlisting}
+
+Setting this height to our element and giving it a "\textit{overflow-x: scroll;}" style, we make this window "\textit{scrollable}".
+
+To achieve a expandable panels for "Saved Visualizations" and "Visualization Options" we used a dynamic style and a \textit{click} event, this process is similar to the dynamic height process we have shown before.
+
+All icons are extracted from the \textit{font-awesome} library. On Figure~\ref{fig:final-user-interface} we can see a final view of our user interface, with the same visualization example as in the mock-up schema.
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm, keepaspectratio]{img/final-user-interface.png}
+  \caption{Final User Interface}
+  \label{fig:final-user-interface}
+\end{figure}
+
+\subsection{Deleting visualizations}
+\label{sec:deleting-visualizations}
+To achieve the visualization deleting process, we are going to use another Elasticsearch action named "delete".
+\begin{lstlisting}[language=javascript, caption=Calling the Elasticsearch "delete" action, label=code:elasticsearch-delete]
+public deleteDoc(type: string, id: string): PromiseLike<any>{
+	return this.cli.delete({
+		index: '.sakura',
+		type: type,
+		id: id,
+		refresh: 'wait_for'
+	})...
+}
+\end{lstlisting}
+
+As we can see, we have to pass the document "type" and the document "id". The "\textit{refresh: 'wait\_for'}" option allows as to wait until the action has finish in order to refresh the saved visualizations panel and make the deleted visualization disappear.
+
 
 \section{Sprint 4}
 \label{sec:sprint-4}
+
+\subsection{Key Objectives}
+\label{sec:key-objectives}
+\begin{itemize}
+    \item Implement dashboard user interface feature capable of showing multiple saved visualizations.
+    \item Implement saving, modifying and deleting features for dashboards .
+    \item Implement deleting feature for visualizations.
+\end{itemize}
+
+\subsection{Implementing the visualizations dashboard}
+\label{sec:visualizations-dashboard}
+Once we've finished all the "Visualizations" section, we are going to reuse our visualization components in order to make a "\textit{customizable}" dashboard interface.
+
 
 
 \section{General Structure}
