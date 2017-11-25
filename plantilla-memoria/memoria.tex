@@ -61,9 +61,9 @@
 }
 
 \lstdefinelanguage{JavaScript}{
- 	keywords={\$, Number, constructor, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+ 	keywords={\$, constructor, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
   	keywordstyle=\color{keyword},
-  	ndkeywords={private, public, Router, class, export, boolean, throw, implements, import, this,prototype, then},
+  	ndkeywords={private, public, Router, class, export, boolean, Number, throw, implements, import, this, prototype, then, string, any},
   	ndkeywordstyle=\color{nd}\bfseries,
   	identifierstyle=\color{black},
   	sensitive=false,
@@ -1152,7 +1152,7 @@ Now we need a \textit{type} which will define what data represents our visualiza
 
 Our index mapping looks like this:
 \begin{lstlisting}[language=javascript]
-visualizations: {
+visualization: {
     properties: {
         kibanaSavedObjectMeta: {
             properties: {
@@ -1425,45 +1425,90 @@ As we can see, we have to pass the document "type" and the document "id". The "\
 \subsection{Key Objectives}
 \label{sec:key-objectives}
 \begin{itemize}
-    \item Implement dashboard user interface feature capable of showing multiple saved visualizations.
+    \item Implement dashboard user interface capable of showing multiple saved visualizations.
     \item Implement saving, modifying and deleting features for dashboards .
-    \item Implement deleting feature for visualizations.
 \end{itemize}
 
 \subsection{Implementing the visualizations dashboard}
 \label{sec:visualizations-dashboard}
 Once we've finished all the "Visualizations" section, we are going to reuse our visualization components in order to make a "\textit{customizable}" dashboard interface.
 
+To implement our dashboard grid where our visualizations will be shown we are using an angular module named "\textit{angular2gridster}"\footnote{\url{https://github.com/swiety85/angular2gridster}}. This module will allow us to:
+\begin{itemize}
+    \item Drag and drop visualizations containers.
+    \item Store the position, size and another useful data for each visualization container.
+\end{itemize}
 
-
-\section{General Structure}
-\label{sec:general-structure}
-
-Si tu proyecto es un software, siempre es bueno poner la arquitectura (que es cómo se estructura tu programa a ``vista de pájaro'').
-
-Por ejemplo, puedes verlo en la figura~\ref{fig:arquitectura}.
-
+On Figure~\ref{fig:dashboards-diagram} we can see how this module fits in our dashboard.
 \begin{figure}
   \centering
-  \includegraphics[width=9cm, keepaspectratio]{img/arquitectura}
-  \caption{Estructura del parser básico}
-  \label{fig:arquitectura}
+  \includegraphics[width=15cm, keepaspectratio]{img/dashboards-diagram}
+  \caption{Dashbord section diagram}
+  \label{fig:dashboards-diagram}
 \end{figure}
 
-Si utilizas una base de datos, no te olvides de incluir también un diagrama de entidad-relación.
+The dashboard object has the following structure:
+\begin{lstlisting}[language=javascript, caption=Dashboard object structure, label=code:dashboard-object]
+var obj = {
+    title: String,
+    w: Number,
+    h: Number,
+    dragAndDrop: Boolean,
+    resizable: Boolean,
+    visualization: any
+}
+\end{lstlisting}
+
+The visualization field stores the same visualization object that is stored on Elasticsearch.
+
+\subsection{Saving, editing and deleting dashboards}
+\label{sec:visualizations-dashboard}
+To implement all this features we have followed the same process as with the "\textit{visualization}" type. We have reused the same methods from the "Elasticsearch Service".
+
+In this case we have to create again another type like we did with visualizations. This time we'll name our type "dashboard" and it will be under our "sakura" index too. Our type mapping looks like this:
+\begin{lstlisting}[language=javascript, caption=Elasticsearch "dashboard" type mapping, label=code:dashboard-type-mapping]
+dashboard: {
+    properties: {
+        title: { type: "text" },
+        widgetsJSON: { type: "text" }
+    }
+}
+\end{lstlisting}
+
+Each field has the following description:
+\begin{itemize}
+    \item \textbf{title}: Dashboard title.
+    \item \textbf{widgetJSON}: This is the dashboard object we have described.
+\end{itemize}
+
+%\section{General Structure}
+%\label{sec:general-structure}
+
+%Si tu proyecto es un software, siempre es bueno poner la arquitectura (que es cómo se estructura tu programa a ``vista de pájaro'').
+
+%Por ejemplo, puedes verlo en la figura~\ref{fig:arquitectura}.
+
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=9cm, keepaspectratio]{img/arquitectura}
+%  \caption{Estructura del parser básico}
+%  \label{fig:arquitectura}
+%\end{figure}
+
+%Si utilizas una base de datos, no te olvides de incluir también un diagrama de entidad-relación.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% RESULTADOS %
+% RESULTS %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Resultados}
+\chapter{Results}
 
-En este capítulo se incluyen los resultados de tu trabajo fin de grado.
+%En este capítulo se incluyen los resultados de tu trabajo fin de grado.
 
-Si es una herramienta de análisis lo que has realizado, aquí puedes poner ejemplos de haberla utilizado para que se vea su utilidad.
+%Si es una herramienta de análisis lo que has realizado, aquí puedes poner ejemplos de haberla utilizado para que se vea su utilidad.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
