@@ -34,10 +34,14 @@ div.metrics-vis{
 			input {
 				height: 1.25rem;
 				width: 100%;
+				//border-radius: 0.25rem;
 				font-size: 1rem;
 				border: 0px;
 				padding-left: 0.5rem;
 				padding-right: 0.5rem;
+				margin-left: 0.5rem;
+				margin-right: 0.5rem;
+				border-radius: 0.25rem;
 			}
 		}
 
