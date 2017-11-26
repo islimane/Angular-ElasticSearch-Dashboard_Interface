@@ -256,6 +256,11 @@ export class MetricsComponent {
 		});
 	}
 
+	private _formatResult(result: any): any {
+		if(typeof result === 'number') return Math.round(result * 100) / 100;
+		return result;
+	}
+
 	debug(): void {
 		console.log('%c DEBUG', 'background: #222; color: #bada55');
 		console.log('%c metricsMap', 'background: #222; color: #bada55', this.metricsMap);

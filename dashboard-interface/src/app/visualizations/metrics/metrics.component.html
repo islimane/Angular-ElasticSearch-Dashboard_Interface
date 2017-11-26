@@ -7,14 +7,14 @@
 			</div>
 		</div>-->
 		<div *ngFor="let metricResult of _getResults()" class="result-container">
-			<span class="result">{{metricResult.result}}</span>
+			<span class="result">{{_formatResult(metricResult.result)}}</span>
 			<span class="result-label">{{metricResult.label}}</span>
 		</div>
 	</div>
 
 	<div [attr.id]="_resultsContainerId" class="results-container" *ngIf="(!widgetMode && dashMode)">
 		<div *ngFor="let metricResult of _getResults()" class="result-container">
-			<span class="result">{{metricResult.result}}</span>
+			<span class="result">{{_formatResult(metricResult.result)}}</span>
 			<span class="result-label">{{metricResult.label}}</span>
 		</div>
 	</div>
