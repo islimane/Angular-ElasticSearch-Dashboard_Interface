@@ -5,7 +5,10 @@
 			Metrics
 		</div>
 		<div class="display-info" (click)="_displayed=!_displayed">
-			<span class="fa {{(_displayed) ? 'fa-caret-down' : 'fa-caret-right'}} icon"></span> {{selectedAggregation}} - {{selectedField}}
+			<span class="fa {{(_displayed) ? 'fa-caret-down' : 'fa-caret-right'}} icon"></span>
+			{{selectedAggregation}}
+			<span *ngIf="selectedAggregation==='count'"> - {{index}}</span>
+			<span *ngIf="selectedAggregation!=='count'"> - {{selectedField}}</span>
 		</div>
 		<div class="remove" (click)="triggerRemoveEvent()">
 			<span class="fa fa-trash-o"></span>
