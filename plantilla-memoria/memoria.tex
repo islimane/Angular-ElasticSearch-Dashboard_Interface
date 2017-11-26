@@ -1733,6 +1733,50 @@ The table allows any number of metrics and any number of buckets. If we have mor
   \label{fig:data-table-multiaggregation-calculation}
 \end{figure}
 
+
+\subsubsection{Pie Chart Visualization}
+\label{sec:pie-chart-visualization}
+A "Pie Chart" visualization performs an operation over the index data an shows the result as a pie chart. The initial view is the same as the "Data Table" visualization's.
+
+To create a "Pie Chart" visualization we have to create one or more buckets and one metric maximum. We will have as many levels or rings on our "Pie Chart" as the number of buckets. For the metrics creation, it only works with "Count", "Sum", "Unique Count" and "Top Hit" aggregations.
+
+This chart introduces the label \textit{tooltip} that shows up when hovering over a "Pie Chart" slice. Because we have different levels, the \textit{tooltip} shows a table whose rows appertain to each bucket aggregation.
+
+An example of a "Pie Chart" visualization is shown on Figure~\ref{fig:pie-chart-calculation}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=16cm, keepaspectratio]{img/pie-chart-calculation.png}
+  \caption{Pie Chart example.}
+  \label{fig:pie-chart-calculation}
+\end{figure}
+
+\subsubsection{Bar Chart Visualization}
+\label{sec:bar-chart-visualization}
+A "Bar Chart" visualization performs an operation over the index data an shows the result as a bar chart. The initial view is the same as the "Data Table" visualization's.
+
+To create a "Bar Chart" visualization we have to create one or more metrics and one bucket maximum. We will have as many bars as the buckets of documents. The metric results will stack on the bars.
+
+This chart has a label \textit{tooltip} as the "Pie chart" visualization, but this time the \textit{tooltip} show the metric field value for a specific bucket.
+
+An example of a "Bar Chart" visualization is shown on Figure~\ref{fig:bar-chart-calculation}.
+\begin{figure}
+  \centering
+  \includegraphics[width=16cm, keepaspectratio]{img/bar-chart-calculation.png}
+  \caption{Bar Chart example.}
+  \label{fig:bar-chart-calculation}
+\end{figure}
+
+This chart introduces the chart \textit{legend}. The legend specifies which color appertains to each metric result. In addition, this legend allow to filter some metric results disabling them by clicking on them, an example of the same "Bar Chart" with a filtered result is shown on Figure~\ref{fig:bar-chart-lengend-filter-example}.
+\begin{figure}
+  \centering
+  \includegraphics[width=16cm, keepaspectratio]{img/bar-chart-lengend-filter-example.png}
+  \caption{Filtered Bar Chart example.}
+  \label{fig:bar-chart-lengend-filter-example}
+\end{figure}
+
+
+
 %En este capítulo se incluyen los resultados de tu trabajo fin de grado.
 
 %Si es una herramienta de análisis lo que has realizado, aquí puedes poner ejemplos de haberla utilizado para que se vea su utilidad.
