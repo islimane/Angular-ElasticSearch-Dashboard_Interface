@@ -1579,7 +1579,8 @@ Let's see how to create each of the visualization types.
 \end{figure}
 
 \subsubsection{Metric Visualization}
-A metric visualization perform an operation over the index data an shows the result as a String, a Number or a collection of them. We can see an initial view of this "Metric Visualization" on Figure~\ref{fig:metric-visualization-initial-view}.
+\label{sec:metric-visualization}
+A "Metric" visualization performs an operation over the index data an shows the result as a String, a Number or a collection of them. We can see an initial view of this "Metric Visualization" on Figure~\ref{fig:metric-visualization-initial-view}.
 
 To add a metric operation to our visualization, we have to click on the "+" icon, this will add a "count" calculation over the selected index by default, and if we click the "play" icon will see the result on calculation result on the screen (Figure~\ref{fig:metric-count-calcuation}).
 
@@ -1687,6 +1688,49 @@ The operation description for each "aggregation" option is:
   \includegraphics[width=13cm, keepaspectratio]{img/metric-top-calculation.png}
   \caption{Metric "top hits" calculation}
   \label{fig:metric-top-calcuation}
+\end{figure}
+
+\subsubsection{Data Table Visualization}
+\label{sec:data-table-visualization}
+A "Data Table" visualization performs an operation over the index data an shows the result as a table. We can see an initial view of this "Data Table Visualization" on Figure~\ref{fig:data-table-initial-view}.
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/data-table-initial-view.png}
+  \caption{Data Table visualization initial view}
+  \label{fig:data-table-initial-view}
+\end{figure}
+
+As we can see, we have a new element on the configuration panel, "Buckets". This bucket aggregations defines a rule to create buckets of documents when making requests to Elasticsearch. Now, the metrics will be performed over this buckets of documents.
+
+We have two types of bucket aggregations:
+\begin{itemize}
+    \item \textbf{Histogram}: This aggregation builds interval buckets of documents for a given numeric field and numeric interval value (Figure~\ref{fig:data-table-histogram-calculation-view}).
+    \item \textbf{Range}: This aggregation builds range buckets of documents for a given numeric field and a collection of numeric ranges (Figure~\ref{fig:data-table-range-calculation}).
+\end{itemize}
+
+The table will have as many columns as metric results plus the number of buckets. And it will have as many rows as received hits over all buckets.
+
+The table allows any number of metrics and any number of buckets. If we have more than one bucket, the bucket results will be created recursively (Figure~\ref{fig:data-table-multiaggregation-calculation}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/data-table-histogram-calculation.png}
+  \caption{Data Table histogram example.}
+  \label{fig:data-table-histogram-calculation-view}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/data-table-range-calculation.png}
+  \caption{Data Table range example.}
+  \label{fig:data-table-range-calculation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/data-table-multiaggregation-calculation.png}
+  \caption{Data Table multiple buckets example.}
+  \label{fig:data-table-multiaggregation-calculation}
 \end{figure}
 
 %En este capítulo se incluyen los resultados de tu trabajo fin de grado.
