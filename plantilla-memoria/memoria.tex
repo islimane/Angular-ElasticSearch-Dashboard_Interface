@@ -44,6 +44,10 @@
 
 \usepackage{listings}
 \usepackage{color}
+
+\setcounter{secnumdepth}{4}
+
+
 \definecolor{nd}{RGB}{98, 143, 217}
 \definecolor{keyword}{RGB}{255,51,102}
 \definecolor{bg}{RGB}{255, 255, 232}
@@ -1443,7 +1447,7 @@ On Figure~\ref{fig:dashboards-diagram} we can see how this module fits in our da
 \begin{figure}
   \centering
   \includegraphics[width=15cm, keepaspectratio]{img/dashboards-diagram}
-  \caption{Dashbord section diagram}
+  \caption{Dashboard section diagram}
   \label{fig:dashboards-diagram}
 \end{figure}
 
@@ -1505,6 +1509,155 @@ Each field has the following description:
 
 \cleardoublepage
 \chapter{Results}
+\section{Introduction}
+\label{sec:results-introduction}
+On the previous chapter we saw in detail how the web application was developed step by step. On this chapter we are going to explain how this application works, how to use it and its functionality.
+
+\section{User Guide}
+\label{sec:results-user-guide}
+On this section we are going to explain one by one how the web application's different features works. First we are going to begin with the "Visualizations" feature, we are going to explain each type of visualization and how to build them, then we are going to explain the "Dashboard" section and how to build dashboards from different visualizations.
+
+\subsection{Visualizations}
+\label{sec:results-visualizations}
+The first view we are getting when we open the application is the "Visualizations" section. We can see this view on Figure~\ref{fig:visualizations-section}.
+
+From this view, if we open the "Saved Visualizations" by clicking on its bar (Figure~\ref{fig:saved-visualizations}),  we can either load a saved visualization or delete it by clicking o the trash icon.
+
+Another option is to create a new visualization by opening the "Visualization Options" bar. To create a new visualization we must select an index about which we are going to calculate the available visualization types. This is shown on Figure~\ref{fig:visualization-options}.
+
+Let's see how to create each of the visualization types.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/visualizations-section}
+  \caption{Visualizations section}
+  \label{fig:visualizations-section}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/saved-visualizations.png}
+  \caption{Saved Visualizations panel}
+  \label{fig:saved-visualizations}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/visualization-options.png}
+  \caption{Visualization Options panel}
+  \label{fig:visualization-options}
+\end{figure}
+
+\subsubsection{Metric Visualization}
+A metric visualization perform an operation over the index data an shows the result as a String, a Number or a collection of them. We can see an initial view of this "Metric Visualization" on Figure~\ref{fig:metric-visualization-initial-view}.
+
+To add a metric operation to our visualization, we have to click on the "+" icon, this will add a "count" calculation over the selected index by default, and if we click the "play" icon will see the result on calculation result on the screen (Figure~\ref{fig:metric-count-calcuation}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-visualization-initial-view.png}
+  \caption{Initial view of a Metric Visualization}
+  \label{fig:metric-visualization-initial-view}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-count-calcuation.png}
+  \caption{Metric "count" calculation}
+  \label{fig:metric-count-calcuation}
+\end{figure}
+
+The operation description for each "aggregation" option is:
+\begin{itemize}
+    \item \textbf{Count}: Counts the exact number of documents for a given index (Figure~\ref{fig:metric-count-calcuation}).
+    \item \textbf{Average}: Calculates the average for a given field of a documents collection for a given index. This field's type must be "number" (Figure~\ref{fig:metric-average-calcuation}).
+    \item \textbf{Sum}: Calculates the summation over a documents collection for a given field and index. This field's type must be "number" (Figure~\ref{fig:metric-sum-calcuation}).
+    \item \textbf{Min}: Calculates the minimum value for a given field of a documents collection for a given index. This field's type must be "number" (Figure~\ref{fig:metric-min-calcuation}).
+    \item \textbf{Max}: Calculates the maximum value for a given field of a documents collection for a given index. This field's type must be "number" (Figure~\ref{fig:metric-max-calcuation}).
+    \item \textbf{Median}: Calculates the median value for a given field of a documents collection for a given index. This field's type must be "number" (Figure~\ref{fig:metric-median-calcuation}).
+    \item \textbf{Standard Deviation}: Calculates the standard deviation values for a given field of a documents collection for a given index. This field's type must be "number" (Figure~\ref{fig:metric-std-calcuation}).
+    \item \textbf{Unique Count}: Calculates number of unique values for a given field of a documents collection for a given index. This field's type must be "number" (Figure~\ref{fig:metric-unique-calcuation}).
+    \item \textbf{Percentiles}: Calculates a multi-values percentiles result for a given field of a documents collection for a given index and for a given list of percentiles. This field's type must be "number" (Figure~\ref{fig:metric-percentiles-calcuation}).
+    \item \textbf{Percentile Ranks}: Calculates a multi-values percentiles result for a given field of a documents collection for a given index and for a given list of percentiles. This field's type must be "number". Percentile ranks show the percentage of documents which selected field's value is below certain value (Figure~\ref{fig:metric-ranks-calcuation}).
+    \item \textbf{Top Hits}: This aggregation is very different from the others. Top Hits keeps track of the top matching documents depending on the selected options and fields. We have to select multiple options in order to perform the aggregation calculation (Figure~\ref{fig:metric-top-calcuation}). These fields are:
+    \begin{itemize}
+        \item \textbf{Field}: This is the same as with the other aggregations, it indicates the document field over which we are going to perform the request.
+        \item \textbf{Aggregate With}: This indicates the way we are going to process the received hits, such as "summation", "maximum", "minimum", "average" or "concatenation". Except for the last type, all must be with a "number" type field.
+        \item \textbf{Size}: This indicates the maximum number of documents or hits we are going to receive on the response.
+        \item \textbf{Sort On}: This, again, is a document field. This field affects to the documents or hits we are going to receive in the way that these documents are going to be sorted by this field. If this field is a "number", the documents will be sorted "numerically", and if the field is a "string", the documents will be sorted alphabetically.
+        \item \textbf{Order}: This indicates how the documents will be sorted, i.e. ascending or descending.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-average-calculation.png}
+  \caption{Metric "average" calculation}
+  \label{fig:metric-average-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-sum-calculation.png}
+  \caption{Metric "sum" calculation}
+  \label{fig:metric-sum-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-min-calculation.png}
+  \caption{Metric "min" calculation}
+  \label{fig:metric-min-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-max-calculation.png}
+  \caption{Metric "max" calculation}
+  \label{fig:metric-max-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-median-calculation.png}
+  \caption{Metric "median" calculation}
+  \label{fig:metric-median-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-std-calculation.png}
+  \caption{Metric "standard deviation" calculation}
+  \label{fig:metric-std-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-unique-calculation.png}
+  \caption{Metric "unique count" calculation}
+  \label{fig:metric-unique-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-percentiles-calculation.png}
+  \caption{Metric "percentiles" calculation}
+  \label{fig:metric-percentiles-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-ranks-calculation.png}
+  \caption{Metric "percentile ranks" calculation}
+  \label{fig:metric-ranks-calcuation}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=13cm, keepaspectratio]{img/metric-top-calculation.png}
+  \caption{Metric "top hits" calculation}
+  \label{fig:metric-top-calcuation}
+\end{figure}
 
 %En este capítulo se incluyen los resultados de tu trabajo fin de grado.
 
