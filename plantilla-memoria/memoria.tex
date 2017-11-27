@@ -131,6 +131,7 @@ frame=single,
 \author{Ismael Slimane Zubillaga}
 
 \renewcommand{\baselinestretch}{1.5}  %% Interlineado
+\Urlmuskip=0mu plus 2mu
 
 \begin{document}
 
@@ -312,8 +313,8 @@ mi familia / mi abuelo / mi abuela}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Introducción}
-\label{sec:intro} % etiqueta para poder referenciar luego en el texto con ~\ref{sec:intro}
+\chapter{Introduction}
+\label{sec:introduction} % etiqueta para poder referenciar luego en el texto con ~\ref{sec:intro}
 \pagenumbering{arabic} % para empezar la numeración de página con números
 
 %En este capítulo se introduce el proyeto. Debería tener información general sobre el mismo, dando la información sobre el contexto en el que se ha desarrollado.
@@ -322,8 +323,12 @@ mi familia / mi abuelo / mi abuela}
 
 %Aconsejo a todo el mundo que mire y se inspire en memorias pasadas. Las mías están todas almacenadas en mi web del GSyC\footnote{\url{https://gsyc.urjc.es/~grex/pfcs/}}.
 
-\section{Descripción del Problema}
-\label{sec:descripcion}
+\section{Problem Description}
+\label{sec:description}
+
+In this times of business digitization, companies needs a way to visualize a big amount of business data in order to make an interpretation of how it behaves. To make it easy, this data has to be displayed in a certain way that allows us to put the focus where it matters and discard irrelevant information.
+
+From the necessity of visualizing this data came the idea of implementing web applications that allows us to represent easily all this information and manage it in a personalized way. Between this applications we can find some such as Kibana, Grafna or Tableau.
 
 %Esto es una sección, que es una estructura menor que un capítulo.
 
@@ -384,8 +389,17 @@ mi familia / mi abuelo / mi abuela}
 %\end{verbatim}
 %}
 
-\section{Objetivo Principal y Estructura}
-\label{sec:objetivo}
+\section{Main Objectives and Requirements}
+\label{sec:objectives}
+
+The project's main objective is to implement a simplified version of the Kibana. This application will use Elasticsearch as a database and its API to store and retrieve data, and it will use Angular to create and design a user interface to manage this data.
+
+The main features we want to implement for this application are:
+\begin{itemize}
+    \item A tool to create, save, modify and delete visualizations of different types, all the data must come from Elasticsearch.
+    \item A tool that allow us to create a dashboard where the visualizations will be displayed. We have to be able to create, save, modify and delete dashboards.
+\end{itemize}
+
 
 %En esta sección se debería introducir la esctura de la memoria. Así:
 
@@ -399,8 +413,15 @@ mi familia / mi abuelo / mi abuela}
 %  \item \ldots
 %\end{itemize}
 
-\section{Disponibilidad del Software}
-\label{sec:objetivo}
+\section{Software Availability}
+\label{sec:software-availability}
+The application is hosted in the web-based Git repository hosting service GitHub, under open source software license.
+\begin{itemize}
+    \item Github repository:
+
+    \url{https://github.com/islimane/Angular-ElasticSearch-Dashboard_Interface}
+\end{itemize}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1824,47 +1845,77 @@ The saving process is the same as the "Visualizations" saving process.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter{Conclusiones}
-\label{chap:conclusiones}
+\chapter{Conclusions}
+\label{chap:conclusions}
+
+\section{Objectives achievement}
+\label{sec:objectives-achievement}
+
+If we look back to the main objectives we'll see that they have been fulfilled. We have developed an application using Elasticsearch and its API.
+
+We were able to implement a tool that allows us to create a different types of visualizations such as "Metrics", "Data Tables", "Pie Charts" and "Bar Charts". This application allow us to save this visualizations, load them from the Elasticsearch database, modify them and delete them from Elasticsearch.
+
+In addition, this application has another section where we can create and design our personalized dashboards of saved visualizations. This dashboards can be stored on the Elasticsearch database in order to load the later and modify them or delete them.
+
+All this has been made using Angular and its features such as, "routing" for the navigation, "injection" and "services" to retrive data from Elasticsearch and "components" to make a modular application.
+
+%Esta sección es la sección espejo de las dos primeras del capítulo de objetivos, donde se planteaba el objetivo general y se elaboraban los específicos.
+
+%Es aquí donde hay que debatir qué se ha conseguido y qué no.
+%Cuando algo no se ha conseguido, se ha de justificar, en términos de qué problemas se han encontrado y qué medidas se han tomado para mitigar esos problemas.
 
 
-\section{Consecución de objetivos}
-\label{sec:consecucion-objetivos}
+\section{Application of lessons learned}
+\label{sec:application-of-lessons-learned}
+During the course of the degree, a lot of knowledge has been acquired but not all this knowledge has been applied or necessary to develop this project. There are some subjects that have related content with this project such as "Telematic Applications Development", "Information Systems Engineering", "Programming Fundamentals", "Telematic Systems Engineering" or "Telematic Applications Systems". All this subjects has lessons that have been applied to this project such as data structures, javascript language and javascript libraries, web styling (css), html, version control or object classes.
 
-Esta sección es la sección espejo de las dos primeras del capítulo de objetivos, donde se planteaba el objetivo general y se elaboraban los específicos.
+%Aquí viene lo que has aprendido durante el Grado/Máster y que has aplicado en el TFG/TFM. Una buena idea es poner las asignaturas más relacionadas y comentar en un párrafo los conocimientos y habilidades puestos en práctica.
 
-Es aquí donde hay que debatir qué se ha conseguido y qué no.
-Cuando algo no se ha conseguido, se ha de justificar, en términos de qué problemas se han encontrado y qué medidas se han tomado para mitigar esos problemas.
-
-
-\section{Aplicación de lo aprendido}
-\label{sec:aplicacion}
-
-Aquí viene lo que has aprendido durante el Grado/Máster y que has aplicado en el TFG/TFM. Una buena idea es poner las asignaturas más relacionadas y comentar en un párrafo los conocimientos y habilidades puestos en práctica.
-
-\begin{enumerate}
-  \item a
-  \item b
-\end{enumerate}
+%\begin{enumerate}
+%  \item a
+%  \item b
+%\end{enumerate}
 
 
-\section{Lecciones aprendidas}
-\label{sec:lecciones_aprendidas}
+\section{Learned Lessons}
+\label{sec:learned-lessons}
 
-Aquí viene lo que has aprendido en el Trabajo Fin de Grado/Máster.
+On this project we've used a lot of tools and technologies that have not been tough during the degree course. During the project development I have learned or improved the following skills:
+\begin{itemize}
+    \item I've learned how to create and develop a project with Angular from scratch, how to retrieve data asynchronously with services, create a routing navigation for the web application, and a lot of Angular technologies or features.
+    \item I've learned how to use the Elasticsearch API rest to retrieve data, create indexes, types and mappings, and to delete and overwrite data.
+    \item I've learned how to use Flexbox to style and design a web application.
+    \item I've learned how to use SASS to style a web application making the code more readable and simplified.
+    \item I've learned how to use Typescript as a front-end programming language to develop a web application.
+    \item I've learned how to create and modify Kibana visualizations and dashboards.
+    \item I've learned how to manage a web application project with Webpack, installing and updating packages.
+    \item I've improved my jQuery skills.
+\end{itemize}
 
-\begin{enumerate}
-  \item a
-  \item b
-\end{enumerate}
+%Aquí viene lo que has aprendido en el Trabajo Fin de Grado/Máster.
+
+%\begin{enumerate}
+%  \item a
+%  \item b
+%\end{enumerate}
 
 
-\section{Trabajos futuros}
-\label{sec:trabajos_futuros}
+\section{Future Work}
+\label{sec:future-work}
+This project have a lot of possibilities when thinking on how to develop more features. These are a few of the future works:
+\begin{itemize}
+    \item Include more types of visualizations such as line charts, heat maps or even 3D charts.
+    \item Include more bucket types such as date histograms.
+    \item Allow to make real-time queries.
+    \item Allow to change between visualizations sharing compatible data.
+    \item Implement user accounts and log-in.
+\end{itemize}
 
-Ningún software se termina, así que aquí vienen ideas y funcionalidades que estaría bien tener implementadas en el futuro.
 
-Es un apartado que sirve para dar ideas de cara a futuros TFGs/TFMs.
+
+%Ningún software se termina, así que aquí vienen ideas y funcionalidades que estaría bien tener implementadas en el futuro.
+
+%Es un apartado que sirve para dar ideas de cara a futuros TFGs/TFMs.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
