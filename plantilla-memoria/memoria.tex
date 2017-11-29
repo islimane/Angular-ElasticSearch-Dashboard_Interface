@@ -45,6 +45,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{titlesec}
+\usepackage{epigraph}
 
 \titleclass{\subsubsubsection}{straight}[\subsection]
 
@@ -248,9 +249,14 @@ mi familia / mi abuelo / mi abuela}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Agradecimientos
 
-\chapter*{Agradecimientos}
-%\addcontentsline{toc}{chapter}{Agradecimientos} % si queremos que aparezca en el índice
-\markboth{AGRADECIMIENTOS}{AGRADECIMIENTOS} % encabezado
+\chapter*{Acknowledge}
+\addcontentsline{toc}{chapter}{Acknowledge} % si queremos que aparezca en el índice
+\markboth{ACKNOWLEDGE}{ACKNOWLEDGE} % encabezado
+In the name of Allah, the most Gracious, the most Merciful.
+
+This project it is a culminating for a long path, and mainly I'm grateful to God, for giving me patience and persistence, and because all I have comes, in the first instance, from him. I'm grateful to my parents, since I would never achieved this without the education, affection and livelihood they gave me, all this without expecting anything in return but seeing me succeed. I want to thank my bosses at \textit{Nubika}, the company I'm currently working on, for their kindness, for making everything easy for me and allowing me to finish this project. Finally I want to thank my close friends for cheering me up, my classmates for their fellowship, and to thank my teachers for their patience and all the knowledge they have transmitted me, specially to my tutor Jesus María Gonzalez-Barahona.
+
+\epigraph{“Have those who disbelieved not considered that the heavens and the earth were a joined entity, then We separated them, and made from water every living thing?  Then will they not believe?” (Quran 21:30)}
 
 %Aquí vienen los agradecimientos\ldots Aunque está bien acordarse de la pareja, no hay que olvidarse de dar las gracias a tu madre, que aunque a veces no lo parezca disfrutará tanto de tus logros como tú\ldots
 %Además, la pareja quizás no sea para siempre, pero tu madre sí.
@@ -258,9 +264,12 @@ mi familia / mi abuelo / mi abuela}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Resumen
 
-\chapter*{Resumen}
-%\addcontentsline{toc}{chapter}{Resumen} % si queremos que aparezca en el índice
-\markboth{RESUMEN}{RESUMEN} % encabezado
+\chapter*{Summary}
+\addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
+\markboth{SUMMARY}{SUMMARY} % encabezado
+In this project that it has been developed the main objective is the development of a web application whose features have been extracted from the \textit{Kibana} application in order to create a simplified version of it. To achieve this we are going to use different technologies such as \textit{Elasticsearch}, to store and manage the application's data, and \textit{Angular} as the main front-end technology, with which we are going to implement the user interface and all the application's features.
+
+At the end of this project we'll have an application that will allow us to create, save, edit and delete different types of visualizations, in addition to the possibility of creating customized dashboards with all the available visualizations we've previously created and stored on Elasticsearch.
 
 %Aquí viene un resumen del proyecto. Ha de constar de tres o cuatro párrafos, donde se presente de manera clara y concisa de qué va el proyecto.
 %Han de quedar respondidas las siguientes preguntas:
@@ -277,9 +286,12 @@ mi familia / mi abuelo / mi abuela}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Resumen en inglés
 
-\chapter*{Summary}
-%\addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
-\markboth{SUMMARY}{SUMMARY} % encabezado
+\chapter*{Resumen}
+\addcontentsline{toc}{chapter}{Resumen} % si queremos que aparezca en el índice
+\markboth{RESUMEN}{RESUMEN} % encabezado
+En este proyecto que se ha desarrollado, se ha marcado como principal objetivo el desarrollo de una aplicación web, cuyas funcionalidades son extraídas de la aplicación web \textit{Kibana} para conseguir una versión simplificada de la misma. Para ello vamos a utilizar tecnologías como \textit{Elasticsearch}, para almacenar y gestionar los datos de la aplicación, y \textit{Angular}, como principal tecnología \textit{front-end}, la cual vamos a usar para implementar la interfaz de usuario y todas la funcionalidades de esta aplicación.
+
+Al final de este proyecto tendremos una aplicación que nos permitirá crear, guardar, editar y borrar distintos tipos de  visualizaciones, además de utilizar las visualizaciones, ya creadas y disponibles mediante la base de datos de Elasticsearch, para crear dashboards personalizados en los que puedan mostrarse todas estas visualizaciones.
 
 %Here comes a translation of the ``Resumen'' into English. Please, double check it for correct grammar and spelling.
 %As it is the translation of the ``Resumen'', which is supposed to be written at the end, this as well should be filled out
@@ -1944,9 +1956,9 @@ This project have a lot of possibilities when thinking on how to develop more fe
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\appendix
-\chapter{Manual de usuario}
-\label{app:manual}
+%\appendix
+%\chapter{Manual de usuario}
+%\label{app:manual}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
