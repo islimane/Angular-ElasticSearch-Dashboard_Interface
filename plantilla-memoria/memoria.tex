@@ -254,7 +254,7 @@ mi familia / mi abuelo / mi abuela}
 \markboth{ACKNOWLEDGE}{ACKNOWLEDGE} % encabezado
 In the name of Allah, the most Gracious, the most Merciful.
 
-This project it is a culminating for a long path, and mainly I'm grateful to God, for giving me patience and persistence, and because all I have comes, in the first instance, from him. I'm grateful to my parents, since I would never achieved this without the education, affection and livelihood they gave me, all this without expecting anything in return but seeing me succeed. I want to thank my bosses at \textit{Nubika}, the company I'm currently working on, for their kindness, for making everything easy for me and allowing me to finish this project. Finally I want to thank my close friends for cheering me up, my classmates for their fellowship, and to thank my teachers for their patience and all the knowledge they have transmitted me, specially to my tutor Jesus María Gonzalez-Barahona.
+This project it is a culminating for a long path, and mainly I'm grateful to God, for giving me patience and persistence, and because all I have comes, in the first instance, from him. I'm grateful to my parents, since I would never achieved this without the education, affection and livelihood they gave me, all this without expecting anything in return but seeing me succeed. I want to thank my bosses at \textit{Nubika}, the company I'm currently working on, for their kindness, for making everything easy for me and allowing me to finish this project. Finally I want to thank my close friends for cheering me up, my classmates for their fellowship, and to thank my teachers for their patience and all the knowledge they have transmitted me, specially to my tutor Jesús María González-Barahona.
 
 \epigraph{“Have those who disbelieved not considered that the heavens and the earth were a joined entity, then We separated them, and made from water every living thing?  Then will they not believe?” (Quran 21:30)}
 
@@ -267,7 +267,7 @@ This project it is a culminating for a long path, and mainly I'm grateful to God
 \chapter*{Summary}
 \addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
 \markboth{SUMMARY}{SUMMARY} % encabezado
-In this project that it has been developed the main objective is the development of a web application whose features have been extracted from the \textit{Kibana} application in order to create a simplified version of it. To achieve this we are going to use different technologies such as \textit{Elasticsearch}, to store and manage the application's data, and \textit{Angular} as the main front-end technology, with which we are going to implement the user interface and all the application's features.
+This project, which has been developed, has the main objective of the development of a web application whose features have been extracted from the \textit{Kibana} application in order to create a simplified version of it, but at the same time with a lot of features. To achieve this we are going to use different technologies such as \textit{Elasticsearch}, to store and manage the application's data, and \textit{Angular} as the main front-end technology, with which we are going to implement the user interface and all the application's features.
 
 At the end of this project we'll have an application that will allow us to create, save, edit and delete different types of visualizations, in addition to the possibility of creating customized dashboards with all the available visualizations we've previously created and stored on Elasticsearch.
 
@@ -338,9 +338,14 @@ Al final de este proyecto tendremos una aplicación que nos permitirá crear, gu
 \section{Problem Description}
 \label{sec:description}
 
-In this times of business digitization, companies needs a way to visualize a big amount of business data in order to make an interpretation of how it behaves. To make it easy, this data has to be displayed in a certain way that allows us to put the focus where it matters and discard irrelevant information.
+In this times of business digitization, companies, and even common people, need a way to visualize a big amount of business data in order to make an interpretation of how it behaves. To make it easy, this data has to be displayed in a certain way that allows us to put the focus where it matters and discard irrelevant information.
 
-From the necessity of visualizing this data came the idea of implementing web applications that allows us to represent easily all this information and manage it in a personalized way. Between this applications we can find some such as Kibana, Grafna or Tableau.
+From the necessity of visualizing this data came the idea of implementing web applications that allows us to represent easily all this information and manage it in a personalized way. Here is where it comes the concept of \textbf{data dashboards}, this concept is currently on the context of one of the most alive fields on computing and communications, this field is \textit{Big Data}. Currently a lot of data it's being stored all over the world, not only by companies but by common people too, with personal data, that could be interested on visualizing it. Since a few years ago the demand of dashboard interfaces and applications for data visualization has been growing.
+
+An interesting way of having these applications is inside a web browser without having to install anything else. In addition, this data can be complex and often we don't know, \textit{a priori}, how is it, so these applications has to foresee that the dashboards have to work with any type of data that could be stored on the database. This dashboards are built with visualizations, and we don't know which type of visualizations are going to be used either, so we have to find a way that the user can choose which visualization wants and collect several of them in a dashboard.
+
+All this is what is going to be developed on this project, taking inspiration from other similar web applications such as Kibana, Grafana or Tableau.
+
 
 %Esto es una sección, que es una estructura menor que un capítulo.
 
@@ -404,13 +409,29 @@ From the necessity of visualizing this data came the idea of implementing web ap
 \section{Main Objectives and Requirements}
 \label{sec:objectives}
 
-The project's main objective is to implement a simplified version of the Kibana. This application will use Elasticsearch as a database and its API to store and retrieve data, and it will use Angular to create and design a user interface to manage this data.
+The main objective of this project is to develop a simplified \textit{reimplementation} of the Kibana web application, but at the same time, a full application with a lot of available features. All this from scratch and with our own code.
 
-The main features we want to implement for this application are:
+We want to build a full dashboard that allows us to manage visualizations, which data:
 \begin{itemize}
-    \item A tool to create, save, modify and delete visualizations of different types, all the data must come from Elasticsearch.
-    \item A tool that allow us to create a dashboard where the visualizations will be displayed. We have to be able to create, save, modify and delete dashboards.
+    \item Will be retrieved from a \textit{no-sql} database.
+    \item Could be of any type.
+    \item Will be managed in an \textit{introspective} way. Hence, we will find out the data structure that is stored in a specific moment on the database.
 \end{itemize}
+Given all this initial requirements, let's see in detail the project features to develop:
+\begin{itemize}
+    \item Building groups of data.
+    \item Building summary metrics for selected visualizations.
+    \item Visualizing the same data on different ways with several types of visualizations.
+    \item Building visualizations for any type of data stored on the database.
+    \item Allowing the user to have persistent data and save the visualizations.
+    \item Allowing the user to edit or modify those visualizations, once have been created.
+    \item Combining all in a customized dashboard with the same features, so we have to be able to create, save, modify and delete dashboards.
+\end{itemize}
+All this features has to be managed in an, easy to use, simple and intuitive user interface.
+
+This application is required to be an \textit{SPA} or \textit{Single Page Application}, without having to install additional software on the the web browser but the web browser's standard features. Hence, we are looking for an \textit{HTML5} application that uses, as far as possible, already implemented modules in order to develop all this requirements on a "End of Degree Project" context, so we have to reuse as much components as we can.
+
+On the other hand, we are going to work with modern frameworks such as Angular, and given the new and modern work environment that is HTML5, we are going to use recent  development methodologies and packaging technologies for applications development such as \textit{Webpack}.
 
 
 %En esta sección se debería introducir la esctura de la memoria. Así:
@@ -427,18 +448,7 @@ The main features we want to implement for this application are:
 
 \section{Software Availability}
 \label{sec:software-availability}
-The application is hosted in the web-based Git repository hosting service GitHub, under open source software license.
-
-There is a web project for this project too, on this web page we can find information of this project and where to find each resource such as this project thesis or the \textit{github} repository.
-\begin{itemize}
-    \item Github repository:
-
-    \url{https://github.com/islimane/Angular-ElasticSearch-Dashboard_Interface}
-
-    \item Project site:
-
-    \url{https://islimane.github.io/Angular-ElasticSearch-Dashboard_Interface}
-\end{itemize}
+This project will be developed as an open source application and a public repository\footnote{\url{https://github.com/islimane/Angular-ElasticSearch-Dashboard_Interface}} will be created on the web-based Git repository hosting service \textit{Github}, under open source software license, so all the development history will be available. Anyone can download and install this application. In addition, we are going to build a web site\footnote{\url{https://islimane.github.io/Angular-ElasticSearch-Dashboard_Interface}} where it will be explained all our project features and where we'll apprise this application development.
 
 
 
@@ -454,7 +464,7 @@ There is a web project for this project too, on this web page we can find inform
 \section{ElasticSearch} % título de sección (se muestra)
 \label{sec:elasticsearch} % identificador de sección (no se muestra, es para poder referenciarla)
 
-\textit{\textbf{Elasticsearch}} is an open-source, \textit{broadly-distributable}, \textit{readily-scalable}, \textit{enterprise-grade} search engine based on Lucene\footnote{\url{https://en.wikipedia.org/wiki/Apache\_Lucene}}. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
+\textit{\textbf{Elasticsearch}} is a \textit{no-sql} database that allows to store a big amount of data. Elasticsearch is design to be distributed, with multiple nodes working in parallel, and is design to be \textit{scalable}. The communication with this database is made by its \textit{API Rest} that works fully over \textit{HTTP}, using \textit{JSON} as document exchange format. Both the queries and the retrieved data from the Elasticsearch database is in JSON format.
 
 \subsection{History}
 \label{subsec:elasticsearch-history}
@@ -546,8 +556,9 @@ For the current project, a repository was created on \textit{Github} with the na
 \section{Webpack}
 \label{sec:webpack}
 
-"\textbf{Webpack} is an \textit{open-source JavaScript} module bundler". The main reason for using Webpack is to have a modular structure on your web application project. This allows you to have a cleaner code and make it more reusable and scalable. Webpack can be used from the command line or be configured with a config file named \textit{webpack.config.js}.
+"\textbf{Webpack} is an \textit{open-source JavaScript} module bundler". The main reason for using Webpack is to have a modular structure on your web application project. This allows you to have a cleaner code and make it more reusable and scalable.
 
+Webpack resolves the problem of how to distribute applications and how to manage different versions while developing or distributing the application. Webpack is related with the process that gets our application \textit{minified} and with the compiling process of some programming languages into \textit{javascript} such as \textit{Typescript}. Webpack can be used from the command line and has a lot of available options to configure it through its configuration file named \textit{webpack.config.js}, also it works very well with other application environment tools such as \textit{NPM}. Webpack is a recent technology but is very demanded by web developers.
 
 \section{Angular}
 \label{sec:angular}
@@ -1009,15 +1020,15 @@ On Figure~\ref{fig:scrum-framework} we can see a general SCRUM framework.
 The main goals or tasks for this sprint are:
 \begin{itemize}
     \item Basic Elasticsearch interface which allows to visualize a simple metric. The data must come from Elastcsearch through an API request.
-    \item Include more aggregations options and Index changing functionality.
+    \item Include more aggregation options and Index selecting functionality.
 \end{itemize}
 
 \subsection{Implementing a simple metric request}
 \label{sec:simple-request}
-We are at the beginning of this project, the first thing we are going to do is to connect our Angular project to Elasticsearch. This can be achieved by installing the Elasticsearch library\footnote{\url{https://github.com/elastic/elasticsearch-js}} for Angular. This library will allow us to make requests to Elasticsearch through its javascript API.
+We are at the beginning of this project, so the first thing we are going to do is to connect our Angular project to Elasticsearch. This can be achieved by installing the Elasticsearch library\footnote{\url{https://github.com/elastic/elasticsearch-js}} for Angular. This library will allow us to make requests to Elasticsearch through its javascript API.
 
 We need an Elasticsearch client instance, this instance will give us the access to the Elasticsearch API. Elasticsearch, by default, it listens on the '9200' port, so we'll need to specify it too.
-\begin{lstlisting}[language=javascript, caption=Client Insance, label=code:client-instance]
+\begin{lstlisting}[language=javascript, caption=Client Instance, label=code:client-instance]
 export class Elasticsearch {
 	public clientElasticsearch: Client;
 	constructor() {
@@ -1031,7 +1042,7 @@ export class Elasticsearch {
 \end{lstlisting}
 This Elasticsearch class is created as an Angular \textbf{service}. In Angular, services are usually used for fetching data from the outside, this is what we are trying to achieve.
 
-The next thing we are going to do is to request a simple "count" from Elasticsearch. In order to get this, we need to specify an Elasticsearch \textbf{index}.
+The next thing we are going to do is to request a simple "count" from Elasticsearch. In order to achieve this goal, we need to specify an Elasticsearch \textbf{index}.
 \begin{lstlisting}[language=javascript]
 ...
 public count(index): PromiseLike<number> {
@@ -1080,11 +1091,11 @@ public getIndexNumFields(index): PromiseLike<string[]> {
  		return this.map(index).then(function(response){
 ...
 \end{lstlisting}
-The map method returns the index mappings, which we need to parse to build our "number fields" array.
+The map method returns the index mappings, which we need to parse in order to build our "number fields" array.
 
 The \textbf{PromiseLike} class is very useful because allows us to wait until the request is finished, in order to execute the appropriate callback function and manage the retrieved data asynchronously.
 
-For now, we are going to include functionality for aggregations that works with fields of type "number" only. To achieve this we are going to use the "search" request provided by the Elasticsearch javascript API. This request returns a JSON object which we need to parse in a different way depending on the aggregation we are requesting, in order to get a displayable result.
+For now, we are going to include functionality for aggregations, which only works with fields of type "number". To achieve this we are going to use the "search" request provided by the Elasticsearch javascript API. This request returns a JSON object which we need to parse in a different way depending on the aggregation we are requesting, in order to get a displayable result.
 \begin{lstlisting}[language=javascript]
 ...
 // avg, sum, min, max, median, std_deviation, unique_count
@@ -1104,7 +1115,7 @@ The final stage view at the end of this sprint is shown on Figure~\ref{fig:sprin
   \label{fig:sprint1-final-stage}
 \end{figure}
 
-For a better understanding a general architecture for this sprint is shown on Figure~\ref{fig:sprint1-architecture}.
+For a better understanding, a general architecture for this sprint is shown on Figure~\ref{fig:sprint1-architecture}.
 \begin{figure}
   \centering
   \includegraphics[width=13cm, keepaspectratio]{img/sprint1_architecture}
@@ -1128,11 +1139,11 @@ The main goals or tasks for this sprint are:
 
 \subsection{Finishing metrics}
 \label{sec:finishing-metrics}
-Following the same logic as we did with the previous aggregations, we implement 'Percentiles', 'Percentile Ranks' and 'Top Hit' aggregations. The complexity of this aggregations it is a little bit higher because this aggregations need more data in order to perform the request.
+Following the same logic as we did with the previous aggregations, we implement 'Percentiles', 'Percentile Ranks' and 'Top Hit' aggregations. The complexity of this aggregations is a little bit higher because this aggregations need more data in order to perform the request.
 
 For this reason, we are going to have individual components for each one of this aggregations and a general \textit{metrics component} for the other aggregations since they share the main calculation logic.
 
-The architecture on Figure~\ref{fig:sprint2-architecture-1} shows how remains the general structure.
+The architecture on Figure~\ref{fig:sprint2-architecture-1} shows how remains the general structure. And the final version of a metric example is shown on Figure~\ref{fig:metric-count-calcuation}.
 \begin{figure}
   \centering
   \includegraphics[width=13cm, keepaspectratio]{img/sprint2_architecture_1.png}
@@ -1142,15 +1153,15 @@ The architecture on Figure~\ref{fig:sprint2-architecture-1} shows how remains th
 
 \subsection{Implementing "Data Table" feature}
 \label{sec:data-table-feature}
-In relation with the "Data Table" visualization implementation we followed the same structure as with the "Metric" visualization. The main difference here is the way we structure the data in order to display it in a table.
+In relation with the "Data Table" visualization implementation we followed the same structure as we did with the "Metric" visualization. The main difference here is the way we structure the data in order to display it in a table.
 
-Another important difference with the "Metric" visualization is the introduction of Elasticsearch \textbf{buckets}. Because of the way "Data Table" visualizations works, Elasticsearch returns the requested data in groups of results, depending on the "bucket aggregation" that has been used. For this project we are going to use two different bucket aggregations between all the possible aggregations:
+Another important difference with the "Metric" visualization is the introduction of Elasticsearch \textbf{buckets}. Because of the way "Data Table" visualizations work, Elasticsearch returns the requested data in groups of results, depending on the "bucket aggregation" that has been selected. For this project we are going to use two different bucket aggregations between all the possible aggregations:
 \begin{itemize}
     \item Histogram
     \item Range
 \end{itemize}
 
-Here the complexity of the requests grows significantly. Because of this complexity, we are going to use a javascript library called "\textbf{bodybuilder}"\footnote{\url{https://github.com/danpaz/bodybuilder}}. As we could understand by its name, this library helps us to build the request bodies. For example if we want to make a simple count over an index, and retrieve the data as "histogram buckets" with an interval:
+Here the complexity of the requests grows. Because of this complexity, we are going to use a javascript library called "\textbf{bodybuilder}"\footnote{\url{https://github.com/danpaz/bodybuilder}}. As we could understand by its name, this library helps us to build the request bodies. For example if we want to make a simple count over an index, and retrieve the data as "histogram buckets" with an interval we would do the following:
 \begin{lstlisting}[language=javascript]
 // Builder process
 bodybuilder().aggregation('histogram', null, 'bucket_1', {
@@ -1170,6 +1181,8 @@ bodybuilder().aggregation('histogram', null, 'bucket_1', {
   }
 }
 \end{lstlisting}
+
+A final version of a Data Table visualization example is shown on Figure~\ref{fig:data-table-multiaggregation-calculation}.
 
 \subsection{Load multiple metrics or buckets and changing between visualizations, both dynamically}
 \label{sec:loading-dynamically}
@@ -1193,9 +1206,9 @@ setInputs(uniqueId:string, inputs: any): void{};
 destroyCmp(uniqueId: string): void{};
 \end{lstlisting}
 
-Due to the Angular live-cycle hook defects we have commented before, we need a more efficient way to set specific component parameters. Usually when a parent component needs to pass parameters to a child component, we get it by adding attributes on the child component selector, but due to the complexity of the bucket and metric components, the Angular live-cycle hook was acting erratically and braking the parent-child parameters synchronization. We needed to communicate with grandchildren components too and this was bringing on more synchronizing problems.
+Due to the Angular live-cycle hook behaviour we have commented before, we need a more efficient way to set specific component parameters. Usually when a parent component needs to pass parameters to a child component, we get it done by adding attributes on the child component selector, but due to the complexity of the bucket and metric components, the Angular live-cycle hook was acting erratically and breaking the parent-child parameters synchronization. We needed to communicate with grandchildren components too and this was bringing on more synchronization problems.
 
-For this reason, we used a different technique for communicating a parent with its children or grandchildren components or even another component without direct relation. This approach for communicating components is made via \textbf{service}, we can see a diagram on Figure~\ref{fig:parent-child-via-service}.
+For this reason, we used a different technique for communicating a parent with its children or grandchildren components or even another component without direct relationship. This approach for communicating components is made via \textbf{service}, we can see a diagram on Figure~\ref{fig:parent-child-via-service}.
 \begin{figure}
   \centering
   \includegraphics[width=13cm, keepaspectratio]{img/parent-child-via-service.png}
@@ -1203,23 +1216,23 @@ For this reason, we used a different technique for communicating a parent with i
   \label{fig:parent-child-via-service}
 \end{figure}
 
-As we can see on Figure~\ref{fig:parent-child-via-service}, a "Parent Component" communicates with its grandchildren employing \textbf{observable} variables declared on a \textbf{service}, each time a method executes "\textbf{next}" on a observable, a callback function is executed on each grandchild that was subscribed to this observable accessing the data the sent data.
+As we can see on Figure~\ref{fig:parent-child-via-service}, a "Parent Component" communicates with its grandchildren employing \textbf{observable} variables declared on a \textbf{service}, each time a method executes "\textbf{next}" on a observable, a callback function is executed on each grandchild that was subscribed to this observable accessing the sent data.
 
-To give an example, we can see this technique in the project applied for the components:
+To give an example, we can see this technique the following components:
 \begin{itemize}
     \item \textbf{VisualizationsComponent}: acting as a "Parent Component".
     \item \textbf{VisualizationsService}: acting as the communicating service.
     \item \textbf{BucketsComponent}: acting as a "Grandchild Component".
 \end{itemize}
 
-Another advantage of this technique is found when we need a bidirectional communication between components, in this case we wouldn't need \textit{input} variables or component events.
+Another advantage of this technique appears when we need a bidirectional communication between components, in this case we wouldn't need \textit{input} variables or component events.
 
 
 \subsection{Loading and saving visualizations}
 \label{sec:loading-and-saving}
 At this point we are able to create two types of visualizations, "Metric" and "Data Table", but we are still not able to store them in Elasticsearch neither loading saved visualizations.
 
-To achieve this features we have to create a new Elasticsearch index which will store all visualizations data. The name of this index we'll be "sakura".
+To achieve this goals we have to create a new Elasticsearch index which will store all visualizations data. The name of this index we'll be "sakura".
 
 Now we need a \textit{type} which will define what data represents our visualizations.
 
@@ -1246,17 +1259,17 @@ visualization: {
 }
 \end{lstlisting}
 
-Each field stores data necessary in order to load a visualization:
+Each field stores specific data in order to load a visualization:
 \begin{itemize}
     \item \textbf{kibanaSavedObjectMeta}: data related with the visualization index.
     \item \textbf{title}: visualization's title.
     \item \textbf{visState}: data related with the aggregations.
 \end{itemize}
 
-Once we've created the visualization object, the saving process consist of 2 steps:
+Once we've created the visualization object, the saving process consists of 2 steps:
 \begin{itemize}
-    \item Check if there is already a visualization on Elasticsearch with the same id (title).
-    \item If there is already a visualization, update it, otherwise create a new one.
+    \item Checking if there is already a visualization on Elasticsearch with the same id (title).
+    \item If there is already a visualization, updating it, otherwise creating a new one.
 \end{itemize}
 
 In Elasticsearch we use the "search" action in order to look for a document:
@@ -1331,7 +1344,7 @@ For this visualization we'll need a library that provides us chart features and 
 
 ChartJS provides a dedicated module for Angular but it has some defects and limitations and still needs improvements, for this reason we decide to import the ChartJS library directly to the HTML and arrange each chart to the HTML through \textit{jQuery}.
 
-For this visualizations, the process of request body building, and the process of response parsing are much higher compared with the visualizations already implemented.
+For this visualizations, the process complexity of request body building, and the process complexity of response parsing are much higher compared to the visualization types already implemented.
 
 The request body has the following format:
 \begin{lstlisting}[language=javascript]
@@ -1350,7 +1363,7 @@ The request body has the following format:
 
 As we can see, each bucket object contains the selected metric, and this metric is the same for every bucket.
 
-The Elasticsearch response object doesn't fit at all with the way we want to display the received data, so we need to parse it into a more "friendly" object in order to make it easy creating the required data for the render process with ChartJS. The parsed object will have the following format:
+The Elasticsearch response object doesn't fit at all with the way we want to display the received data, so we need to parse it into a more "friendly" object in order to make it easy creating the required data in order to render the chart with ChartJS. The parsed object will have the following format:
 \begin{lstlisting}[language=javascript, caption=Custom results object, label=code:cutom-pie-chart-obj]
 // This map contains the bucket(level) id as key and the array of results as value.
 -> Map<String, Array<any>>
@@ -1373,12 +1386,14 @@ The chart object is formed by the following fields:
     \item \textbf{options}: This defines our chart configuration an characteristics such us responsiveness, tooltip customization, etc.
 \end{itemize}
 
-Each \textbf{dataset} defines a different level on our "Pie Chart" and is formed by the following fields:
+Each \textbf{dataset} defines a different level on our "Pie Chart" and it's formed by the following fields:
 \begin{itemize}
     \item \textbf{data}: An array of values where each value appertain to a slice of the current level. Examples of this array are shown on code snippet ~\ref{code:cutom-pie-chart-obj}.
     \item \textbf{backgroundColor}: An array of hexadecimal colors for each slice of the current level. This array is created randomly, the way we created this array is keeping and array of colors that are already displayed and calculating a given distance between hexadecimal colors in a decimal form, thus we ensure that all colors will differ one from each other.
     \item \textbf{labels}: An array of labels with value information for each slice of the current level. Here we had to use a library named "text-table". The reason we need this library is because ChartJS doesn't take \textit{HTML} code in order to display a label but it takes a simple \textit{String}, in this case we need to display a table within the label, since each row will represent an upper level, so this library parses an array of arrays and convert it into a table in a \textit{String} format with "line breaks".
 \end{itemize}
+
+A final version of a Pie Chart visualization example is shown on Figure~\ref{fig:pie-chart-calculation}.
 
 \subsection{Implementing the "Bar Chart"}
 \label{sec:pie-chart}
@@ -1423,6 +1438,7 @@ The \textit{dataset} object is now much simpler, now it only contains informatio
     \item \textbf{backgroundColor}: A single hexadecimal color. This will be calculated randomly using the same logic as we did with the "Pie Chart".
     \item \textbf{labels}: A single \textit{string} value which identifies the current values collection.
 \end{itemize}
+A final version of a Bar Chart visualization example is shown on Figure~\ref{fig:bar-chart-calculation}.
 
 \subsection{Designing a user interface}
 \label{sec:pie-chart}
@@ -1431,7 +1447,7 @@ We have reached a point on the development process where it would be great to ha
 
 For now we only have one view,  "Visualizations", so we are going to design a user interface thinking on elements that we already have and their functionality.
 
-On Figure~\ref{fig:user-interface-mockup} we can see a mock-up schema we want to get implemented.
+On Figure~\ref{fig:user-interface-mockup} we can see the mock-up schema we want to get implemented.
 \begin{figure}
   \centering
   \includegraphics[width=15cm, keepaspectratio]{img/user_interface_mockup}
@@ -1465,7 +1481,7 @@ private _getHeight(elemId: string): Number {
 
 Setting this height to our element and giving it a "\textit{overflow-x: scroll;}" style, we make this window "\textit{scrollable}".
 
-To achieve a expandable panels for "Saved Visualizations" and "Visualization Options" we used a dynamic style and a \textit{click} event, this process is similar to the dynamic height process we have shown before.
+To achieve the expandable panels for "Saved Visualizations" and "Visualization Options" we used a dynamic style and a \textit{click} event, this process is similar to the dynamic height process we have shown before.
 
 All icons are extracted from the \textit{font-awesome} library. On Figure~\ref{fig:final-user-interface} we can see a final view of our user interface, with the same visualization example as in the mock-up schema.
 \begin{figure}
@@ -1498,13 +1514,13 @@ As we can see, we have to pass the document "type" and the document "id". The "\
 \subsection{Key Objectives}
 \label{sec:key-objectives}
 \begin{itemize}
-    \item Implement dashboard user interface capable of showing multiple saved visualizations.
-    \item Implement saving, modifying and deleting features for dashboards .
+    \item Implement a dashboard user interface capable of showing multiple saved visualizations.
+    \item Implement the saving, modifying and deleting features for dashboards .
 \end{itemize}
 
 \subsection{Implementing the visualizations dashboard}
 \label{sec:visualizations-dashboard}
-Once we've finished all the "Visualizations" section, we are going to reuse our visualization components in order to make a "\textit{customizable}" dashboard interface.
+Once we've finished the "Visualizations" section, we are going to reuse our visualization components in order to make a "\textit{customizable}" dashboard interface.
 
 First of all, we have to be able to change between the sections "Visualizations" and "Dashboards", to achieve this we are going to use the Angular \textbf{routing} feature. This feature allows us to navigate between different application content. To achieve this we have to import the following modules:
 \begin{lstlisting}[language=javascript, caption=Paths definition, label=code:dashboard-object]
@@ -1598,13 +1614,13 @@ On the previous chapter we saw in detail how the web application was developed s
 
 \section{User Guide}
 \label{sec:results-user-guide}
-On this section we are going to explain one by one how the web application's different features works. First we are going to begin with the "Visualizations" feature, we are going to explain each type of visualization and how to build them, then we are going to explain the "Dashboard" section and how to build dashboards from different visualizations.
+On this section we are going to explain one by one how the web application's different features work. First we are going to begin with the "Visualizations" feature, we are going to explain each type of visualization and how to build them, then we are going to explain the "Dashboard" section and how to build dashboards from different visualizations.
 
 \subsection{Visualizations}
 \label{sec:results-visualizations}
 The first view we are getting when we open the application, or clicking on the "eye" icon on the nav-bar, is the "Visualizations" section. We can see this view on Figure~\ref{fig:visualizations-section}.
 
-From this view, if we open the "Saved Visualizations" by clicking on its bar (Figure~\ref{fig:saved-visualizations}),  we can either load a saved visualization or delete it by clicking o the trash icon.
+From this view, if we open the "Saved Visualizations" by clicking on its bar (Figure~\ref{fig:saved-visualizations}),  we can either load a saved visualization or delete it by clicking on the trash icon.
 
 Another option is to create a new visualization by opening the "Visualization Options" bar. To create a new visualization we must select an index about which we are going to calculate the available visualization types. This is shown on Figure~\ref{fig:visualization-options}.
 
@@ -1635,7 +1651,7 @@ Let's see how to create each of the visualization types.
 \label{sec:metric-visualization}
 A "Metric" visualization performs an operation over the index data an shows the result as a String, a Number or a collection of them. We can see an initial view of this "Metric Visualization" on Figure~\ref{fig:metric-visualization-initial-view}.
 
-To add a metric operation to our visualization, we have to click on the "+" icon, this will add a "count" calculation over the selected index by default, and if we click the "play" icon will see the result on calculation result on the screen (Figure~\ref{fig:metric-count-calcuation}).
+To add a metric operation to our visualization, we have to click on the "+" icon, this will add a "count" calculation over the selected index by default, and if we click the "play" icon we'll see the result on the screen (Figure~\ref{fig:metric-count-calcuation}).
 
 \begin{figure}
   \centering
@@ -1745,7 +1761,7 @@ The operation description for each "aggregation" option is:
 
 \subsubsection{Data Table Visualization}
 \label{sec:data-table-visualization}
-A "Data Table" visualization performs an operation over the index data an shows the result as a table. We can see an initial view of this "Data Table Visualization" on Figure~\ref{fig:data-table-initial-view}.
+A "Data Table" visualization performs an operation over the index data and shows the result as a table. We can see an initial view of this "Data Table Visualization" on Figure~\ref{fig:data-table-initial-view}.
 \begin{figure}
   \centering
   \includegraphics[width=13cm, keepaspectratio]{img/data-table-initial-view.png}
@@ -1808,9 +1824,9 @@ An example of a "Pie Chart" visualization is shown on Figure~\ref{fig:pie-chart-
 \label{sec:bar-chart-visualization}
 A "Bar Chart" visualization performs an operation over the index data an shows the result as a bar chart. The initial view is the same as the "Data Table" visualization's.
 
-To create a "Bar Chart" visualization we have to create one or more metrics and one bucket maximum. We will have as many bars as the buckets of documents. The metric results will stack on the bars.
+To create a "Bar Chart" visualization we have to create one or more metrics and one bucket maximum. We will have as many bars as buckets of documents. The metric results will stack on the bars.
 
-This chart has a label \textit{tooltip} as the "Pie chart" visualization, but this time the \textit{tooltip} show the metric field value for a specific bucket.
+This chart has a label \textit{tooltip} as the "Pie chart" visualization, but this time the \textit{tooltip} shows the metric field value for a specific bucket.
 
 An example of a "Bar Chart" visualization is shown on Figure~\ref{fig:bar-chart-calculation}.
 \begin{figure}
@@ -1820,7 +1836,7 @@ An example of a "Bar Chart" visualization is shown on Figure~\ref{fig:bar-chart-
   \label{fig:bar-chart-calculation}
 \end{figure}
 
-This chart introduces the chart \textit{legend}. The legend specifies which color appertains to each metric result. In addition, this legend allow to filter some metric results disabling them by clicking on them, an example of the same "Bar Chart" with a filtered result is shown on Figure~\ref{fig:bar-chart-lengend-filter-example}.
+This chart introduces the chart \textit{legend}. The legend specifies which color appertains to each metric result. In addition, this legend allows to filter some metric results disabling them by clicking on them, an example of the same "Bar Chart" with a filtered result is shown on Figure~\ref{fig:bar-chart-lengend-filter-example}.
 \begin{figure}
   \centering
   \includegraphics[width=16cm, keepaspectratio]{img/bar-chart-lengend-filter-example.png}
@@ -1830,7 +1846,7 @@ This chart introduces the chart \textit{legend}. The legend specifies which colo
 
 \subsubsection{Saving Visualizations}
 \label{sec:saving-visualizations}
-We finish this section by explaining how saving visualizations works. To save a visualization we only have to write a visualization title, on the input at the top of our metrics and buckets panel, and click on the "floppy disk" icon. If we want to edit a visualization, after loading it from the "Saved Visualizations" panel and modifying it, we only have to save it with the same title in order to overwrite it.
+We finish this section by explaining how saving visualizations works. To save a visualization we only have to write a visualization title, on the input at the top of our "metrics and buckets" panel, and click on the "floppy disk" icon. If we want to edit a visualization, after loading it from the "Saved Visualizations" panel and modifying it, we only have to save it with the same title in order to overwrite it.
 
 
 \subsection{Dashboards}
@@ -1887,9 +1903,28 @@ If we look back to the main objectives we'll see that they have been fulfilled. 
 
 We were able to implement a tool that allows us to create a different types of visualizations such as "Metrics", "Data Tables", "Pie Charts" and "Bar Charts". This application allow us to save this visualizations, load them from the Elasticsearch database, modify them and delete them from Elasticsearch.
 
-In addition, this application has another section where we can create and design our personalized dashboards of saved visualizations. This dashboards can be stored on the Elasticsearch database in order to load the later and modify them or delete them.
+In addition, this application has another section where we can create and design our personalized dashboards of saved visualizations. This dashboards can be stored on the Elasticsearch database in order to load them later and modify them or delete them.
 
-All this has been made using Angular and its features such as, "routing" for the navigation, "injection" and "services" to retrive data from Elasticsearch and "components" to make a modular application.
+One of this project's objective was learning how to use modern technologies of framework based construction in javascript, or in this case its superset Typescript, such as Angular. Effectively, this application has been developed with Angular and we had taken advantage from several of its features, which saved us working time when developing the application. In addition, this features have allowed us to develop a more flexible application such us:
+\begin{itemize}
+    \item \textit{Routing}: To make the application navigation for the different structure sections, making easily a SPA.
+    \item \textit{Injection}: Allowing as to integrate and reuse different modules in a simple way, and saving us working time.
+    \item \textit{Services} - Standard use: To make isolated code where we interact with the database to retrieve or manage data from the database, making a cleaner and more readable code.
+    \item \textit{Services} - Custom use: To communicate between different components, fixing the component variable dependency synchronization issues due to the Angular "livecycle" hook.
+    \item \textit{Components}: To make a well structured code where each component had its own functionality.
+\end{itemize}
+
+In addition, we had another objective for this project, this is finding out how could we integrate different visualization libraries with Angular such as \textit{ChartJS}. We found that Angular has different options to integrate external libraries such as the common way with the library CDN, or importing the library module with NPM, but this module required to have a "typings" (Typescript) file with the variable types declaration in order to have it work in our project. In this case we used both techniques due to missing "typings" files for some libraries we used, or due to limitations by using the second option.
+
+Thus, we achieved an HTML5 application development, we worked with a no-sql database such as Elasticsearch, we used already implemented components to interact with it, so we used an API which allowed us to have a dynamic access to the data. We use the data writing in order to have a data persistence on whatever the user creates, thus, the user can save its progress whenever the user wants and recover the work later, in the same state the user left it. In addition, the application is very flexible, it does not require a defined data but it works with any type of data since the user interface allows us to choose the data, from the stored data on the database.
+
+With this, we have built visualizations using external libraries, and we have built too, a dashboard structure that allowed us to combine visualizations in the same panel. In addition, in an introspective way, in real time we read the data from the database, and we use this data to build the buckets and the metrics, thus, the user can choose to show another type of visualization if the data changes. So we are not restricting to a concrete type of data on the back-end.
+
+As we said, from the data, we can build or define groups of data (buckets), or we can build or define how those visualizations are summarized (metrics). And we have several ways to summarize them and several ways to group them, each one of them with different types of visualizations.
+
+All this works over javascript on the web browser, without having to install anything else and without any specific API. This is because we work directly with the Elasticsearch API on the server side, everything else are libraries that we've integrated within our application. So, this application is a SPA which is responsive and works both on desktop and on tablets, thanks to Angular and Flexbox.
+
+Finally, we have deployed too, a web site where we try to explain this project and appraise its application\footnote{\url{https://islimane.github.io/Angular-ElasticSearch-Dashboard_Interface/}}.
 
 %Esta sección es la sección espejo de las dos primeras del capítulo de objetivos, donde se planteaba el objetivo general y se elaboraban los específicos.
 
@@ -1972,6 +2007,46 @@ This project have a lot of possibilities when thinking on how to develop more fe
 % para incluir las citas en la memoria
 \bibliographystyle{abbrv}
 \bibliography{memoria}  % memoria.bib es el nombre del fichero que contiene
+\begin{thebibliography}{99}
+    \bibitem{elasticsearch_book}
+        Clinton Gormley \& Zachary Tong.
+        Elasticsearch - The Definitive Guide.
+        O'Reilly, 2015.
+    \bibitem{elasticsearch_doc}
+        Elasticsearch: Elastic Stack and Product Documentation,
+        \\\texttt{https://www.elastic.co/guide/index.html}
+    \bibitem{kibana_book}
+        Bahaaldine Azarmi.
+        Learning Kibana 5.0.
+        Packt, 2017.
+    \bibitem{kibana_doc}
+        Kibana: Kibana User Guide,
+        \\\texttt{https://www.elastic.co/guide/en/kibana/5.5/index.html}
+    \bibitem{javascript_book}
+        David Flanagan.
+        Javascript - The Definitive Guide.
+        O'Reilly, 2006.
+    \bibitem{javascript_doc}
+        MDN Web Docs,
+        \\\texttt{https://developer.mozilla.org/bm/docs/Web/JavaScript}
+    \bibitem{typescript_book}
+        Steve Fenton.
+        Pro Typescript.
+        Apress, 2017.
+    \bibitem{typescript_doc}
+        Typescript: Typescript Documentation,
+        \\\texttt{https://developer.mozilla.org/bm/docs/Web/JavaScript}
+    \bibitem{chartjs_doc}
+        ChartJS Documentation,
+        \\\texttt{http://www.chartjs.org/docs/latest/}
+    \bibitem{bodybuilder_doc}
+        Bodybuilder Documentation,
+        \\\texttt{http://bodybuilder.js.org/docs/}
+    \bibitem{flexbox_doc}
+        Flexbox in CSS,
+        \\\texttt{http://cssreference.io/flexbox/}
+\end{thebibliography}
+
 % las referencias bibliográficas. Abre ese fichero y mira el formato que tiene,
 % que se conoce como BibTeX. Hay muchos sitios que exportan referencias en
 % formato BibTeX. Prueba a buscar en http://scholar.google.com por referencias
