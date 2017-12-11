@@ -173,7 +173,7 @@ Trabajo Fin de Grado/Máster
 \vspace{2.5cm}
 
 \LARGE
-ANGULAR - ELASTICSEARCH - DASHBOARD INTERFACE
+ANGULAR-BASED DASHBOARD FOR ELASTICSEARCH
 
 \vspace{4cm}
 
@@ -191,70 +191,70 @@ Tutor : Dr. Jesús M. González-Barahona
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Para firmar
 \clearpage
-\pagenumbering{gobble}
-\chapter*{}
+%\pagenumbering{gobble}
+%\chapter*{}
 
-\vspace{-4cm}
-\begin{center}
-\LARGE
-\textbf{Trabajo Fin de Grado/Máster}
+%\vspace{-4cm}
+%\begin{center}
+%\LARGE
+%\textbf{Trabajo Fin de Grado/Máster}
 
-\vspace{1cm}
-\large
-Título del Trabajo con Letras Capitales para Sustantivos y Adjetivos
+%\vspace{1cm}
+%\large
+%Título del Trabajo con Letras Capitales para Sustantivos y Adjetivos
 
-\vspace{1cm}
-\large
-\textbf{Autor :} Nombre del Alumno/a \\
-\textbf{Tutor :} Dr. Gregorio Robles Martínez
+%\vspace{1cm}
+%\large
+%\textbf{Autor :} Nombre del Alumno/a \\
+%\textbf{Tutor :} Dr. Gregorio Robles Martínez
 
-\end{center}
+%\end{center}
 
-\vspace{1cm}
-La defensa del presente Proyecto Fin de Carrera se realizó el día \qquad$\;\,$ de \qquad\qquad\qquad\qquad \newline de 20XX, siendo calificada por el siguiente tribunal:
-
-
-\vspace{0.5cm}
-\textbf{Presidente:}
-
-\vspace{1.2cm}
-\textbf{Secretario:}
-
-\vspace{1.2cm}
-\textbf{Vocal:}
+%\vspace{1cm}
+%La defensa del presente Proyecto Fin de Carrera se realizó el día \qquad$\;\,$ de \qquad\qquad\qquad\qquad \newline de 20XX, siendo calificada por el siguiente tribunal:
 
 
-\vspace{1.2cm}
-y habiendo obtenido la siguiente calificación:
+%\vspace{0.5cm}
+%\textbf{Presidente:}
 
-\vspace{1cm}
-\textbf{Calificación:}
+%\vspace{1.2cm}
+%\textbf{Secretario:}
+
+%\vspace{1.2cm}
+%\textbf{Vocal:}
 
 
-\vspace{1cm}
-\begin{flushright}
-Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 20XX
-\end{flushright}
+%\vspace{1.2cm}
+%y habiendo obtenido la siguiente calificación:
+
+%\vspace{1cm}
+%\textbf{Calificación:}
+
+
+%\vspace{1cm}
+%\begin{flushright}
+%Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 20XX
+%\end{flushright}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Dedicatoria
 
-\chapter*{}
-\pagenumbering{Roman} % para comenzar la numeracion de paginas en numeros romanos
-\begin{flushright}
-\textit{Dedicado a \\
-mi familia / mi abuelo / mi abuela}
-\end{flushright}
+%\chapter*{}
+%\pagenumbering{Roman} % para comenzar la numeracion de paginas en numeros romanos
+%\begin{flushright}
+%\textit{Dedicado a \\
+%mi familia / mi abuelo / mi abuela}
+%\end{flushright}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Agradecimientos
 
-\chapter*{Acknowledge}
-\addcontentsline{toc}{chapter}{Acknowledge} % si queremos que aparezca en el índice
-\markboth{ACKNOWLEDGE}{ACKNOWLEDGE} % encabezado
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements} % si queremos que aparezca en el índice
+\markboth{ACKNOWLEDGEMENTS}{ACKNOWLEDGEMENTS} % encabezado
 In the name of Allah, the most Gracious, the most Merciful.
 
-This project it is a culminating for a long path, and mainly I'm grateful to God, for giving me patience and persistence, and because all I have comes, in the first instance, from him. I'm grateful to my parents, since I would never achieved this without the education, affection and livelihood they gave me, all this without expecting anything in return but seeing me succeed. I want to thank my bosses at \textit{Nubika}, the company I'm currently working on, for their kindness, for making everything easy for me and allowing me to finish this project. Finally I want to thank my close friends for cheering me up, my classmates for their fellowship, and to thank my teachers for their patience and all the knowledge they have transmitted me, specially to my tutor Jesús María González-Barahona.
+This project it is the culminating of a long path, and mainly I'm grateful to God, for giving me patience and persistence, and because all I have comes, in the first instance, from him. I'm grateful to my parents, since I would never achieved this without the education, affection and livelihood they gave me, all this without expecting anything in return but seeing me succeed. I want to thank my bosses at \textit{Nubika}, the company I'm currently working on, for their kindness, for making everything easy for me and allowing me to finish this project. Finally I want to thank my close friends for cheering me up, my classmates for their fellowship, and to thank my teachers for their patience and all the knowledge they have transmitted me, specially to my tutor Jesús María González-Barahona.
 
 \epigraph{“Have those who disbelieved not considered that the heavens and the earth were a joined entity, then We separated them, and made from water every living thing?  Then will they not believe?” (Quran 21:30)}
 
@@ -267,9 +267,20 @@ This project it is a culminating for a long path, and mainly I'm grateful to God
 \chapter*{Summary}
 \addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
 \markboth{SUMMARY}{SUMMARY} % encabezado
-This project, which has been developed, has the main objective of the development of a web application whose features have been extracted from the \textit{Kibana} application in order to create a simplified version of it, but at the same time with a lot of features. To achieve this we are going to use different technologies such as \textit{Elasticsearch}, to store and manage the application's data, and \textit{Angular} as the main front-end technology, with which we are going to implement the user interface and all the application's features.
+The project presented in this document had the the main objective of
+developing a web-based dashboard for visualizing data in an
+Elasticsearch database. Most of its features have been inspired in
+Kibana, the most well known dashboard for Elasticsearch, although all
+of them have been built from scratch. The resulting dashboard is an
+HTML5 application running in the browser, based in Angular as the main
+front-end technology.
 
-At the end of this project we'll have an application that will allow us to create, save, edit and delete different types of visualizations, in addition to the possibility of creating customized dashboards with all the available visualizations we've previously created and stored on Elasticsearch.
+The resulting dashboard allows users to create, save, edit and remove
+different types of visualizations for Elasticsearch data, using dynamic
+filters to select the data to display. It also allows for the
+combination of those visualizations in actionable dashboards, which can
+also be created, saved, edited and removed. The application uses
+Elasticsearch itself to store its state.
 
 %Aquí viene un resumen del proyecto. Ha de constar de tres o cuatro párrafos, donde se presente de manera clara y concisa de qué va el proyecto.
 %Han de quedar respondidas las siguientes preguntas:
@@ -338,7 +349,7 @@ Al final de este proyecto tendremos una aplicación que nos permitirá crear, gu
 \section{Problem Description}
 \label{sec:description}
 
-In this times of business digitization, companies, and even common people, need a way to visualize a big amount of business data in order to make an interpretation of how it behaves. To make it easy, this data has to be displayed in a certain way that allows us to put the focus where it matters and discard irrelevant information.
+In these times of business digitization, companies, and even common people, need a way to visualize a big amount of business data in order to make an interpretation of how it behaves. To make it easy, this data has to be displayed in a certain way that allows us to put the focus where it matters and discard irrelevant information.
 
 From the necessity of visualizing this data came the idea of implementing web applications that allows us to represent easily all this information and manage it in a personalized way. Here is where it comes the concept of \textbf{data dashboards}, this concept is currently on the context of one of the most alive fields on computing and communications, this field is \textit{Big Data}. Currently a lot of data it's being stored all over the world, not only by companies but by common people too, with personal data, that could be interested on visualizing it. Since a few years ago the demand of dashboard interfaces and applications for data visualization has been growing.
 
@@ -413,7 +424,7 @@ The main objective of this project is to develop a simplified \textit{reimplemen
 
 We want to build a full dashboard that allows us to manage visualizations, which data:
 \begin{itemize}
-    \item Will be retrieved from a \textit{no-sql} database.
+    \item Will be retrieved from a \textit{no-SQL} database.
     \item Could be of any type.
     \item Will be managed in an \textit{introspective} way. Hence, we will find out the data structure that is stored in a specific moment on the database.
 \end{itemize}
@@ -464,7 +475,7 @@ This project will be developed as an open source application and a public reposi
 \section{ElasticSearch} % título de sección (se muestra)
 \label{sec:elasticsearch} % identificador de sección (no se muestra, es para poder referenciarla)
 
-\textit{\textbf{Elasticsearch}} is a \textit{no-sql} database that allows to store a big amount of data. Elasticsearch is design to be distributed, with multiple nodes working in parallel, and is design to be \textit{scalable}. The communication with this database is made by its \textit{API Rest} that works fully over \textit{HTTP}, using \textit{JSON} as document exchange format. Both the queries and the retrieved data from the Elasticsearch database is in JSON format.
+\textit{\textbf{Elasticsearch}} is a \textit{no-SQL} database that allows to store a big amount of data. Elasticsearch is design to be distributed, with multiple nodes working in parallel, and is design to be \textit{scalable}. The communication with this database is made by its \textit{API Rest} that works fully over \textit{HTTP}, using \textit{JSON} as document exchange format. Both the queries and the retrieved data from the Elasticsearch database is in JSON format.
 
 \subsection{History}
 \label{subsec:elasticsearch-history}
@@ -1916,7 +1927,7 @@ One of this project's objective was learning how to use modern technologies of f
 
 In addition, we had another objective for this project, this is finding out how could we integrate different visualization libraries with Angular such as \textit{ChartJS}. We found that Angular has different options to integrate external libraries such as the common way with the library CDN, or importing the library module with NPM, but this module required to have a "typings" (Typescript) file with the variable types declaration in order to have it work in our project. In this case we used both techniques due to missing "typings" files for some libraries we used, or due to limitations by using the second option.
 
-Thus, we achieved an HTML5 application development, we worked with a no-sql database such as Elasticsearch, we used already implemented components to interact with it, so we used an API which allowed us to have a dynamic access to the data. We use the data writing in order to have a data persistence on whatever the user creates, thus, the user can save its progress whenever the user wants and recover the work later, in the same state the user left it. In addition, the application is very flexible, it does not require a defined data but it works with any type of data since the user interface allows us to choose the data, from the stored data on the database.
+Thus, we achieved an HTML5 application development, we worked with a no-SQL database such as Elasticsearch, we used already implemented components to interact with it, so we used an API which allowed us to have a dynamic access to the data. We use the data writing in order to have a data persistence on whatever the user creates, thus, the user can save its progress whenever the user wants and recover the work later, in the same state the user left it. In addition, the application is very flexible, it does not require a defined data but it works with any type of data since the user interface allows us to choose the data, from the stored data on the database.
 
 With this, we have built visualizations using external libraries, and we have built too, a dashboard structure that allowed us to combine visualizations in the same panel. In addition, in an introspective way, in real time we read the data from the database, and we use this data to build the buckets and the metrics, thus, the user can choose to show another type of visualization if the data changes. So we are not restricting to a concrete type of data on the back-end.
 
@@ -2004,9 +2015,7 @@ This project have a lot of possibilities when thinking on how to develop more fe
 \cleardoublepage
 
 % Las siguientes dos instrucciones es todo lo que necesitas
-% para incluir las citas en la memoria
-\bibliographystyle{abbrv}
-\bibliography{memoria}  % memoria.bib es el nombre del fichero que contiene
+% para incluir las citas en la memoria contiene
 \begin{thebibliography}{99}
     \bibitem{elasticsearch_book}
         Clinton Gormley \& Zachary Tong.
